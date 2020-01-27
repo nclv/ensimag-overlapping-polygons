@@ -3,7 +3,7 @@
 Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
 
 ## Base
-- Si tous les points d'un polygone A sont dans un polygone B alors B contient A. Voir <http://alienryderflex.com/polygon/> pour réaliser ce test.
+- Si un point d'un polygone A est dans un polygone B alors B contient A. Voir <http://alienryderflex.com/polygon/> pour réaliser ce test.
 
 ## Améliorations
 - Si un polygone A contient un polygone B alors il contient tous les polygones contenus dans B.
