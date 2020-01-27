@@ -17,3 +17,7 @@ Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
 
   On peut accélérer les tests d'intersection de lignes à l'aide du *"sweep line algorithm"*.
 - On a besoin de tester *seulement* si **un point de A sont à l'intérieur de B.**
+
+- A consulter:
+  - https://www.toptal.com/python/computational-geometry-in-python-from-theory-to-implementation
+  - https://en.wikipedia.org/wiki/Point_in_polygon
