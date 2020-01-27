@@ -18,4 +18,4 @@ Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
   Ce qui précède fonctionne pour tout type de polygone. Si les polygones sont convexes, on peut ignorer les tests d'intersection de lignes et simplement **tester que tous les points de A sont à l'intérieur de B.**
 
   On peut accélérer les tests d'intersection de lignes à l'aide du *"sweep line algorithm"*.
--
+- On a besoin de tester *seulement* si **un point de A sont à l'intérieur de B.**
