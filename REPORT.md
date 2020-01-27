@@ -10,8 +10,6 @@ Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
 
 
 ## Notes
-- Il semble nécessaire de constater la convexité ou non du polygone.
-
 - Dans un cas quelconque :
   Effectuer des tests d'intersection de lignes pour chaque paire de lignes, chaque ligne appartenant à un polygone. Si aucune paire de lignes ne se croise et que l'un des points du polygone A se trouve à l'intérieur du polygone B, alors A est entièrement à l'intérieur de B. (en O(N*M) avec A polygone de N côtés et B polygone de M côtés)
 
