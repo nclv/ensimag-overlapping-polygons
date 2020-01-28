@@ -10,13 +10,15 @@ import point_in_polygon
 from tycat import read_instance, print_polygons
 
 
-def trouve_inclusions(polygones):
+def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_number):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
+    Le programme fonctionne si les polygones sont triés du plus grand au plus petit dans le fichier .poly
 
     Parameters:
         polygones (list): Liste de Polygones
+        is_point_in_polygon (function): //
 
     Returns:
         results (list) : Liste des inclusions.
@@ -24,23 +26,25 @@ def trouve_inclusions(polygones):
     """
 
     # IMPROVE
-    # list(combinations(range(len(polygones)), 2)) to get indexes
-    # list(combinations(enumerate(polygones), 2)) to get everything, or
-    # list((i,j) for ((i,_),(j,_)) in itertools.combinations(enumerate(a), 2)) to get indexes
+    # list(permutations(range(len(polygones)), 2)) to get indexes
+    # list(permutations(enumerate(polygones), 2)) to get everything, or
+    # list((i,j) for ((i,_),(j,_)) in itertools.permutations(enumerate(polygones), 2)) to get indexes
 
+    # sans enumerate l'ordre n'est pas respecté
+    sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area(), reverse=True)
+    # trier les polygones revient à modifier l'ordre défini dans le fichier .poly, le enumerate permet de conserver cet ordre
     n = len(polygones)
     results = [-1] * n
-    combination_indexes = list(itertools.combinations(range(n), 2))
-    # print(results, combination_indexes)
+    # combination_indexes = list(itertools.permutations(range(n), 2))
+    combination_indexes = []
+    print(results, combination_indexes)
 
-    for indice, (polygon1, polygon2) in enumerate(itertools.combinations(polygones, 2)):
-        point = polygon1.points[0]
-        is_point_in_polygon = point_in_polygon.crossing_number(polygon2, point)
-        # print(is_point_in_polygon)
-        if is_point_in_polygon:
+    for indice, (polygon1, polygon2) in enumerate(itertools.permutations(sorted_polygones, 2)):
+        point = polygon1[1].points[0]
+        combination_indexes.append((polygon1[0], polygon2[0]))
+        if is_point_in_polygon(polygon2[1], point):
             results[combination_indexes[indice][0]] = combination_indexes[indice][1]
-        else:
-            results[combination_indexes[indice][1]] = combination_indexes[indice][0]
+            print(results[combination_indexes[indice][0]])
 
     return results
 

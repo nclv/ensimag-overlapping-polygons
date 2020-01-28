@@ -13,17 +13,21 @@ from tycat import read_instance
 from point_in_polygon import crossing_number
 
 
-TESTS = [(crossing_number, True)]
+TESTS_2_POLY = [(crossing_number, "10x10.poly", True)]
 
 
-@pytest.mark.parametrize("function, expected", TESTS)
-def test_point_in_polygon(function, expected):
-    polygones = read_instance("e2.poly")
-    assert function(polygones[1], polygones[0].points[0]) == expected
+@pytest.mark.parametrize("function, file, expected", TESTS_2_POLY)
+def test_point_in_polygon(function, expected, file):
+    """on vérifie qu'un point du polygone est inclut dans l'autre polygone"""
+    polygones = read_instance(file)
+    assert len(polygones) == 2
+    assert function(polygones[0], polygones[1].points[0]) == expected
 
 
-@pytest.mark.parametrize("function, expected", TESTS)
-def test_all_points_in_polygon(function, expected):
-    polygones = read_instance("e2.poly")
-    for point in polygones[0].points:
-        assert function(polygones[1], point) == expected
+@pytest.mark.parametrize("function, file, expected", TESTS_2_POLY)
+def test_all_points_in_polygon(function, expected, file):
+    """on vérifie que tous les points du polygone sont inclus dans l'autre polygone"""
+    polygones = read_instance(file)
+    assert len(polygones) == 2
+    for point in polygones[1].points:
+        assert function(polygones[0], point) == expected
