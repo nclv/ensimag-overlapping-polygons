@@ -1,7 +1,11 @@
+
 """
 segment between two points.
 """
+
+
 from geo.quadrant import Quadrant
+from geo.utils import almostEqual
 
 
 def ccw(A, B, C):
@@ -27,9 +31,9 @@ class Segment:
 
         segment = Segment([Point([1.0, 2.0]), Point([3.0, 4.0])])
 
-    - compute intersection point with other segment:
+    - does self intersect with an other segment:
 
-        intersection = segment1.intersection_with(segment2)
+        segment1.intersect(segment2) (bool)
 
     """
 
@@ -77,7 +81,7 @@ class Segment:
 
     def is_vertical(self):
         """
-        return if we are a truely vertical segment.
+        return if we are a truly vertical segment.
         """
         return self.endpoints[0].coordinates[0] == self.endpoints[1].coordinates[0]
 
@@ -106,7 +110,7 @@ class Segment:
         you might get wrong results for points extremely near endpoints.
         """
         distance = sum(possible_point.distance_to(p) for p in self.endpoints)
-        return abs(distance - self.length()) < 0.000001
+        return almostEqual(distance, self.length())
 
     def __str__(self):
         return (

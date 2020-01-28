@@ -1,8 +1,11 @@
 """
 points (any dimension).
 """
+
+
 from math import sqrt
 from geo.quadrant import Quadrant
+from geo.utils import almostEqual
 
 
 class Point:
@@ -19,6 +22,7 @@ class Point:
 
     distance = point1.distance_to(point2)
     """
+
     def __init__(self, coordinates):
         """
         build new point using an array of coordinates.
@@ -64,7 +68,12 @@ class Point:
         """
         x_1, y_1 = self.coordinates
         x_2, y_2 = other.coordinates
-        return -y_1*x_2 + x_1*y_2
+        return -y_1 * x_2 + x_1 * y_2
+
+    def __eq__(self, other):
+        return almostEqual(self.coordinates[0], other.coordinates[0]) and almostEqual(
+            self.coordinates[1], other.coordinates[1]
+        )
 
     def __add__(self, other):
         """
@@ -82,22 +91,22 @@ class Point:
         """
         multiplication by scalar operator. (useful for scaling)
         """
-        return Point([c*factor for c in self.coordinates])
+        return Point([c * factor for c in self.coordinates])
 
     def __truediv__(self, factor):
         """
         division by scalar operator. (useful for scaling)
         """
-        return Point([c/factor for c in self.coordinates])
+        return Point([c / factor for c in self.coordinates])
 
     def __str__(self):
         """
         print code generating the point.
         """
-        return '(' + ', '.join(str(c) for c in self.coordinates) + ')'
+        return "(" + ", ".join(str(c) for c in self.coordinates) + ")"
 
     def __repr__(self):
-        return "Point([" + ', '.join(str(c) for c in self.coordinates) + "])"
+        return "Point([" + ", ".join(str(c) for c in self.coordinates) + "])"
 
     def __lt__(self, other):
         """
