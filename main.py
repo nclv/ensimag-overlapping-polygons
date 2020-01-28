@@ -37,14 +37,13 @@ def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_n
     results = [-1] * n
     # combination_indexes = list(itertools.permutations(range(n), 2))
     combination_indexes = []
-    print(results, combination_indexes)
 
     for indice, (polygon1, polygon2) in enumerate(itertools.permutations(sorted_polygones, 2)):
         point = polygon1[1].points[0]
         combination_indexes.append((polygon1[0], polygon2[0]))
         if is_point_in_polygon(polygon2[1], point):
             results[combination_indexes[indice][0]] = combination_indexes[indice][1]
-            print(results[combination_indexes[indice][0]])
+            # print(results[combination_indexes[indice][0]])
 
     return results
 
