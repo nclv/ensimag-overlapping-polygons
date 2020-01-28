@@ -70,7 +70,7 @@ class Polygon:
 
     def intersect(self, other):
         """Renvoie si deux polygones se coupents"""
-        for segment1, segment2 in zip(self.segments(), other.segments):
+        for segment1, segment2 in zip(self.segments(), other.segments()):
             if segment1.intersect(segment2):
                 return True
 
