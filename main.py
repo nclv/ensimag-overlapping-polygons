@@ -40,17 +40,38 @@ def point_in_polygon(polygon, point):
 
 
 def trouve_inclusions(polygones):
-    """
-    renvoie le vecteur des inclusions
-    la ieme case contient l'indice du polygone
-    contenant le ieme polygone (-1 si aucun).
-    (voir le sujet pour plus d'info)
-    """
-    for polygon1, polygon2 in itertools.combinations(polygones, 2):
-        point = polygon1.points[0]
-        print(point_in_polygon(polygon2, point))
+    """Renvoie le vecteur des inclusions
 
-    return ["TODO"]
+    La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
+
+    Parameters:
+        polygones (list): Liste de Polygones
+
+    Returns:
+        results (list) : Liste des inclusions.
+
+    """
+
+    # IMPROVE
+    # list(combinations(range(len(polygones)), 2)) to get indexes
+    # list(combinations(enumerate(polygones), 2)) to get everything, or
+    # list((i,j) for ((i,_),(j,_)) in itertools.combinations(enumerate(a), 2)) to get indexes
+
+    n = len(polygones)
+    results = [-1] * n
+    combination_indexes = list(itertools.combinations(range(n), 2))
+    print(results, combination_indexes)
+
+    for indice, (polygon1, polygon2) in enumerate(itertools.combinations(polygones, 2)):
+        point = polygon1.points[0]
+        is_point_in_polygon = point_in_polygon(polygon2, point)
+        print(is_point_in_polygon)
+        if is_point_in_polygon:
+            results[combination_indexes[indice][0]] = combination_indexes[indice][1]
+        else:
+            results[combination_indexes[indice][1]] = combination_indexes[indice][0]
+
+    return results
 
 
 def main():
