@@ -14,12 +14,12 @@ def print_polygons(polygons):
 
 
 def read_instance(fname):
-    with open(fname, 'rt') as f:
-        points = (tuple(map(float, l.split())) for l in f)
+    with open(fname, "rt") as file:
+        points = (tuple(map(float, ligne.split())) for ligne in file)
         # create polygons from [(l, x, y)]
         return [
-                Polygon([Point(p[1:]) for p in poly_points])
-                for _, poly_points in groupby(points, key=lambda t: t[0])
+            Polygon([Point(p[1:]) for p in poly_points])
+            for _, poly_points in groupby(points, key=lambda t: t[0])
         ]
 
 
@@ -35,4 +35,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

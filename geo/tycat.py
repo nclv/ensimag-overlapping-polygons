@@ -79,7 +79,7 @@ def tycat(*things):
             * svg_content
         or is an iterable on things implementing it.
     """
-    print("[", Displayer.file_count, "]")
+    print("file_count : [", Displayer.file_count, "]")
 
     # create different directories for each user
     user = getpass.getuser()
