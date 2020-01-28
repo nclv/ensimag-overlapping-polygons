@@ -6,37 +6,8 @@ attention donc lors des modifications.
 """
 import sys
 import itertools
+import point_in_polygon
 from tycat import read_instance, print_polygons
-
-
-def point_in_polygon(polygon, point):
-    """Renvoie si le point est dans le polygone.
-
-    Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
-
-    Parameters:
-        polygon (Polygon): //
-        point (Point): //
-
-    Returns:
-        boolean : True if point in polygon
-
-    """
-    x, y = point.coordinates
-    points = polygon.points
-    x_coord, y_coord = zip(*[point.coordinates for point in points])  # IMPROVE
-    nombre_de_points = len(points)
-    nombre_impair_de_noeuds = False
-
-    j = nombre_de_points - 1
-
-    for i in range(nombre_de_points):
-        if (y_coord[i] < y and y_coord[j] >= y) or (y_coord[j] < y and y_coord[i] >= y):
-            if (x_coord[i] + (y - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < x):
-                nombre_impair_de_noeuds = not nombre_impair_de_noeuds
-        j = i
-
-    return nombre_impair_de_noeuds
 
 
 def trouve_inclusions(polygones):
@@ -60,12 +31,12 @@ def trouve_inclusions(polygones):
     n = len(polygones)
     results = [-1] * n
     combination_indexes = list(itertools.combinations(range(n), 2))
-    print(results, combination_indexes)
+    # print(results, combination_indexes)
 
     for indice, (polygon1, polygon2) in enumerate(itertools.combinations(polygones, 2)):
         point = polygon1.points[0]
-        is_point_in_polygon = point_in_polygon(polygon2, point)
-        print(is_point_in_polygon)
+        is_point_in_polygon = point_in_polygon.crossing_number(polygon2, point)
+        # print(is_point_in_polygon)
         if is_point_in_polygon:
             results[combination_indexes[indice][0]] = combination_indexes[indice][1]
         else:
@@ -82,7 +53,7 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
-        print_polygons(polygones)
+        # print_polygons(polygones)
         inclusions = trouve_inclusions(polygones)
         print(inclusions)
 
