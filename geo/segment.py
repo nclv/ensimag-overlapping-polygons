@@ -4,6 +4,15 @@ segment between two points.
 from geo.quadrant import Quadrant
 
 
+def ccw(A, B, C):
+    """A, B, C 3 points, renvoie s'il sont orienté counterclockwise"""
+    return (C.coordinates[1] - A.coordinates[1]) * (
+        B.coordinates[0] - A.coordinates[0]
+    ) > (B.coordinates[1] - A.coordinates[1]) * (
+        C.coordinates[0] - A.coordinates[0]
+    )
+
+
 class Segment:
     """
     oriented segment between two points.
@@ -23,6 +32,7 @@ class Segment:
         intersection = segment1.intersection_with(segment2)
 
     """
+
     def __init__(self, points):
         """
         create a segment from an array of two points.
@@ -57,6 +67,14 @@ class Segment:
             quadrant.add_point(point)
         return quadrant
 
+    def intersect(self, other):
+        """Return true if line segments AB and CD intersect"""
+        return ccw(self.endpoints[0], other.endpoints[0], other.endpoints[1]) != ccw(
+            self.endpoints[1], other.endpoints[0], other.endpoints[1]
+        ) and ccw(self.endpoints[0], self.endpoints[1], other.endpoints[0]) != ccw(
+            self.endpoints[0], self.endpoints[1], other.endpoints[1]
+        )
+
     def is_vertical(self):
         """
         return if we are a truely vertical segment.
@@ -68,8 +86,8 @@ class Segment:
         svg for tycat.
         """
         return '<line x1="{}" y1="{}" x2="{}" y2="{}"/>\n'.format(
-            *self.endpoints[0].coordinates,
-            *self.endpoints[1].coordinates)
+            *self.endpoints[0].coordinates, *self.endpoints[1].coordinates
+        )
 
     def endpoint_not(self, point):
         """
@@ -91,12 +109,12 @@ class Segment:
         return abs(distance - self.length()) < 0.000001
 
     def __str__(self):
-        return "Segment([" + str(self.endpoints[0]) + ", " + \
-            str(self.endpoints[1]) + "])"
+        return (
+            "Segment([" + str(self.endpoints[0]) + ", " + str(self.endpoints[1]) + "])"
+        )
 
     def __repr__(self):
-        return "[" + repr(self.endpoints[0]) + ", " + \
-            repr(self.endpoints[1]) + "])"
+        return "[" + repr(self.endpoints[0]) + ", " + repr(self.endpoints[1]) + "])"
 
     def __hash__(self):
         return hash(tuple(self.endpoints))

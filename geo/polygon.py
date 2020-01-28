@@ -68,6 +68,12 @@ class Polygon:
     def absolute_area(self):
         return abs(self.area())
 
+    def intersect(self, other):
+        """Renvoie si deux polygones se coupents"""
+        for segment1, segment2 in zip(self.segments(), other.segments):
+            if segment1.intersect(segment2):
+                return True
+
     def is_oriented_clockwise(self):
         """
         clockwise being defined respectively to svg displayed, return
