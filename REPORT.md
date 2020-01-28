@@ -1,6 +1,7 @@
 # Recherche de solutions
 
 Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
+Si un polygone A est contenu dans plusieurs autres polygones (B et C par exemple) alors il faut retourner le polygone (B ou C) le plus proche de A. 
 
 ## Base
 - Si un point d'un polygone A est dans un polygone B alors B contient A. Voir <http://alienryderflex.com/polygon/> pour réaliser ce test.
