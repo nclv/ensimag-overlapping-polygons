@@ -10,7 +10,7 @@ import point_in_polygon
 from tycat import read_instance, print_polygons
 
 
-def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_number):
+def trouve_inclusions_sorted(polygones, is_point_in_polygon=point_in_polygon.crossing_number):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
@@ -47,6 +47,42 @@ def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_n
 
     return results
 
+def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_number):
+    """Renvoie le vecteur des inclusions
+
+    La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
+    Le programme fonctionne si les polygones sont triés du plus grand au plus petit dans le fichier .poly
+
+    Parameters:
+        polygones (list): Liste de Polygones
+        is_point_in_polygon (function): //
+
+    Returns:
+        results (list) : Liste des inclusions.
+
+    """
+
+    # IMPROVE
+    # list(permutations(range(len(polygones)), 2)) to get indexes
+    # list(permutations(enumerate(polygones), 2)) to get everything, or
+    # list((i,j) for ((i,_),(j,_)) in itertools.permutations(enumerate(polygones), 2)) to get indexes
+
+    n = len(polygones)
+    results = [-1] * n
+    # combination_indexes = list(itertools.permutations(range(n), 2))
+    combination_indexes = []
+
+    for indice, (polygon1, polygon2) in enumerate(itertools.permutations(enumerate(polygones), 2)):
+        point = polygon1[1].points[0]
+        combination_indexes.append((polygon1[0], polygon2[0]))
+        if is_point_in_polygon(polygon2[1], point):
+            if results[combination_indexes[indice][0]] == -1:
+                results[combination_indexes[indice][0]] = combination_indexes[indice][1]
+            if polygones[results[combination_indexes[indice][0]]].absolute_area() > polygones[combination_indexes[indice][1]].absolute_area():
+                results[combination_indexes[indice][0]] = combination_indexes[indice][1]
+            # print(results[combination_indexes[indice][0]])
+
+    return results
 
 def main():
     """
@@ -58,6 +94,7 @@ def main():
         polygones = read_instance(fichier)
         # print_polygons(polygones)
         inclusions = trouve_inclusions(polygones)
+        assert trouve_inclusions(polygones) == trouve_inclusions_sorted(polygones)
         print(inclusions)
 
 
