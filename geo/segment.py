@@ -36,6 +36,7 @@ class Segment:
         segment1.intersect(segment2) (bool)
 
     """
+    __slots__ = "endpoints"
 
     def __init__(self, points):
         """

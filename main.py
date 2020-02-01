@@ -34,7 +34,7 @@ def trouve_inclusions_sorted(
 
     # sans enumerate l'ordre n'est pas respecté
     sorted_polygones = sorted(
-        enumerate(polygones), key=lambda couple: couple[1].absolute_area(), reverse=True
+        enumerate(polygones), key=lambda couple: couple[1].absolute_area, reverse=True
     )
     # trier les polygones revient à modifier l'ordre défini dans le fichier .poly, le enumerate permet de conserver cet ordre
     n = len(polygones)
@@ -86,12 +86,15 @@ def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_n
         point = polygon1[1].points[0]
         combination_indexes.append((polygon1[0], polygon2[0]))
         if is_point_in_polygon(polygon2[1], point):
-            indice_poly1, indice_poly2 = combination_indexes[indice][0], combination_indexes[indice][1]
+            indice_poly1, indice_poly2 = (
+                combination_indexes[indice][0],
+                combination_indexes[indice][1],
+            )
             if results[indice_poly1] == -1:
                 results[indice_poly1] = indice_poly2
             if (
-                polygones[results[indice_poly1]].absolute_area()
-                > polygones[indice_poly2].absolute_area()
+                polygones[results[indice_poly1]].absolute_area
+                > polygones[indice_poly2].absolute_area
             ):
                 results[indice_poly1] = indice_poly2
             # print(results[combination_indexes[indice][0]])
