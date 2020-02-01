@@ -31,6 +31,7 @@ class Polygon:
         ....
 
     """
+    __slots__ = "points"
 
     def __init__(self, points):
         assert len(points) > 2
@@ -59,6 +60,7 @@ class Polygon:
         """
         return map(Segment, couples(self.points))
 
+    @property
     def area(self):
         """
         return polygon area. can be positive or negative, depending on
@@ -67,7 +69,7 @@ class Polygon:
         return sum(p1.cross_product(p2) for p1, p2 in couples(self.points)) / 2
 
     def absolute_area(self):
-        return abs(self.area())
+        return abs(self.area)
 
     def intersect(self, other):
         """Renvoie si deux polygones se coupents"""

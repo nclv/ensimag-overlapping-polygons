@@ -40,6 +40,7 @@ def trouve_inclusions_sorted(
     n = len(polygones)
     results = [-1] * n
     # combination_indexes = list(itertools.permutations(range(n), 2))
+    # permutations('ABCD', 2) => AB AC AD BA BC BD CA CB CD DA DB DC
     combination_indexes = []
 
     for indice, (polygon1, polygon2) in enumerate(
@@ -106,7 +107,9 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
-        #  print_polygons(polygones)
+        # print(list(enumerate(itertools.permutations(sorted(
+        #     enumerate(polygones), key=lambda couple: couple[1].absolute_area(), reverse=True
+        # )), 2))[0])
         inclusions = trouve_inclusions(polygones)
         print(inclusions)
 

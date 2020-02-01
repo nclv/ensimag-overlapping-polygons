@@ -22,6 +22,7 @@ class Point:
 
     distance = point1.distance_to(point2)
     """
+    __slots__ = "coordinates"
 
     def __init__(self, coordinates):
         """
