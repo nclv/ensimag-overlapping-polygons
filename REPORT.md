@@ -11,10 +11,12 @@ Si un polygone A est contenu dans plusieurs autres polygones (B et C par exemple
 
 - `__slots__` et `@property` dans polygon.py (gain négligeable devant ceux des slots de point.py et segment.py), point.py (gain timeit de 4ms) and segment.py (gain timeit de 10ms)
 
+Depuis l'interpréteur :
 ```python
 >> import timeit
 >> timeit.timeit("from tycat import read_instance;polygones=read_instance('e3.poly'); sorted_poly = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area, reverse=True)")
 ```
+Dans le terminal :
 ```bash
 python3 -m timeit -s "from tycat import read_instance" "polygones=read_instance('e3.poly'); sorted_poly = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area, reverse=True)"
 2000 loops, best of 5: 150 usec per loop
@@ -24,10 +26,12 @@ python3 -m timeit -s "from tycat import read_instance" "polygones=list(enumerate
 
 ```bash
 python3 -m timeit -r 5 -n 10 -s "from tycat import read_instance" "polygones=list(enumerate(read_instance('generated_from_examples.poly'))); polygones.sort(key=lambda couple: couple[1].absolute_area, reverse=True)"
-5 loops, best of 5: 50.6 msec per loop
+5 loops, best of 5: 41 msec per loop
 python3 -m timeit -r 5 -n 10 -s "from tycat import read_instance" "polygones=read_instance('generated_from_examples.poly'); sorted_poly = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area, reverse=True)"
-5 loops, best of 5: 52.2 msec per loop
+5 loops, best of 5: 41.7 msec per loop
 ```
+
+L'ordre de l'enumerate et l'utilisation de sort plutôt que sorted influent peu les performances.
 
 ## Notes
 - Dans un cas quelconque :
