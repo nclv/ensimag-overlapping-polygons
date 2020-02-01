@@ -11,8 +11,8 @@ import numpy as np
 
 
 EXAMPLE_FILE = "e2.poly"
-N = 7
-NUMBER = 10 # le nombre de lignes
+N = 7  # gère l'espacement entre les motifs, variable selon EXAMPLE_FILE
+NUMBER = 10  # le nombre de lignes
 
 
 with open(EXAMPLE_FILE, "r") as file:
