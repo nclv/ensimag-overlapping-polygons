@@ -6,12 +6,14 @@ from geo.segment import Segment
 from geo.quadrant import Quadrant
 from itertools import islice, cycle
 
+
 def couples(iterable):
     """
     iterate on all couples of given iterable.
     this will wrap around last element.
     """
     return zip(iterable, islice(cycle(iterable), 1, None))
+
 
 class Polygon:
     """
@@ -62,8 +64,7 @@ class Polygon:
         return polygon area. can be positive or negative, depending on
         orientation.
         """
-        return sum(p1.cross_product(p2)
-                   for p1, p2 in couples(self.points)) / 2
+        return sum(p1.cross_product(p2) for p1, p2 in couples(self.points)) / 2
 
     def absolute_area(self):
         return abs(self.area())
@@ -104,10 +105,7 @@ class Polygon:
         """
         svg for tycat.
         """
-        svg_coordinates = (
-            "{},{}".format(*p.coordinates)
-            for p in self.points
-        )
+        svg_coordinates = ("{},{}".format(*p.coordinates) for p in self.points)
         svg_formatted = " ".join(svg_coordinates)
         return '<polygon points="{}" fill="none"/>'.format(svg_formatted)
 
