@@ -110,9 +110,6 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
-        # print(list(enumerate(itertools.permutations(sorted(
-        #     enumerate(polygones), key=lambda couple: couple[1].absolute_area(), reverse=True
-        # )), 2))[0])
         inclusions = trouve_inclusions(polygones)
         print(inclusions)
 
