@@ -27,7 +27,6 @@ def generator(number=10, example_file="e2.poly", n=7):
         for column in range(1, 3):
             for i in range(1, number):
                 temp = points.copy()
-                print(increment)
                 temp[:, 0] = temp[:, 0] + increment
                 temp[:, column] = temp[:, column] + n * i
                 #print(temp)
