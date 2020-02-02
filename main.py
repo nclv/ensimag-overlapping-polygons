@@ -110,7 +110,7 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
-        inclusions = trouve_inclusions(polygones)
+        inclusions = trouve_inclusions_sorted(polygones)
         print(inclusions)
 
 
