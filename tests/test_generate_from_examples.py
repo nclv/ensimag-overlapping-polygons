@@ -11,7 +11,7 @@ import config
 import pytest
 
 from generate_from_examples import generator
-from utils import est_croissante
+from utils import tous_entiers_croissante
 
 
 @pytest.mark.parametrize("number", [(2), (3), (4)])
@@ -19,4 +19,4 @@ def test_polygones_increasing_indexes(number):
     generator(number=number)
     with open(f"generated_from_examples_{number}.poly", 'r') as file:
         suite = [int(ligne.split()[0]) for ligne in file]
-        assert est_croissante(suite) == True
+        assert tous_entiers_croissante(suite) == True

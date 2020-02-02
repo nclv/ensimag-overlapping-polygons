@@ -24,20 +24,19 @@ def generator(number=10, example_file="e2.poly", n=7):
     with open(example_file, "r") as file:
         points = np.array([list(map(int, ligne.split())) for ligne in file])
         increment = max(np.bincount(points[:, 0]))
-        for i in range(1, number):
-            temp = points.copy()
-            temp[:, 0] = temp[:, 0] + increment + i - 1
-            for column in range(1, 3):
+        for column in range(1, 3):
+            for i in range(1, number):
+                temp = points.copy()
+                print(increment)
+                temp[:, 0] = temp[:, 0] + increment
                 temp[:, column] = temp[:, column] + n * i
-            #print(temp)
-            points = np.append(points, temp, axis=0)
-            increment *= 2
-            increment -= 1
+                #print(temp)
+                points = np.append(points, temp, axis=0)
+                increment += increment
 
     np.savetxt(f"generated_from_examples_{number}.poly", points, fmt='%i')
 
 
 if __name__ == '__main__':
-    generator(number=3)
-    generator(number=2)
-    generator(number=4)
+    for i in range(1, 8):
+        generator(number=i)

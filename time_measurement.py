@@ -26,8 +26,8 @@ def bench(preparation, a_mesurer, repetitions=10):
 
 def perf_test(a_mesurer):
     # augmenter le range de number si besoin, descendre à 6 pour avoir des résultats corrects et un temps réduit d'exécution
-    for number in range(1, 8):
-        # generator(number=number)  # si les fichiers ne sont pas déjà générés
+    for number in range(1, 7):
+        generator(number=number)  # si les fichiers ne sont pas déjà générés
         preparation = read_instance(f"generated_from_examples_{number}.poly")
         for temps in bench(preparation, a_mesurer):
             print(number, temps)
