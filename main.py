@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
 """
 fichier principal pour la detection des inclusions.
 ce fichier est utilise pour les tests automatiques.
 attention donc lors des modifications.
 """
+
+
 import sys
 import itertools
-import point_in_polygon
+from point_in_polygon import crossing_number
 from tycat import read_instance, print_polygons
 
 
 def trouve_inclusions_sorted(
-    polygones, is_point_in_polygon=point_in_polygon.crossing_number
+    polygones, is_point_in_polygon=crossing_number
 ):
     """Renvoie le vecteur des inclusions
 
@@ -55,7 +60,7 @@ def trouve_inclusions_sorted(
     return results
 
 
-def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_number):
+def trouve_inclusions(polygones, is_point_in_polygon=crossing_number):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
