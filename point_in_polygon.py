@@ -30,7 +30,7 @@ def crossing_number(polygon, point):
     j = nombre_de_points - 1
 
     for i in range(nombre_de_points):
-        if (y_coord[i] < ordo and y_coord[j] >= ordo) or (y_coord[j] < ordo and y_coord[i] >= ordo):
+        if (y_coord[i] < ordo <= y_coord[j]) or (y_coord[j] < ordo <= y_coord[i]):
             if (x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc):
                 nombre_impair_de_noeuds = not nombre_impair_de_noeuds
         j = i

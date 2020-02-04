@@ -16,7 +16,7 @@ from main import trouve_inclusions, trouve_inclusions_sorted
 
 
 TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions, trouve_inclusions_sorted)
-POLY_FILES = get_files_matching_ext(".poly", ["generated.poly"])
+POLY_FILES = get_files_matching_ext(".poly", ["generated.poly"] + [f"generated_from_examples_{i}" for i in range(1, 8)])
 TESTS_INCLUSIONS = [
     ("10x10.poly", [-1, 0]),
     ("e2.poly", [1, -1, 0, 0]),
@@ -39,4 +39,9 @@ def test_compare_functions(file, functions=TROUVE_INCLUSIONS_FUNCTIONS):
 
 @pytest.mark.parametrize("file, expected", TESTS_INCLUSIONS)
 def test_inclusions(expected, file, function=trouve_inclusions_sorted):
+    assert function(read_instance(file)) == expected
+
+
+@pytest.mark.parametrize("file, expected", TESTS_INCLUSIONS)
+def test_results(file, expected, function=trouve_inclusions_sorted):
     assert function(read_instance(file)) == expected
