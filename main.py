@@ -79,25 +79,22 @@ def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_n
     results = [-1] * n
     # combination_indexes = list(itertools.permutations(range(n), 2))
     combination_indexes = []
-
+    append = combination_indexes.append
     for indice, (polygon1, polygon2) in enumerate(
         itertools.permutations(enumerate(polygones), 2)
     ):
-        point = polygon1[1].points[0]
-        combination_indexes.append((polygon1[0], polygon2[0]))
-        if is_point_in_polygon(polygon2[1], point):
+        append((polygon1[0], polygon2[0]))
+        if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
             indice_poly1, indice_poly2 = (
                 combination_indexes[indice][0],
                 combination_indexes[indice][1],
             )
-            if results[indice_poly1] == -1:
-                results[indice_poly1] = indice_poly2
-            if (
+            if results[indice_poly1] == -1 or (
                 polygones[results[indice_poly1]].absolute_area
                 > polygones[indice_poly2].absolute_area
             ):
                 results[indice_poly1] = indice_poly2
-            # print(results[combination_indexes[indice][0]])
+                # print(results[combination_indexes[indice][0]])
 
     return results
 

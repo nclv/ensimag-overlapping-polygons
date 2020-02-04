@@ -6,6 +6,13 @@ Si un polygone A est contenu dans plusieurs autres polygones (B et C par exemple
 ## Base
 - Si un point d'un polygone A est dans un polygone B alors B contient A. Voir <http://alienryderflex.com/polygon/> pour réaliser ce test.
 
+### Crossing-number
+- Soit n le nombre de points du polygone, xi_poly et yi_poly les coordonnées du point i du polygone, x et y les coordonnées du point dont on cherche s'il appartient au polygone. Alors i va de 0 à n - 1 et j = n - 1.
+si $$y_ipoly < ordo <= y_jpoly$$ ou $$y_jpoly < ordo <= y_ipoly$$
+  si $$x_ipoly + \frac{(y - y_ipoly)(x_jpoly - x_ipoly)}{y_jpoly - y_ipoly} < x$$
+    un noeud en plus
+
+
 ## Améliorations
 - Si un polygone A contient un polygone B alors il contient tous les polygones contenus dans B.
 

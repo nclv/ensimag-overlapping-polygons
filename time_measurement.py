@@ -39,8 +39,8 @@ def perf_test(a_mesurer):
 
 
 def main():
-    # perf_test(trouve_inclusions)
-    perf_test(trouve_inclusions_sorted)
+    perf_test(trouve_inclusions)
+    # perf_test(trouve_inclusions_sorted)
 
 
 if __name__=="__main__":

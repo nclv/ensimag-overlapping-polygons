@@ -5,6 +5,7 @@ from geo.point import Point
 from geo.segment import Segment
 from geo.quadrant import Quadrant
 from itertools import islice, cycle
+import numpy as np
 
 
 def couples(iterable):

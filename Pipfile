@@ -9,6 +9,7 @@ verify_ssl = true
 pytest = "*"
 numpy = "*"
 pyls = "*"
+snakeviz = "*"
 
 [requires]
 python_version = "3.8"
