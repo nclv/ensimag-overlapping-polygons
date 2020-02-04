@@ -39,6 +39,8 @@ python3 -m timeit -r 5 -n 10 -s "from tycat import read_instance" "polygones=rea
 ```
 
 L'ordre de l'enumerate et l'utilisation de sort plutôt que sorted influent peu les performances.
+Une optimisation lru_cache n'apporte rien (pbl du hashage qui prend du temps).
+L'utilisation de variables locales dans point_in_polygon.crossing_number fait perdre quelques secondes
 
 ## Notes
 - Dans un cas quelconque :
