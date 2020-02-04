@@ -59,7 +59,6 @@ def trouve_inclusions(polygones, is_point_in_polygon=point_in_polygon.crossing_n
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
-    Le programme fonctionne si les polygones sont triés du plus grand au plus petit dans le fichier .poly
 
     Parameters:
         polygones (list): Liste de Polygones
