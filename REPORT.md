@@ -42,6 +42,15 @@ L'ordre de l'enumerate et l'utilisation de sort plutôt que sorted influent peu 
 Une optimisation lru_cache n'apporte rien (pbl du hashage qui prend du temps).
 L'utilisation de variables locales dans point_in_polygon.crossing_number fait perdre quelques secondes
 
+Vérifier que le polygone (simple) est convexe : https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex/45372025#45372025
+Méthode point inside polygone **convexe**:
+ - créer les triangles entre deux sommets consécutifs et le point
+ - la somme des aires doit être égale à celle du polygone
+Voir https://www.geeksforgeeks.org/check-whether-given-point-lies-inside-rectangle-not/
+
+Précalculation:
+ - générer un rectangle (ou une boule) autour du polygone, si le point n'est pas dans le rectangle (la boule) (Méthode point inside polygone **convexe** car un rectangle est un polygone convexe / https://stackoverflow.com/questions/481144/equation-for-testing-if-a-point-is-inside-a-circle) alors celà ne sert à rien de tester toutes les arêtes avec le ray-crossing
+
 ## Notes
 - Dans un cas quelconque :
   Effectuer des tests d'intersection de lignes pour chaque paire de lignes, chaque ligne appartenant à un polygone. Si aucune paire de lignes ne se croise et que l'un des points du polygone A se trouve à l'intérieur du polygone B, alors A est entièrement à l'intérieur de B. (en O(N*M) avec A polygone de N côtés et B polygone de M côtés)
