@@ -69,6 +69,7 @@ def crossing_number_v2(polygon, point):
 
     return nombre_impair_de_noeuds
 
+
 # gain de 2sec sur crossing_number_v2 pour generated_from_examples_6.poly
 def crossing_number_v3(polygon, point):
     """Renvoie si le point est dans le polygone.
@@ -95,7 +96,54 @@ def crossing_number_v3(polygon, point):
     for i in range(nombre_de_points):
         if y_coord[i] < ordo <= y_coord[j] or y_coord[j] < ordo <= y_coord[i] and (x_coord[i] <= absc or x_coord[j] <= absc):
             # xor plus rapide que ^=
-            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc)
+            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                not x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc)
         j = i
+
+    return nombre_impair_de_noeuds
+
+
+def crossing_number_v4(polygon, point):
+    absc, ordo = point.coordinates
+    sommet0 = polygon.points[-1].coordinates
+    y0_test = sommet0[1] >= ordo
+    indice = 0
+    sommet1 = polygon.points[indice].coordinates
+    nombre_impair_de_noeuds = False
+
+    for _ in range(len(polygon.points) - 1):
+        y1_test = sommet1[1] >= ordo
+        if y0_test != y1_test:
+            x0_test = sommet0[0] >= absc
+            if x0_test == sommet1[0] >= absc:
+                nombre_impair_de_noeuds = (
+                    not nombre_impair_de_noeuds) != (not x0_test)
+            else:
+                nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                    not sommet1[0] - (sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) / (sommet0[1]-sommet1[1]) >= absc)
+        y0_test = y1_test
+        sommet0 = sommet1
+        indice += 1
+        sommet1 = polygon.points[indice].coordinates
+
+    return nombre_impair_de_noeuds
+
+
+def crossing_number_v5(polygon, point):
+    absc, ordo = point.coordinates
+    sommet0 = polygon.points[-1].coordinates
+    y0_test = sommet0[1] >= ordo
+    indice = 0
+    sommet1 = polygon.points[indice].coordinates
+    nombre_impair_de_noeuds = False
+
+    for _ in range(len(polygon.points) - 1):
+        y1_test = sommet1[1] >= ordo
+        if y0_test != y1_test:
+            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not ((sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])) == y1_test)
+        y0_test = y1_test
+        sommet0 = sommet1
+        indice += 1
+        sommet1 = polygon.points[indice].coordinates
 
     return nombre_impair_de_noeuds
