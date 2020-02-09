@@ -34,6 +34,12 @@ def test_point_in_polygon_side_on_threshold(function):
 
 
 @pytest.mark.parametrize("function", POINT_IN_POLYGON_FUNCTIONS)
+def test_point_in_polygon_point_on_side(function):
+    polygone, point = (Polygon([Point([0, 0]), Point([1, 0]), Point([2, 1]), Point([3, 0]), Point([2, -2]), Point([0, -2])]), Point([0.5, 0]))
+    assert function(polygone, point) == True
+
+
+@pytest.mark.parametrize("function", POINT_IN_POLYGON_FUNCTIONS)
 def test_point_in_polygon_upper_triangles(function):
     polygone, point = (Polygon([Point([-1, 0]), Point([0, 1]), Point([1, 0]), Point([2, 1]), Point([3, 0]), Point([2, -2]), Point([0, -2])]), Point([2, 0]))
     assert function(polygone, point) == True
