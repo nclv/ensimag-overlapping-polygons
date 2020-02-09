@@ -105,13 +105,14 @@ def crossing_number_v3(polygon, point):
 
 def crossing_number_v4(polygon, point):
     absc, ordo = point.coordinates
-    sommet0 = polygon.points[-1].coordinates
+    points = polygon.points
+    sommet0 = points[-1].coordinates
     y0_test = sommet0[1] >= ordo
     indice = 0
-    sommet1 = polygon.points[indice].coordinates
+    sommet1 = points[indice].coordinates
     nombre_impair_de_noeuds = False
 
-    for _ in range(len(polygon.points) - 1):
+    for _ in range(len(points) - 1):
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
             x0_test = sommet0[0] >= absc
@@ -124,26 +125,28 @@ def crossing_number_v4(polygon, point):
         y0_test = y1_test
         sommet0 = sommet1
         indice += 1
-        sommet1 = polygon.points[indice].coordinates
+        sommet1 = points[indice].coordinates
 
     return nombre_impair_de_noeuds
 
 
 def crossing_number_v5(polygon, point):
     absc, ordo = point.coordinates
-    sommet0 = polygon.points[-1].coordinates
+    points = polygon.points
+    sommet0 = points[-1].coordinates
     y0_test = sommet0[1] >= ordo
     indice = 0
-    sommet1 = polygon.points[indice].coordinates
+    sommet1 = points[indice].coordinates
     nombre_impair_de_noeuds = False
+    nombre_de_points = len(points)
 
-    for _ in range(len(polygon.points) - 1):
+    for _ in range(nombre_de_points - 1):
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not ((sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])) == y1_test)
         y0_test = y1_test
         sommet0 = sommet1
         indice += 1
-        sommet1 = polygon.points[indice].coordinates
+        sommet1 = points[indice].coordinates
 
     return nombre_impair_de_noeuds
