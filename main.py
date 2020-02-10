@@ -10,11 +10,13 @@ attention donc lors des modifications.
 
 
 import sys
-import itertools
 import multiprocessing
-import numpy as np
+from itertools import permutations
+from more_itertools import chunked
+
+from geo.quadrant import Quadrant
 from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v4, crossing_number_v5
-from tycat import read_instance, print_polygons
+from tycat import read_instance, read_instance_v2, print_polygons
 
 
 def trouve_inclusions_sorted(
@@ -52,7 +54,7 @@ def trouve_inclusions_sorted(
     combination_indexes = []
     append = combination_indexes.append
     for indice, (polygon1, polygon2) in enumerate(
-        itertools.permutations(sorted_polygones, 2)
+        permutations(sorted_polygones, 2)
     ):
         append((polygon1[0], polygon2[0]))
         if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
@@ -75,12 +77,9 @@ def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v4):
         results (list) : Liste des inclusions.
 
     """
-    n = len(polygones)
-    results = [-1] * n
+    results = [-1] * len(polygones)
 
-    for indice, (polygon1, polygon2) in enumerate(
-        itertools.permutations(enumerate(polygones), 2)
-    ):
+    for polygon1, polygon2 in permutations(enumerate(polygones), 2):
         if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
             indice_poly1, indice_poly2 = (
                 polygon1[0],
@@ -95,6 +94,32 @@ def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v4):
     return results
 
 
+# aucun improvement
+def trouve_inclusions_diviser(polygones):
+    results = [-1] * len(polygones)
+    rectangle = Quadrant.empty_quadrant(2)
+    for polygone in polygones:
+        rectangle.update(polygone.bounding_quadrant())
+    trouve_inclusions_rec(polygones, results, rectangle)
+    return results
+
+
+def trouve_inclusions_rec(polygones, results, rectangle):
+    sous_rectangles = rectangle.divide()
+    sous_polygones = []
+    for sous_rectangle in sous_rectangles:
+        gardes = []
+        for polygone in polygones:
+            if sous_rectangle.intersect(polygone.bounding_quadrant()):
+                gardes.append(polygone)
+            sous_polygones.append(polygones)
+
+    taille_initiale = len(polygones)
+    for split_polygones, rectangle in zip(sous_polygones, sous_rectangles):
+        if len(split_polygones) > taille_initiale / 2 or len(split_polygones) < 10:
+            trouve_inclusions(split_polygones, results) # miodifier trouve_inclusions pour avoir results en paramètres, il faut aussi modifier les tests
+        else:
+            trouve_inclusions_rec(split_polygones, results, rectangle)
 
 
 def trouve_inclusions_multiprocessing(split_polygone, results, polygones):
@@ -110,7 +135,7 @@ def trouve_inclusions_multiprocessing(split_polygone, results, polygones):
         results (list) : Liste des inclusions.
 
     """
-    for indice, (polygon1, polygon2) in enumerate(split_polygone):
+    for (polygon1, polygon2) in split_polygone:
         if crossing_number_v5(polygon2[1], polygon1[1].points[0]):
             indice_poly1, indice_poly2 = (
                 polygon1[0],
@@ -139,8 +164,7 @@ def main_multiprocessing():
 
         processes = []
         count = 2 # multiprocessing.cpu_count()
-        split_polygones = np.array_split(list(itertools.permutations(enumerate(polygones), 2)), count)
-
+        split_polygones = chunked(permutations(enumerate(polygones), 2), count)
         for split_polygone in split_polygones:
             _process = multiprocessing.Process(target=trouve_inclusions_multiprocessing, args=(split_polygone, results, polygones))
             processes.append(_process)
@@ -160,10 +184,12 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
+        # polygones = read_instance_v2(fichier)
+        # inclusions = trouve_inclusions_diviser(polygones)
         inclusions = trouve_inclusions(polygones)
         print(inclusions)
 
 
 if __name__ == "__main__":
     main()
-    # main_multiprocessing()
+    # main_multiprocessing()

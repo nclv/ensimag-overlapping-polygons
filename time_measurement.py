@@ -10,7 +10,7 @@ time_measurement.py : //
 from time import perf_counter_ns
 import os.path
 
-from main import trouve_inclusions_sorted, trouve_inclusions
+from main import trouve_inclusions
 from tycat import read_instance
 from generate_from_examples import generator
 

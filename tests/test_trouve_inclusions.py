@@ -40,4 +40,5 @@ TESTS_INCLUSIONS = [
 
 @pytest.mark.parametrize("file, expected", TESTS_INCLUSIONS)
 def test_inclusions(expected, file, function=trouve_inclusions):
-    assert function(read_instance(file)) == expected
+    polygones = read_instance(file)
+    assert function(polygones) == expected
