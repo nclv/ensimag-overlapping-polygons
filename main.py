@@ -90,6 +90,7 @@ def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v4):
                 > polygones[indice_poly2].absolute_area
             ):
                 results[indice_poly1] = indice_poly2
+                print(indice_poly1, indice_poly2)
 
     return results
 

@@ -117,7 +117,7 @@ def crossing_number_v4(polygon, point):
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
             x0_test = sommet0[0] >= absc
-            if x0_test == (sommet1[0] >= absc):
+            if x0_test != (sommet1[0] >= absc):
                 nombre_impair_de_noeuds = (
                     not nombre_impair_de_noeuds) != (not x0_test)
             else:
