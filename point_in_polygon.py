@@ -119,19 +119,57 @@ def crossing_number_v3_bis(polygon, point):
     absc, ordo = point.coordinates
     points = polygon.points
     indice = 0
-    sommet0 = points[-1].coordinates
+    nombre_de_points = len(points)
+    sommet0 = points[nombre_de_points - 1].coordinates
     sommet1 = points[indice].coordinates
-    y0_test = sommet1[1] < ordo <= sommet0[1]
+    y0_test0, y0_test1 = sommet0[1] >= ordo, ordo > sommet0[1]
     nombre_impair_de_noeuds = False
 
-    for _ in range(len(points) - 1):
-        #  = sommet0[1] < ordo <= sommet1[1]
-        if sommet1[1] < ordo <= sommet0[1] or sommet0[1] < ordo <= sommet1[1] and (sommet1[0] <= absc or sommet0[0] <= absc):
+    for _ in range(nombre_de_points):
+        y1_test0, y1_test1 = sommet1[1] >= ordo, ordo > sommet1[1]
+        if (y1_test0 != y0_test0) and (y1_test1 != y0_test1) and (sommet1[0] <= absc or sommet0[0] <= absc):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
                 not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
-        # y0_test = y1_test
+        y0_test0, y0_test1 = y1_test0, y1_test1
         sommet0 = sommet1
+        if indice == nombre_de_points - 1:
+            break
+        indice += 1
+        sommet1 = points[indice].coordinates
+
+    return nombre_impair_de_noeuds
+
+
+def crossing_number_v3_sec(polygon, point):
+    """Renvoie si le point est dans le polygone.
+
+    Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
+
+    Parameters:
+        polygon (Polygon): //
+        point (Point): //
+
+    Returns:
+        boolean : True if point in polygon
+
+    """
+    absc, ordo = point.coordinates
+    points = polygon.points
+    indice = 0
+    nombre_de_points = len(points)
+    sommet0 = points[nombre_de_points - 1].coordinates
+    sommet1 = points[indice].coordinates
+    nombre_impair_de_noeuds = False
+
+    for _ in range(nombre_de_points):
+        if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]) and (sommet1[0] <= absc or sommet0[0] <= absc):
+            # xor plus rapide que ^=
+            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+        sommet0 = sommet1
+        if indice == nombre_de_points - 1:
+            break
         indice += 1
         sommet1 = points[indice].coordinates
 

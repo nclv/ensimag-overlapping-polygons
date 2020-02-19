@@ -15,7 +15,7 @@ from itertools import permutations
 from more_itertools import chunked
 
 from geo.quadrant import Quadrant
-from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_bis, crossing_number_v4, crossing_number_v5
+from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_bis, crossing_number_v3_sec, crossing_number_v4, crossing_number_v5
 from tycat import read_instance, read_instance_v2, print_polygons
 
 
@@ -64,7 +64,7 @@ def trouve_inclusions_sorted(
     return results
 
 
-def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_bis):
+def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
