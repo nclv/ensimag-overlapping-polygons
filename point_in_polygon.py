@@ -125,12 +125,12 @@ def crossing_number_v3_bis(polygon, point):
     nombre_impair_de_noeuds = False
 
     for _ in range(len(points) - 1):
-        y1_test = sommet0[1] < ordo <= sommet1[1]
-        if y0_test or y1_test and (sommet1[0] <= absc or sommet0[0] <= absc):
+        #  = sommet0[1] < ordo <= sommet1[1]
+        if sommet1[1] < ordo <= sommet0[1] or sommet0[1] < ordo <= sommet1[1] and (sommet1[0] <= absc or sommet0[0] <= absc):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
                 not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
-        y0_test = y1_test
+        # y0_test = y1_test
         sommet0 = sommet1
         indice += 1
         sommet1 = points[indice].coordinates
