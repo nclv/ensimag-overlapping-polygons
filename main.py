@@ -64,7 +64,7 @@ def trouve_inclusions_sorted(
     return results
 
 
-def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_sec):
+def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).

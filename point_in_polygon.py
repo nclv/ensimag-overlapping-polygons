@@ -185,8 +185,9 @@ def crossing_number_v4(polygon, point):
     indice = 0
     sommet1 = points[indice].coordinates
     nombre_impair_de_noeuds = False
+    nombre_de_points = len(points)
 
-    for _ in range(len(points) - 1):
+    while indice < nombre_de_points - 1:
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
             x0_test = sommet0[0] >= absc
@@ -207,13 +208,14 @@ def crossing_number_v4(polygon, point):
 def crossing_number_v5(polygon, point):
     absc, ordo = point.coordinates
     points = polygon.points
+    nombre_de_points = len(points)
     sommet0 = points[-1].coordinates
     y0_test = sommet0[1] >= ordo
     indice = 0
     sommet1 = points[indice].coordinates
     nombre_impair_de_noeuds = False
 
-    for _ in range(len(points) - 1):
+    while indice < nombre_de_points - 1:
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not ((sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])) == y1_test)
