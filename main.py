@@ -15,7 +15,7 @@ from itertools import permutations
 from more_itertools import chunked
 
 from geo.quadrant import Quadrant
-from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v4, crossing_number_v5
+from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_bis, crossing_number_v4, crossing_number_v5
 from tycat import read_instance, read_instance_v2, print_polygons
 
 
@@ -64,7 +64,7 @@ def trouve_inclusions_sorted(
     return results
 
 
-def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v4):
+def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_bis):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
@@ -90,7 +90,7 @@ def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v4):
                 > polygones[indice_poly2].absolute_area
             ):
                 results[indice_poly1] = indice_poly2
-                print(indice_poly1, indice_poly2)
+                # print(indice_poly1, indice_poly2)
 
     return results
 
@@ -150,6 +150,29 @@ def trouve_inclusions_multiprocessing(split_polygone, results, polygones):
                 # print(results[combination_indexes[indice][0]])
 
 
+def send_theo(polygones):
+    import socket
+    import time
+    TEMPS = 0.2
+    port = 34587
+    hote = "90.127.103.170"
+    connexion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connexion.connect((hote, port))
+    time.sleep(1)
+    for poly in polygones:
+        k = 0
+        while len(poly.points[k:]) > 20:
+            connexion.send(str(poly.points[k:k + 20]).encode("utf-8"))
+            k += 20
+            time.sleep(TEMPS)
+        connexion.send(str(poly.points[k:]).encode("utf-8"))
+        time.sleep(TEMPS)
+        connexion.send(b"next")
+        time.sleep(TEMPS)
+    connexion.send(b"end")
+    connexion.close()
+
+
 # aucun gain de temps car les opérations dans la boucle sont déjà peu coûteuses
 def main_multiprocessing():
     for fichier in sys.argv[1:]:
@@ -187,6 +210,7 @@ def main():
         polygones = read_instance(fichier)
         # polygones = read_instance_v2(fichier)
         # inclusions = trouve_inclusions_diviser(polygones)
+        # send_theo(polygones)
         inclusions = trouve_inclusions(polygones)
         print(inclusions)
 
