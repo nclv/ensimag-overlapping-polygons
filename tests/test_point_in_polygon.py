@@ -11,14 +11,14 @@ import pytest
 
 from tycat import read_instance
 from utils import get_files_matching_ext
-from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v4, crossing_number_v5
+from point_in_polygon import crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_bis, crossing_number_v3_sec, crossing_number_v4, crossing_number_v5
 from geo.polygon import Polygon
 from geo.point import Point
 
 
 TESTS_2_POLY = [(crossing_number, "10x10.poly", True)]
 POLY_FILES = get_files_matching_ext(".poly", ["generated.poly"] + [f"generated_from_examples_{i}.poly" for i in range(4, 8)])
-POINT_IN_POLYGON_FUNCTIONS = (crossing_number_v5, crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v4)
+POINT_IN_POLYGON_FUNCTIONS = (crossing_number_v5, crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v4, crossing_number_v3_bis, crossing_number_v3_sec)
 
 
 @pytest.mark.parametrize("function", POINT_IN_POLYGON_FUNCTIONS)

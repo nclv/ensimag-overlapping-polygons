@@ -195,7 +195,7 @@ def crossing_number_v4(polygon, point):
                     not nombre_impair_de_noeuds) != (not x0_test)
             else:
                 nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
-                    not sommet1[0] - (sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) / (sommet0[1]-sommet1[1]) >= absc)
+                    not sommet1[0] - (sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) / (sommet0[1]-sommet1[1]) > absc)
         y0_test = y1_test
         sommet0 = sommet1
         indice += 1
