@@ -118,7 +118,7 @@ def trouve_inclusions_rec(polygones, results, rectangle):
     taille_initiale = len(polygones)
     for split_polygones, rectangle in zip(sous_polygones, sous_rectangles):
         if len(split_polygones) > taille_initiale / 2 or len(split_polygones) < 10:
-            trouve_inclusions(split_polygones, results) # miodifier trouve_inclusions pour avoir results en paramètres, il faut aussi modifier les tests
+            trouve_inclusions(split_polygones, results) # modifier trouve_inclusions pour avoir results en paramètres, il faut aussi modifier les tests
         else:
             trouve_inclusions_rec(split_polygones, results, rectangle)
 

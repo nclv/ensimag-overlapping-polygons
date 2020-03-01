@@ -10,6 +10,7 @@ pytest = "*"
 numpy = "*"
 pyls = "*"
 snakeviz = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.8"
