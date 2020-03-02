@@ -161,20 +161,17 @@ def crossing_number_v3_sec(polygon, point):
     points = polygon.points
     indice = 0
     nombre_de_points = len(points)
-    sommet0 = points[nombre_de_points - 1].coordinates
-    sommet1 = points[indice].coordinates
+    sommet0 = points[-1].coordinates
     nombre_impair_de_noeuds = False
 
-    for _ in range(nombre_de_points):
+    while indice < nombre_de_points:
+        sommet1 = points[indice].coordinates
         if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]) and (sommet1[0] <= absc or sommet0[0] <= absc):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
                 not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
         sommet0 = sommet1
-        if indice == nombre_de_points - 1:
-            break
         indice += 1
-        sommet1 = points[indice].coordinates
 
     return nombre_impair_de_noeuds
 
