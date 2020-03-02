@@ -123,23 +123,24 @@ def crossing_number_v3_bis(polygon, point):
     points = polygon.points
     indice = 0
     nombre_de_points = len(points)
-    sommet0 = points[nombre_de_points - 1].coordinates
-    sommet1 = points[indice].coordinates
+    sommet0 = points[-1].coordinates
     y0_test0, y0_test1 = sommet0[1] >= ordo, ordo > sommet0[1]
     nombre_impair_de_noeuds = False
 
-    for _ in range(nombre_de_points):
+    while indice < nombre_de_points:
+        sommet1 = points[indice].coordinates
         y1_test0, y1_test1 = sommet1[1] >= ordo, ordo > sommet1[1]
-        if (y1_test0 != y0_test0) and (y1_test1 != y0_test1) and (sommet1[0] <= absc or sommet0[0] <= absc):
-            # xor plus rapide que ^=
-            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
-                not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+        if (y1_test0 != y0_test0) and (y1_test1 != y0_test1):
+            x0_test = sommet0[0] >= absc
+            if x0_test != (sommet1[0] >= absc):
+                nombre_impair_de_noeuds = (
+                    not nombre_impair_de_noeuds) != (not x0_test)
+            else:
+                nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                    not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
         y0_test0, y0_test1 = y1_test0, y1_test1
         sommet0 = sommet1
-        if indice == nombre_de_points - 1:
-            break
         indice += 1
-        sommet1 = points[indice].coordinates
 
     return nombre_impair_de_noeuds
 
