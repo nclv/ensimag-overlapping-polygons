@@ -50,6 +50,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
 
     # trier les polygones revient à modifier l'ordre défini dans le fichier .poly, le enumerate permet de conserver cet ordre
     poly_couples = combinations(sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area), 2)
+    # OR presort by first quadrant scalar ?
     quadrants = [polygon.bounding_quadrant() for polygon in polygones]
     results = [-1] * len(polygones)
 
