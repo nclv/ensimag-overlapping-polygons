@@ -12,7 +12,7 @@ import pytest
 
 from tycat import read_instance
 from utils import get_files_matching_ext
-from main import trouve_inclusions
+from main import trouve_inclusions, trouve_inclusions_sorted
 
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
@@ -24,18 +24,19 @@ TESTS_INCLUSIONS = [
     ("e21.poly", [-1, 0, 1, 2]),
     ("e3.poly", [-1, 0, 1, 1, -1, 4, 5, 5]),
 ]
+TROUVE_INCLUSIONS_FUNCTIONS = [trouve_inclusions, trouve_inclusions_sorted]
 
 
-# # ne passe pas sur generated_from_examples_4.poly
-# @pytest.mark.parametrize("file", POLY_FILES)
-# def test_compare_functions(file, functions=TROUVE_INCLUSIONS_FUNCTIONS):
-#     polygones = read_instance(file)
-#     assert all(
-#         [
-#             function1(polygones) == function2(polygones)
-#             for function1, function2 in zip(functions, functions[1:])
-#         ]
-#     )
+# ne passe pas sur generated_from_examples_4.poly
+@pytest.mark.parametrize("file", POLY_FILES)
+def test_compare_functions(file, functions=TROUVE_INCLUSIONS_FUNCTIONS):
+    polygones = read_instance(file)
+    assert all(
+        [
+            function1(polygones) == function2(polygones)
+            for function1, function2 in zip(functions, functions[1:])
+        ]
+    )
 
 
 @pytest.mark.parametrize("file, expected", TESTS_INCLUSIONS)
