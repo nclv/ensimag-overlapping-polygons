@@ -49,9 +49,8 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
     # list((i,j) for ((i,_),(j,_)) in itertools.permutations(enumerate(polygones), 2)) to get indexes
 
     # trier les polygones revient à modifier l'ordre défini dans le fichier .poly, le enumerate permet de conserver cet ordre
-    sorted_polygones = sorted(polygones, key=lambda couple: couple[1].absolute_area)
-    poly_couples = combinations(sorted_polygones, 2)
-    results = [-1] * len(sorted_polygones)
+    poly_couples = combinations(sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area), 2)
+    results = [-1] * len(polygones)
 
     for polygon1, polygon2 in poly_couples:
         indice_poly1, indice_poly2 = (

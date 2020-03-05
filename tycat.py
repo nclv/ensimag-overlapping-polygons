@@ -18,7 +18,7 @@ def read_instance(fname):
         points = (tuple(map(float, ligne.split())) for ligne in file)
         # create polygons from [(l, x, y)]
         return [
-            (int(indice), Polygon([Point(p[1:]) for p in poly_points]))
+            Polygon([Point(p[1:]) for p in poly_points])
             for indice, poly_points in groupby(points, key=lambda t: t[0])
         ]
 
