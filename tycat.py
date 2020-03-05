@@ -19,7 +19,7 @@ def read_instance(fname):
         # create polygons from [(l, x, y)]
         return [
             Polygon([Point(p[1:]) for p in poly_points])
-            for indice, poly_points in groupby(points, key=lambda t: t[0])
+            for _, poly_points in groupby(points, key=lambda t: t[0])
         ]
 
 

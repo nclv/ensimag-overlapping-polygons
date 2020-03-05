@@ -78,6 +78,15 @@ class Quadrant:
             )
         )
 
+    def intersect_2(self, other):
+
+        return (
+            self.min_coordinates[0] < other.max_coordinates[0]
+            and self.max_coordinates[0] > other.min_coordinates[0]
+            and self.min_coordinates[1] < other.max_coordinates[1]
+            and self.max_coordinates[1] > other.min_coordinates[1]
+        )
+
     def inflate(self, distance):
         """
         get bigger quadrant containing original one + any point outside
