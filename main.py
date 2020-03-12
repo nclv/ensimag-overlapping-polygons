@@ -13,7 +13,6 @@ import sys
 import multiprocessing
 from itertools import permutations, combinations
 from more_itertools import chunked
-from operator import attrgetter
 
 from geo.quadrant import Quadrant
 from point_in_polygon import (
@@ -25,7 +24,8 @@ from point_in_polygon import (
     crossing_number_v4,
     crossing_number_v5,
 )
-from tycat import read_instance, read_instance_v2, print_polygons
+from segments_intersections import trouve_inclusions_segments
+from tycat import read_instance
 
 
 def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_sec):
@@ -225,7 +225,7 @@ def main():
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
         # send_theo(polygones)
-        inclusions = trouve_inclusions_sorted(polygones)
+        inclusions = trouve_inclusions_segments(polygones)
         print(inclusions)
 
 
