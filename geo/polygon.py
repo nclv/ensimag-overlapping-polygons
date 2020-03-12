@@ -33,6 +33,7 @@ class Polygon:
         ....
 
     """
+
     __slots__ = "points"
 
     def __init__(self, points):

@@ -1,4 +1,3 @@
-
 """
 segment between two points.
 """
@@ -12,9 +11,7 @@ def ccw(A, B, C):
     """A, B, C 3 points, renvoie s'il sont orienté counterclockwise"""
     return (C.coordinates[1] - A.coordinates[1]) * (
         B.coordinates[0] - A.coordinates[0]
-    ) > (B.coordinates[1] - A.coordinates[1]) * (
-        C.coordinates[0] - A.coordinates[0]
-    )
+    ) > (B.coordinates[1] - A.coordinates[1]) * (C.coordinates[0] - A.coordinates[0])
 
 
 class Segment:
@@ -36,6 +33,7 @@ class Segment:
         segment1.intersect(segment2) (bool)
 
     """
+
     __slots__ = "endpoints"
 
     def __init__(self, points):
