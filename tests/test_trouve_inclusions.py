@@ -13,18 +13,31 @@ import pytest
 from tycat import read_instance
 from utils import get_files_matching_ext
 from main import trouve_inclusions, trouve_inclusions_sorted
+from segments_intersections import trouve_inclusions_segments
 
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
-POLY_FILES = get_files_matching_ext(".poly", ["generated.poly"] + [f"generated_from_examples_{i}.poly" for i in range(4, 8)])
+POLY_FILES = get_files_matching_ext(
+    ".poly",
+    ["generated.poly"] + [f"generated_from_examples_{i}.poly" for i in range(4, 8)],
+)
 TESTS_INCLUSIONS = [
     ("10x10.poly", [-1, 0]),
     ("e2.poly", [1, -1, 0, 0]),
     ("e20.poly", [-1, 0, 1, 1]),
     ("e21.poly", [-1, 0, 1, 2]),
     ("e3.poly", [-1, 0, 1, 1, -1, 4, 5, 5]),
+    ("generated_from_examples_1.poly", [1, -1, 0, 0]),
+    (
+        "generated_from_examples_2.poly",
+        [1, -1, 0, 0, 5, -1, 4, 4, 9, -1, 8, 8, 13, -1, 12, 12],
+    ),
 ]
-TROUVE_INCLUSIONS_FUNCTIONS = [trouve_inclusions, trouve_inclusions_sorted]
+TROUVE_INCLUSIONS_FUNCTIONS = [
+    trouve_inclusions,
+    trouve_inclusions_sorted,
+    trouve_inclusions_segments,
+]
 
 
 # ne passe pas sur generated_from_examples_4.poly

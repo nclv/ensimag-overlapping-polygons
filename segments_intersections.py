@@ -72,7 +72,7 @@ def trouve_inclusions_segments(polygones):
     mapping_lignes = trouve_intersections(
         couples_indice_segment, couples_indice_ligne, quadrants, areas
     )
-    pprint(mapping_lignes)
+    # pprint(mapping_lignes)
     return point_in_polygon(mapping_lignes)
 
 
