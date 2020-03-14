@@ -5,7 +5,7 @@
 from geo.segment import Segment
 from geo.point import Point
 from collections import Counter
-# from pprint import pprint
+from pprint import pprint
 from tycat import read_instance
 import sys
 
@@ -45,7 +45,7 @@ def point_in_polygon(mapping_lignes):
 
 
 def get_segments(polygones):
-    max_length = 999.0
+    max_length = 9999.0
     couples_indice_segment = []
     couples_indice_ligne = []
     quadrants = [polygon.bounding_quadrant() for polygon in polygones]
@@ -72,7 +72,7 @@ def trouve_inclusions_segments(polygones):
     mapping_lignes = trouve_intersections(
         couples_indice_segment, couples_indice_ligne, quadrants, areas
     )
-    # pprint(mapping_lignes)
+    pprint(mapping_lignes)
     return point_in_polygon(mapping_lignes)
 
 

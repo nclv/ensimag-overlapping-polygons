@@ -78,6 +78,7 @@ class Segment:
             self.endpoints[0], self.endpoints[1], other.endpoints[1]
         )
 
+
     def is_vertical(self):
         """
         return if we are a truly vertical segment.
