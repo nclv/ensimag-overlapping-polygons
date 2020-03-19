@@ -69,6 +69,24 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
 
     return results
 
+def check_between(polygon1, polygon2):
+    x_coord1, y_coord1 = zip(*[point.coordinates for point in polygon1.points])
+    x_coord2, y_coord2 = zip(*[point.coordinates for point in polygon2.points])
+    
+
+def point_in_between(a, b, c):
+    """c between a and b (abscisses)"""
+
+    dotproduct = (c - a) * (b - a)
+    if dotproduct < 0:
+        return False
+
+    squaredlengthba = (b - a)*(b - a)
+    if dotproduct > squaredlengthba:
+        return False
+
+    return True
+
 
 def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
