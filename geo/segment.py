@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 """
 segment between two points.
@@ -12,9 +14,7 @@ def ccw(A, B, C):
     """A, B, C 3 points, renvoie s'il sont orienté counterclockwise"""
     return (C.coordinates[1] - A.coordinates[1]) * (
         B.coordinates[0] - A.coordinates[0]
-    ) > (B.coordinates[1] - A.coordinates[1]) * (
-        C.coordinates[0] - A.coordinates[0]
-    )
+    ) > (B.coordinates[1] - A.coordinates[1]) * (C.coordinates[0] - A.coordinates[0])
 
 
 class Segment:
@@ -36,6 +36,7 @@ class Segment:
         segment1.intersect(segment2) (bool)
 
     """
+
     __slots__ = "endpoints"
 
     def __init__(self, points):
@@ -79,6 +80,7 @@ class Segment:
         ) and ccw(self.endpoints[0], self.endpoints[1], other.endpoints[0]) != ccw(
             self.endpoints[0], self.endpoints[1], other.endpoints[1]
         )
+
 
     def is_vertical(self):
         """

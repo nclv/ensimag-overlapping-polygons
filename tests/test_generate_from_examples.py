@@ -19,7 +19,7 @@ from utils import tous_entiers_croissante
 def test_polygones_increasing_indexes(number):
     """Vérification de l'odre des indices de chaque polygone"""
 
-    filename = f"generated_from_examples_{number}.poly"
+    filename = config.TESTS_PATH + f"generated_from_examples_{number}.poly"
 
     if not os.path.exists(filename):
         print("Files generation...")

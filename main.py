@@ -13,7 +13,6 @@ import sys
 import multiprocessing
 from itertools import permutations, combinations
 from more_itertools import chunked
-from operator import attrgetter
 
 from geo.quadrant import Quadrant
 from point_in_polygon import (
@@ -25,9 +24,10 @@ from point_in_polygon import (
     crossing_number_v4,
     crossing_number_v5,
 )
-from tycat import read_instance, read_instance_v2, print_polygons
+from segments_intersections import trouve_inclusions_segments
+from tycat import read_instance
 
-
+# ok
 def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
 
@@ -72,7 +72,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
 def check_between(polygon1, polygon2):
     x_coord1, y_coord1 = zip(*[point.coordinates for point in polygon1.points])
     x_coord2, y_coord2 = zip(*[point.coordinates for point in polygon2.points])
-    
+
 
 def point_in_between(a, b, c):
     """c between a and b (abscisses)"""
@@ -87,7 +87,7 @@ def point_in_between(a, b, c):
 
     return True
 
-
+# fonctionne pas
 def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
 
@@ -176,30 +176,6 @@ def trouve_inclusions_multiprocessing(split_polygone, results, polygones):
             ):
                 results[indice_poly1] = indice_poly2
                 #  print(results[combination_indexes[indice][0]])
-
-
-def send_theo(polygones):
-    import socket
-    import time
-
-    TEMPS = 0.2
-    port = 34587
-    hote = "90.127.103.170"
-    connexion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    connexion.connect((hote, port))
-    time.sleep(1)
-    for poly in polygones:
-        k = 0
-        while len(poly.points[k:]) > 20:
-            connexion.send(str(poly.points[k : k + 20]).encode("utf-8"))
-            k += 20
-            time.sleep(TEMPS)
-        connexion.send(str(poly.points[k:]).encode("utf-8"))
-        time.sleep(TEMPS)
-        connexion.send(b"next")
-        time.sleep(TEMPS)
-    connexion.send(b"end")
-    connexion.close()
 
 
 #  aucun gain de temps car les opérations dans la boucle sont déjà peu coûteuses
