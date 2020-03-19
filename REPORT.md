@@ -1,3 +1,6 @@
+# Génération
+- Slow generation: generate some random point and join them randomly. If two edges (a,b) and (c,d) intersect -> swap them to edges (a,c) and (b, d).
+
 # Recherche de solutions
 
 Il n'y a **jamais d'intersection de segments entre deux polygones différents.**

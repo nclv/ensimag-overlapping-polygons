@@ -7,13 +7,34 @@ polygones_generator.py : générateur de polygones
 """
 
 
-import random
+from random import seed, random
 from geo.polygon import Polygon
 from geo.segment import Segment
 from geo.point import Point
 
 
+def random_coordinates_generator(nombre):
+    seed(1)
+    for _ in range(nombre):
+        yield [random(), random()]
+
+def random_points_generator(nombre):
+    return map(Point, random_coordinates_generator(NOMBRE))
+
 def main():
+    NOMBRE = 100
+    segments = [] # contient des listes de deux points
+    for new_pointa, new_pointb in zip(random_points_generator(NOMBRE), random_points_generator(NOMBRE)):
+        new_segment = [new_pointa, new_pointb]
+        for indice in range(len(segments)):
+            pointc, pointd = segments[i]
+            if Segment(new_segment).intersect(Segment([pointc, pointd])):
+                # si intersection, on swap les points
+                new_segment = [new_pointa, pointc]
+                segments[indice] = [new_pointb, pointd]
+            segments.append(new_segment) # on ajoute le segment dans tous les cas
+
+def old_main():
     """main function"""
     nombre_de_points = 100
     coordonnees_des_points = 10
