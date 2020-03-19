@@ -1,10 +1,39 @@
 # Génération
 - Slow generation: generate some random point and join them randomly. If two edges (a,b) and (c,d) intersect -> swap them to edges (a,c) and (b, d).
+-
+
+I propose "deintersection" algorithm.
+
+Let we have n
+
+random points.
+
+n = 10;
+p = RandomReal[1.0, {n, 2}];
+
+We want change the order of this points to get rid of the intersections.
+
+Line segments (p1,p2)
+and (p3,p4) intersect if and only if the signs of areas of triangles p1p2p3 and p1p2p4 are different and the signs of areas of triangles p3p4p1 and p3p4p1
+
+are also different.
+
+enter image description here
+
+Corresponding function
+
+SignedArea[p1_, p2_, p3_] :=
+  0.5 (#1[[2]] #2[[1]] - #1[[1]] #2[[2]]) &[p2 - p1, p3 - p1];
+IntersectionQ[p1_, p2_, p3_, p4_] :=
+  SignedArea[p1, p2, p3] SignedArea[p1, p2, p4] < 0 &&
+   SignedArea[p3, p4, p1] SignedArea[p3, p4, p2] < 0;
 
 # Recherche de solutions
 
 Il n'y a **jamais d'intersection de segments entre deux polygones différents.**
 Si un polygone A est contenu dans plusieurs autres polygones (B et C par exemple) alors il faut retourner le polygone (B ou C) le plus proche de A.
+
+Une ligne horizontale : un xmin et un y
 
 ## Base
 - Si un point d'un polygone A est dans un polygone B alors B contient A. Voir <http://alienryderflex.com/polygon/> pour réaliser ce test.

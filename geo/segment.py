@@ -40,7 +40,7 @@ class Segment:
         """
         create a segment from an array of two points.
         """
-        self.endpoints = sorted(points, key=lambda p: p.coordinates[1])
+        self.endpoints = points
 
     def __eq__(self, other):
         return self.endpoints == other.endpoints

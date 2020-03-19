@@ -14,6 +14,7 @@ from tycat import read_instance
 from utils import get_files_matching_ext
 from main import trouve_inclusions, trouve_inclusions_sorted
 from segments_intersections import trouve_inclusions_segments
+from line_intersections import trouve_inclusions_lines
 
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
@@ -34,11 +35,13 @@ TESTS_INCLUSIONS = [
     ),
 ]
 TROUVE_INCLUSIONS_FUNCTIONS = [
+    trouve_inclusions_sorted
+]
+TROUVE_INCLUSIONS_FUNCTIONS_BAD = [
     trouve_inclusions,
-    trouve_inclusions_sorted,
     trouve_inclusions_segments,
-
-
+    trouve_inclusions_lines
+]
 
 # ne passe pas sur generated_from_examples_4.poly
 @pytest.mark.parametrize("file", POLY_FILES)

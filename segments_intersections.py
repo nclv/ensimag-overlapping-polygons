@@ -26,8 +26,9 @@ def trouve_intersections(
             if poly_indice != ligne_indice:
                 if not quadrants[ligne_indice].intersect_2(quadrants[poly_indice]):
                     continue
-                if areas[poly_indice] < areas[ligne_indice]:
-                    continue
+                # source du mauvais fonctionnement ?
+                # if areas[poly_indice] < areas[ligne_indice]:
+                #     continue
                 if segment.intersect(ligne):
                     crossing_segments.append(poly_indice)
         mapping_lignes.append((ligne_indice, crossing_segments))
