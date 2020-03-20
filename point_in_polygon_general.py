@@ -55,7 +55,8 @@ def trouve_inclusions_general(polygones):
     segments = []
     liste_x = []
     set_y = set()
-    # sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area) ne change rien
+    set_poly = set(range(len(polygones)))
+    # sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area) ?
     for indice, polygon in enumerate(polygones):
         for segment in polygon.segments():
             segment_coord = []
@@ -63,16 +64,19 @@ def trouve_inclusions_general(polygones):
                 coord = point.coordinates
                 segment_coord.append(coord)
                 set_y.add(coord[1])
+                # if indice in set_poly:
+                #     set_y.add(coord[1])
+                #     set_poly.remove(indice)
             segments.append((indice, sorted(segment_coord, key=lambda p: p[1])))
         liste_x.append((indice, polygon.points[0].coordinates[0]))
     segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
-    # print(liste_x, set_y)
-    #pprint(segments)
+    print(liste_x, set_y)
+    pprint(segments)
 
     results = [-1] * len(polygones)
     for ligne in set_y:
         liste_intersections, poly_rencontree = crossing_number_global(segments, ligne)
-        # print(liste_intersections)
+        print(liste_intersections)
         for poly_number, absc in filter(lambda couple: couple[0] in poly_rencontree, liste_x):
             # print(absc)
             less_inter = list(filter(lambda couple: couple[1] < absc, liste_intersections))
