@@ -87,7 +87,7 @@ def point_in_between(a, b, c):
 
     return True
 
-# fonctionne pas
+# fonctionne :)
 def trouve_inclusions(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
 
@@ -219,7 +219,7 @@ def main():
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
         # send_theo(polygones)
-        inclusions = trouve_inclusions_sorted(polygones)
+        inclusions = trouve_inclusions(polygones)
         print(inclusions)
 
 

@@ -27,8 +27,8 @@ from geo.point import Point
 TESTS_2_POLY = [(crossing_number, config.TESTS_PATH + "10x10.poly", True)]
 POLY_FILES = get_files_matching_ext(
     ".poly",
-    [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
 )
+# [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
 POINT_IN_POLYGON_FUNCTIONS = (
     crossing_number_v5,
     crossing_number,
@@ -133,10 +133,7 @@ def test_all_points_in_polygon(function, expected, file):
 @pytest.mark.parametrize("file", POLY_FILES)
 def test_compare_functions(file, functions=POINT_IN_POLYGON_FUNCTIONS):
     polygones = read_instance(file)
-    assert all(
-        [
-            function1(polygones[0], polygones[1].points[0])
-            == function2(polygones[0], polygones[1].points[0])
-            for function1, function2 in zip(functions, functions[1:])
-        ]
-    )
+    results = [function(polygones[0], polygones[1].points[0]) for function in functions]
+    for indice, (res1, res2) in enumerate(zip(results, results[1:])):
+        print("Numéro de la comparaison : ", indice)
+        assert(res1 == res2)
