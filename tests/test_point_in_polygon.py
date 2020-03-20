@@ -27,7 +27,7 @@ from geo.point import Point
 TESTS_2_POLY = [(crossing_number, config.TESTS_PATH + "10x10.poly", True)]
 POLY_FILES = get_files_matching_ext(
     ".poly",
-    [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in range(4, 8)],
+    [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
 )
 POINT_IN_POLYGON_FUNCTIONS = (
     crossing_number_v5,

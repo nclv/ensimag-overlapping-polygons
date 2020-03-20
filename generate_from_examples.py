@@ -8,12 +8,13 @@ generate_from_examples.py: //
 
 
 import numpy as np
+from pprint import pprint
 
 
 NUMBER = 10
 
 
-def generator(number=10, example_file="e2.poly", n=7):
+def generator(number=10, example_file="tests/polyfiles/e2.poly", n=7, path=""):
     """Génération d'un fichier .poly.
 
     Parameters:
@@ -23,19 +24,23 @@ def generator(number=10, example_file="e2.poly", n=7):
     """
     with open(example_file, "r") as file:
         points = np.array([list(map(int, ligne.split())) for ligne in file])
+        save_points = points.copy()
         increment = max(np.bincount(points[:, 0]))
+        save_increment = increment
         for column in range(1, 3):
+            # print(column, increment)
             for i in range(1, number):
-                temp = points.copy()
+                # print(increment)
+                temp = save_points.copy()
                 temp[:, 0] = temp[:, 0] + increment
                 temp[:, column] = temp[:, column] + n * i
-                #print(temp)
                 points = np.append(points, temp, axis=0)
-                increment += increment
+                increment += save_increment
 
-    np.savetxt(f"generated_from_examples_{number}.poly", points, fmt='%i')
+    np.savetxt(path + f"generated_from_examples_{number}.poly", points, fmt='%i')
 
 
 if __name__ == '__main__':
-    for i in range(1, 8):
-        generator(number=i)
+    # for i in range(1, 8):
+    #     generator(number=i)
+    generator(64)
