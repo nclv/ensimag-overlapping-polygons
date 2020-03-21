@@ -15,7 +15,7 @@ from generate_from_examples import generator
 from utils import tous_entiers_croissante
 
 
-@pytest.mark.parametrize("number", [(2**1), (2**2), (2**4), (2**6), (2**7), (2**8)])
+@pytest.mark.parametrize("number", [(2**1), (2**2), (2**4), (2**6), (2**7), (2**8), (2**9)])
 def test_polygones_increasing_indexes(number):
     """Vérification de l'odre des indices de chaque polygone"""
 

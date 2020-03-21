@@ -20,7 +20,7 @@ from point_in_polygon_general import trouve_inclusions_general
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
 POLY_FILES = get_files_matching_ext(
-    ".poly", exceptions=[config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in []]
+    ".poly", exceptions=[config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [256, 512]]
 )
 # [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]]
 TESTS_INCLUSIONS = [

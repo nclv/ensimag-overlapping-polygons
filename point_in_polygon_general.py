@@ -38,11 +38,10 @@ def crossing_number_global(polygon, ligne):
             # poly = ligne[0]
             segment_numero_poly = segment[0]
             # if poly != segment_numero_poly: # on ne compte pas les intersections avec d'autres segments du même polygone
-                #d.append([poly, segment_numero_poly, inter])
             d.append((segment_numero_poly, inter))
         indice += 1
 
-    return sorted(d, key=lambda couple: couple[1])
+    return sorted(d, key=lambda couple: couple[1]) # nécessaire
 
 
 def trouve_inclusions_general(polygones):
@@ -53,7 +52,6 @@ def trouve_inclusions_general(polygones):
 
     ### TEST des QUADRANTS ###
     quadrants = [polygon.bounding_quadrant() for polygon in polygones]
-    areas = [polygon.absolute_area for polygon in polygones]
     # on ne test pas les autres polygones
     poly_couples, _ = zip(*sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area))
     number_couples = set(combinations(poly_couples, 2)) # attention, combinations renvoie un générateur
@@ -73,15 +71,17 @@ def trouve_inclusions_general(polygones):
                 coord = point.coordinates
                 segment_coord.append(coord)
             first_point = points[0].coordinates
-            segments.append((indice, sorted(segment_coord, key=lambda p: p[1])))
+            #segments.append((indice, sorted(segment_coord, key=lambda p: p[1])))
+            segments.append((indice, segment_coord))
             # on ne veut pas de polygones en doublons
             for value in y_points[first_point[1]]:
                 if value[0] == indice:
                     break
             else:
                 y_points[first_point[1]].append((indice, first_point[0]))
-    segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
+    #segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
     # pprint(y_points)
+    # print(len(y_points))
 
     y_points_needed = defaultdict(list)
     poly_found = set()
@@ -98,6 +98,7 @@ def trouve_inclusions_general(polygones):
                 # print(poly_found)
                 y_points_needed[ligne] = value
     # pprint(y_points_needed)
+    # print(len(y_points_needed))
 
     for ligne, value in y_points_needed.items():
         # print(f"y = {ligne}")
@@ -111,11 +112,11 @@ def trouve_inclusions_general(polygones):
             # pprint(less_inter)
             count = Counter(couple[0] for couple in less_inter)
             for indice, intersection_number in count.items():
-                if (poly_number, indice) not in number_couples:
+                if (poly_number, indice) not in number_couples: # nécessaire
                     continue
-                ### TEST des QUADRANTS ###
-                if not quadrants[indice].intersect_2(quadrants[poly_number]):
-                    continue
+                ### TEST des QUADRANTS ### trop long
+                # if not quadrants[indice].intersect_2(quadrants[poly_number]):
+                #     continue
 
                 if intersection_number % 2 == 1:
                     # print(f"Polygone {poly_number} in {indice}")
