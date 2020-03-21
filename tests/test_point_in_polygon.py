@@ -26,7 +26,7 @@ from geo.point import Point
 
 TESTS_2_POLY = [(crossing_number, config.TESTS_PATH + "10x10.poly", True)]
 POLY_FILES = get_files_matching_ext(
-    ".poly",
+    ".poly", exceptions=[config.TESTS_PATH + "1bis.poly"]
 )
 
 # [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
@@ -39,10 +39,8 @@ POINT_IN_POLYGON_FUNCTIONS = (
 )
 
 # erreur 7.poly
-POINT_IN_POLYGON_FUNCTIONS_BAD = (
-    crossing_number_v4,
-    crossing_number_v3_bis,
-)
+POINT_IN_POLYGON_FUNCTIONS_BAD = (crossing_number_v4, crossing_number_v3_bis)
+
 
 @pytest.mark.parametrize("function", POINT_IN_POLYGON_FUNCTIONS)
 def test_point_in_polygon_vertex_on_threshold(function):
@@ -140,4 +138,4 @@ def test_compare_functions(file, functions=POINT_IN_POLYGON_FUNCTIONS):
     results = [function(polygones[0], polygones[1].points[0]) for function in functions]
     for indice, (res1, res2) in enumerate(zip(results, results[1:])):
         print("Numéro de la comparaison : ", indice)
-        assert(res1 == res2)
+        assert res1 == res2

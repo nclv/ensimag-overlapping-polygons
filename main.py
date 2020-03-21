@@ -25,6 +25,7 @@ from point_in_polygon import (
     crossing_number_v5,
 )
 from segments_intersections import trouve_inclusions_segments
+from point_in_polygon_general import trouve_inclusions_general
 from tycat import read_instance
 
 # ok
@@ -219,7 +220,7 @@ def main():
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
         # send_theo(polygones)
-        inclusions = trouve_inclusions_sorted(polygones)
+        inclusions = trouve_inclusions_general(polygones)
         print(inclusions)
 
 

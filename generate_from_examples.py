@@ -46,7 +46,8 @@ def generator2(number=4, example_file="tests/polyfiles/1bis.poly", path=""):
         save_points = points.copy()
         for i in range(2, number + 1):
             temp = save_points.copy()
-            for column in range(3):
+            temp[:, 0] = temp[:, 0] + i
+            for column in range(1, 3):
                 temp[:, column] = temp[:, column] * i
             points = np.append(points, temp, axis=0)
 
