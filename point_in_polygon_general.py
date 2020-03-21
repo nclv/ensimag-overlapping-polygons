@@ -1,9 +1,22 @@
 import sys
 from pprint import pprint
-from tycat import read_instance
-from itertools import groupby, combinations
+from tycat import read_instance, read_instance_v3
+from itertools import combinations, islice, cycle
 from collections import Counter, defaultdict
 
+
+def couples(iterable):
+    """
+    iterate on all couples of given iterable.
+    this will wrap around last element.
+    """
+    return zip(iterable, islice(cycle(iterable), 1, None))
+
+def absolute_area(polygone):
+    return abs(sum(cross_product(p1, p2) for p1, p2 in couples(polygone)) / 2)
+
+def cross_product(p1, p2):
+    return -p1[1] * p2[0] + p1[0] * p2[1]
 
 def crossing_number_global(segments, ordo):
     """Renvoie si le point est dans le polygone.
@@ -55,6 +68,7 @@ def trouve_inclusions_general(polygones):
     poly_indices, _ = zip(*sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area))
     number_couples = set(combinations(poly_indices, 2)) # attention, combinations renvoie un générateur
 
+    # print(number_couples)
     # for indice_poly1, indice_poly2 in number_couples:
     #     if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
     #         continue
@@ -83,10 +97,28 @@ def trouve_inclusions_general(polygones):
                     break
             else:
                 y_points[first_point[1]].append((indice, first_point[0]))
-    #segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
+    # segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
     # pprint(y_points)
     # print(len(y_points))
 
+    # for indice, polygon in enumerate(polygones):
+    #     # poly_indices.append(indice)
+    #     segments_polygon = list(couples(polygon))
+    #     # segments.extend(segments_polygon) # on a pas l'indice
+    #     for segment in segments_polygon:
+    #         segments.append((indice, segment))
+    #     for segment in segments_polygon:
+    #         first_point = segment[0]
+    #         # on ne veut pas de polygones en doublons
+    #         for value in y_points[first_point[1]]:
+    #             if value[0] == indice:
+    #                 break
+    #         else:
+    #             y_points[first_point[1]].append((indice, first_point[0]))
+
+
+    # pprint(y_points)
+    # pprint(segments)
     y_points_needed = defaultdict(list)
     poly_found = set()
     # on ne garde que les lignes avec le plus de points
@@ -138,6 +170,7 @@ def main():
     """
     for fichier in sys.argv[1:]:
         polygones = read_instance(fichier)
+        # polygones = read_instance_v3(fichier)
         inclusions = trouve_inclusions_general(polygones)
         print(inclusions)
 

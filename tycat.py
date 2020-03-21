@@ -29,6 +29,14 @@ def read_instance_v2(filename):
         for indice, poly_points in groupby(points, key=lambda t: t[0]):
             yield int(indice), Polygon([Point(p[1:]) for p in poly_points])
 
+def read_instance_v3(filename):
+    with open(filename, "rt") as file:
+        points = (tuple(map(float, ligne.split())) for ligne in file)
+        # create polygons from [(l, x, y)]
+        return [
+            [p[1:] for p in poly_points]
+            for _, poly_points in groupby(points, key=lambda t: t[0])
+        ]
 
 def main():
     if len(sys.argv) <= 1:
