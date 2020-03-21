@@ -81,7 +81,7 @@ def trouve_inclusions_general(polygones):
             else:
                 y_points[first_point[1]].append((indice, first_point[0]))
     segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
-    pprint(y_points)
+    # pprint(y_points)
 
     y_points_needed = defaultdict(list)
     poly_found = set()
@@ -97,18 +97,18 @@ def trouve_inclusions_general(polygones):
                 poly_found.update(set(poly_indices))
                 # print(poly_found)
                 y_points_needed[ligne] = value
-    pprint(y_points_needed)
+    # pprint(y_points_needed)
 
     for ligne, value in y_points_needed.items():
-        print(f"y = {ligne}")
+        # print(f"y = {ligne}")
         liste_intersections = crossing_number_global(segments, ligne)
         if not liste_intersections: continue
-        pprint(liste_intersections)
+        # pprint(liste_intersections)
         for poly_number, abscisse in value:
             less_inter = [couple for couple in liste_intersections if couple[1] < abscisse]
             if not less_inter: continue
-            print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
-            pprint(less_inter)
+            # print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
+            # pprint(less_inter)
             count = Counter(couple[0] for couple in less_inter)
             for indice, intersection_number in count.items():
                 if (poly_number, indice) not in number_couples:
@@ -118,7 +118,7 @@ def trouve_inclusions_general(polygones):
                     continue
 
                 if intersection_number % 2 == 1:
-                    print(f"Polygone {poly_number} in {indice}")
+                    # print(f"Polygone {poly_number} in {indice}")
                     results[poly_number] = indice
     return results
 
