@@ -40,7 +40,19 @@ def generator(number=10, example_file="tests/polyfiles/e2.poly", n=7, path=""):
     np.savetxt(path + f"generated_from_examples_{number}.poly", points, fmt='%i')
 
 
+def generator2(number=4, example_file="tests/polyfiles/1bis.poly", path=""):
+    with open(example_file, "r") as file:
+        points = np.array([list(map(int, ligne.split())) for ligne in file])
+        save_points = points.copy()
+        for i in range(2, number + 1):
+            temp = save_points.copy()
+            for column in range(3):
+                temp[:, column] = temp[:, column] * i
+            points = np.append(points, temp, axis=0)
+
+    np.savetxt(path + f"generate_{number}.poly", points, fmt='%i')
+
 if __name__ == '__main__':
     # for i in range(1, 8):
     #     generator(number=i)
-    generator(64)
+    generator2(number=4, path="tests/polyfiles/")

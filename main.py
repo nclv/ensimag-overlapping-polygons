@@ -12,7 +12,7 @@ attention donc lors des modifications.
 import sys
 import multiprocessing
 from itertools import permutations, combinations
-from more_itertools import chunked
+#from more_itertools import chunked
 
 from geo.quadrant import Quadrant
 from point_in_polygon import (
