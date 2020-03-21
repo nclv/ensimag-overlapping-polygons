@@ -56,26 +56,7 @@ def crossing_number_global(segments, ordo):
     return sorted(d, key=lambda couple: couple[1], reverse=True) # nécessaire
 
 
-def trouve_inclusions_general(polygones):
-    """problème avec 1
-    ligne qui passe par 3 sommets (2 polygones carré gauche et grand milieu)
-
-    """
-
-    ### TEST des QUADRANTS ###
-    #quadrants = [polygon.bounding_quadrant() for polygon in polygones]
-    # on ne test pas les autres polygones
-    poly_indices, _ = zip(*sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area))
-    number_couples = set(combinations(poly_indices, 2)) # attention, combinations renvoie un générateur
-
-    # print(number_couples)
-    # for indice_poly1, indice_poly2 in number_couples:
-    #     if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
-    #         continue
-
-    nombre_polygones = len(polygones)
-    results = [-1] * nombre_polygones
-    # get all segments
+def get_segments(polygones):
     segments = []
     # poly_indices = []
     # dictionnaire ce clé y et de valeur les points sur y
@@ -97,6 +78,49 @@ def trouve_inclusions_general(polygones):
                     break
             else:
                 y_points[first_point[1]].append((indice, first_point[0]))
+
+    return segments, y_points
+
+def choose_y(y_points, nombre_polygones):
+    y_points_needed = defaultdict(list)
+    poly_found = set()
+    # on ne garde que les lignes avec le plus de points
+    # on veut tous les polygones
+    for ligne, value in sorted(y_points.items(), key=lambda x: len(x[1]), reverse=True):
+        # print(ligne, value)
+        # poly_indices, point = zip(*value)
+        if len(poly_found) == nombre_polygones:
+            break
+        for indice, point in value:
+            if indice not in poly_found:
+                # poly_found.update(set(poly_indices))
+                poly_found.add(indice)
+                # print(poly_found)
+                y_points_needed[ligne].append((indice, point))
+    return y_points_needed
+
+def trouve_inclusions_general(polygones):
+    """problème avec 1
+    ligne qui passe par 3 sommets (2 polygones carré gauche et grand milieu)
+
+    """
+
+    ### TEST des QUADRANTS ###
+    #quadrants = [polygon.bounding_quadrant() for polygon in polygones]
+    # on ne test pas les autres polygones
+    poly_indices, _ = zip(*sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area))
+    number_couples = set(combinations(poly_indices, 2)) # attention, combinations renvoie un générateur
+
+    # print(number_couples)
+    # for indice_poly1, indice_poly2 in number_couples:
+    #     if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+    #         continue
+
+    nombre_polygones = len(polygones)
+    results = [-1] * nombre_polygones
+    # get all segments
+    segments, y_points = get_segments(polygones)
+
     # segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
     # pprint(y_points)
     # print(len(y_points))
@@ -119,21 +143,7 @@ def trouve_inclusions_general(polygones):
 
     # pprint(y_points)
     # pprint(segments)
-    y_points_needed = defaultdict(list)
-    poly_found = set()
-    # on ne garde que les lignes avec le plus de points
-    # on veut tous les polygones
-    for ligne, value in sorted(y_points.items(), key=lambda x: len(x[1]), reverse=True):
-        # print(ligne, value)
-        # poly_indices, point = zip(*value)
-        if len(poly_found) == nombre_polygones:
-            break
-        for indice, point in value:
-            if indice not in poly_found:
-                # poly_found.update(set(poly_indices))
-                poly_found.add(indice)
-                # print(poly_found)
-                y_points_needed[ligne].append((indice, point))
+    y_points_needed = choose_y(y_points, nombre_polygones)
     # pprint(y_points_needed)
     # print(len(y_points_needed))
 
