@@ -41,7 +41,6 @@ TROUVE_INCLUSIONS_FUNCTIONS = [
     trouve_inclusions
 ]
 TROUVE_INCLUSIONS_FUNCTIONS_BAD = [
-    trouve_inclusions,
     trouve_inclusions_lines
 ]
 
