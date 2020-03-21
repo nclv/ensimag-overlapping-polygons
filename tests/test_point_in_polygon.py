@@ -31,15 +31,18 @@ POLY_FILES = get_files_matching_ext(
 
 # [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
 POINT_IN_POLYGON_FUNCTIONS = (
-    crossing_number_v5,
-    crossing_number,
-    crossing_number_v2,
     crossing_number_v3,
-    crossing_number_v4,
-    crossing_number_v3_bis,
+    crossing_number_v2,
+    crossing_number_v5,
     crossing_number_v3_sec,
+    crossing_number,
 )
 
+# erreur 7.poly
+POINT_IN_POLYGON_FUNCTIONS_BAD = (
+    crossing_number_v4,
+    crossing_number_v3_bis,
+)
 
 @pytest.mark.parametrize("function", POINT_IN_POLYGON_FUNCTIONS)
 def test_point_in_polygon_vertex_on_threshold(function):

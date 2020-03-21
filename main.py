@@ -219,7 +219,7 @@ def main():
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
         # send_theo(polygones)
-        inclusions = trouve_inclusions_segments(polygones)
+        inclusions = trouve_inclusions_sorted(polygones)
         print(inclusions)
 
 
