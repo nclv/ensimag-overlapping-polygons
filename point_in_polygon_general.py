@@ -3,6 +3,7 @@ from pprint import pprint
 from tycat import read_instance, read_instance_v3
 from itertools import combinations, islice, cycle
 from collections import Counter, defaultdict
+from operator import itemgetter
 
 
 def couples(iterable):
@@ -18,7 +19,7 @@ def absolute_area(polygone):
 def cross_product(p1, p2):
     return -p1[1] * p2[0] + p1[0] * p2[1]
 
-def crossing_number_global(segments, ordo):
+def crossing_number_global(segments, ordo, max_x):
     """Renvoie si le point est dans le polygone.
 
     Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
@@ -31,47 +32,60 @@ def crossing_number_global(segments, ordo):
         boolean : True if point in polygon
 
     """
-    indice = 0
-    nombre_de_points = len(segments)
     d = []
 
-    while indice < nombre_de_points:
-        segment = segments[indice]
-        sommet0 = segment[1][0]
-        sommet1 = segment[1][1]
-        # test de hauteur
-        if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]): # and (sommet1[0] <= absc or sommet0[0] <= absc):
-            # le membre de gauche est la coordonnée de l'intersection du segment
-            # avec la droite y
-            inter = sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0])
-            #if (sommet1[0] <= inter or sommet0[0] <= inter):
-            # if inter < absc:
-            #     # print("intersection")
-            # poly = ligne[0]
-            segment_numero_poly = segment[0]
-            # if poly != segment_numero_poly: # on ne compte pas les intersections avec d'autres segments du même polygone
-            d.append((segment_numero_poly, inter))
-        indice += 1
+    for poly_indice, points in segments.items():
+        # print(poly_indice, points)
+        counter = 0
+        nombre_de_points = len(points)
+        sommet0 = points[-1]
+        while counter < nombre_de_points:
+            #segment = segments[indice]
+            #sommet0 = segment[1][0]
+            sommet1 = points[counter]
+            # test de hauteur
+            #if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]): # and (sommet1[0] <= absc or sommet0[0] <= absc):
+            if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]) and (sommet1[0] <= max_x or sommet0[0] <= max_x): # la deuxième condition apporte un petit gain
+                # le membre de gauche est la coordonnée de l'intersection du segment
+                # avec la droite y
+                inter = sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0])
+                #if (sommet1[0] <= inter or sommet0[0] <= inter):
+                # if inter < absc:
+                #     # print("intersection")
+                # poly = ligne[0]
+                # segment_numero_poly = segment[0]
+                # if inter < max_x:
+                segment_numero_poly = poly_indice
+                # if poly != segment_numero_poly: # on ne compte pas les intersections avec d'autres segments du même polygone
+                d.append((segment_numero_poly, inter))
+            sommet0 = sommet1
+            counter += 1
 
-    return sorted(d, key=lambda couple: couple[1], reverse=True) # nécessaire
+    return sorted(d, key=lambda couple: couple[1]) # nécessaire
 
 
 def get_segments(polygones):
-    segments = []
+    # les segments du fichier des polygones sont déjà triés
+    # ie. points d'un même polygone à la suite des autres
+    segments = defaultdict(list)
     # poly_indices = []
     # dictionnaire ce clé y et de valeur les points sur y
     y_points = defaultdict(list)
     for indice, polygon in enumerate(polygones):
         # poly_indices.append(indice)
         for segment in polygon.segments():
-            segment_coord = []
-            points = segment.endpoints
-            for point in points:
-                coord = point.coordinates
-                segment_coord.append(coord)
-            first_point = points[0].coordinates
-            #segments.append((indice, sorted(segment_coord, key=lambda p: p[1])))
-            segments.append((indice, segment_coord))
+            # segment_coord = []
+            # points = segment.endpoints
+            # for point in points:
+            #     coord = point.coordinates
+            #     segment_coord.append(coord)
+            # first_point = points[0].coordinates
+            # # on a besoin que du premier point
+            # #segments.append((indice, sorted(segment_coord, key=lambda p: p[1])))
+            # segments.append((indice, segment_coord))
+            # en fait on a besoin que du premier point
+            first_point = segment.endpoints[0].coordinates
+            segments[indice].append(first_point)
             # on ne veut pas de polygones en doublons
             for value in y_points[first_point[1]]:
                 if value[0] == indice:
@@ -149,11 +163,13 @@ def trouve_inclusions_general(polygones):
 
     for ligne, value in y_points_needed.items():
         # print(f"y = {ligne}")
-        liste_intersections = crossing_number_global(segments, ligne)
+        max_x = max(value, key=itemgetter(1))[1]
+        # print(max_x)
+        liste_intersections = crossing_number_global(segments, ligne, max_x)
         if not liste_intersections: continue
         # pprint(liste_intersections)
         for poly_number, abscisse in value:
-            less_inter = [couple for couple in liste_intersections if couple[1] > abscisse]
+            less_inter = [couple for couple in liste_intersections if couple[1] < abscisse]
             #less_inter = liste_intersections
             if not less_inter: continue
             # print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
