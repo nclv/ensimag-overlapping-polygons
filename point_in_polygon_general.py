@@ -19,7 +19,7 @@ def absolute_area(polygone):
 def cross_product(p1, p2):
     return -p1[1] * p2[0] + p1[0] * p2[1]
 
-def crossing_number_global(segments, ordo, max_x):#, poly_number, number_couples):
+def crossing_number_global(segments, ordo, max_x, results):#, poly_number, number_couples):
     """Renvoie si le point est dans le polygone.
 
     Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
@@ -35,6 +35,11 @@ def crossing_number_global(segments, ordo, max_x):#, poly_number, number_couples
     d = []
 
     for poly_indice, points in segments:
+        # après affectation results[poly_number] = indice
+        # lsq ligne indice, il ne faut pas prendre les segments de poly_number
+        for result in results:
+            if result == poly_indice:
+                continue
         # (value[0], poly_indice)
         # if (poly_number, poly_indice) not in number_couples:
         #     continue
@@ -176,7 +181,7 @@ def trouve_inclusions_general(polygones):
         max_x = max(value, key=itemgetter(1))[1]
         # print(max_x)
         # pprint(segments)
-        liste_intersections = crossing_number_global(segments, ligne, max_x)#, value, number_couples)
+        liste_intersections = crossing_number_global(segments, ligne, max_x, results)#, value, number_couples)
         if not liste_intersections: continue
         pprint(liste_intersections)
         for poly_number, abscisse in value:
@@ -215,6 +220,7 @@ def trouve_inclusions_general(polygones):
 
                 if intersection_number % 2 == 1:
                     print(f"Polygone {poly_number} in {indice}")
+                    # lsq ligne indice, il ne faut pas prendre les segments de poly_number
                     results[poly_number] = indice
     return results
 
