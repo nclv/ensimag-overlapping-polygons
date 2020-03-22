@@ -19,7 +19,7 @@ def absolute_area(polygone):
 def cross_product(p1, p2):
     return -p1[1] * p2[0] + p1[0] * p2[1]
 
-def crossing_number_global(segments, ordo, max_x):
+def crossing_number_global(segments, ordo, max_x):#, poly_number, number_couples):
     """Renvoie si le point est dans le polygone.
 
     Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
@@ -35,6 +35,9 @@ def crossing_number_global(segments, ordo, max_x):
     d = []
 
     for poly_indice, points in segments.items():
+        # (value[0], poly_indice)
+        # if (poly_number, poly_indice) not in number_couples:
+        #     continue
         # print(poly_indice, points)
         counter = 0
         nombre_de_points = len(points)
@@ -55,9 +58,8 @@ def crossing_number_global(segments, ordo, max_x):
                 # poly = ligne[0]
                 # segment_numero_poly = segment[0]
                 # if inter < max_x:
-                segment_numero_poly = poly_indice
                 # if poly != segment_numero_poly: # on ne compte pas les intersections avec d'autres segments du même polygone
-                d.append((segment_numero_poly, inter))
+                d.append((poly_indice, inter))
             sommet0 = sommet1
             counter += 1
 
@@ -165,19 +167,21 @@ def trouve_inclusions_general(polygones):
         # print(f"y = {ligne}")
         max_x = max(value, key=itemgetter(1))[1]
         # print(max_x)
-        liste_intersections = crossing_number_global(segments, ligne, max_x)
+        liste_intersections = crossing_number_global(segments, ligne, max_x)#, value, number_couples)
         if not liste_intersections: continue
         # pprint(liste_intersections)
         for poly_number, abscisse in value:
-            less_inter = [couple for couple in liste_intersections if couple[1] < abscisse]
+        # for poly_number, abscisse in value:
+        #     liste_intersections = crossing_number_global(segments, ligne, max_x, poly_number, number_couples)
+            less_inter = [couple for couple in liste_intersections if couple[1] < abscisse and (poly_number, couple[0]) in number_couples]
             #less_inter = liste_intersections
             if not less_inter: continue
             # print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
             # pprint(less_inter)
             count = Counter(couple[0] for couple in less_inter)
             for indice, intersection_number in count.items():
-                if (poly_number, indice) not in number_couples: # nécessaire
-                    continue
+                # if (poly_number, indice) not in number_couples: # nécessaire
+                #     continue
                 ### TEST des QUADRANTS ### trop long
                 # if not quadrants[indice].intersect_2(quadrants[poly_number]):
                 #     continue
