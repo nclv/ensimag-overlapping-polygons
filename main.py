@@ -61,12 +61,13 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
             polygon1[0],
             polygon2[0],
         )
+        if results[indice_poly1] != -1:
+            continue
         if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
             continue
         if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
-            if results[indice_poly1] == -1:
-                results[indice_poly1] = indice_poly2
-                # print(indice_poly1, indice_poly2)
+            results[indice_poly1] = indice_poly2
+            # print(indice_poly1, indice_poly2)
 
     return results
 
