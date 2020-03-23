@@ -98,6 +98,7 @@ class Polygon:
         else:
             return self
 
+    @property
     def bounding_quadrant(self):
         """
         min quadrant containing polygon.

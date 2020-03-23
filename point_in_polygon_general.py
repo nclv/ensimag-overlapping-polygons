@@ -19,7 +19,7 @@ def absolute_area(polygone):
 def cross_product(p1, p2):
     return -p1[1] * p2[0] + p1[0] * p2[1]
 
-def crossing_number_global(segments, ordo, max_x, results):#, poly_number, number_couples):
+def crossing_number_global(segments, ordo, value, min_x, mapping):#, poly_number, number_couples):
     """Renvoie si le point est dans le polygone.
 
     Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
@@ -32,18 +32,19 @@ def crossing_number_global(segments, ordo, max_x, results):#, poly_number, numbe
         boolean : True if point in polygon
 
     """
-    d = []
+    d = value
+    pprint(mapping)
 
     for poly_indice, points in segments:
         # après affectation results[poly_number] = indice
         # lsq ligne indice, il ne faut pas prendre les segments de poly_number
-        for result in results:
-            if result == poly_indice:
-                continue
+        # for result in results:
+        #     if result == poly_indice:
+        #         continue
         # (value[0], poly_indice)
         # if (poly_number, poly_indice) not in number_couples:
         #     continue
-        # print(poly_indice, points)
+        # print(poly_indice)
         counter = 0
         nombre_de_points = len(points)
         sommet0 = points[-1]
@@ -64,23 +65,27 @@ def crossing_number_global(segments, ordo, max_x, results):#, poly_number, numbe
                 # segment_numero_poly = segment[0]
                 # if inter < max_x:
                 # if poly != segment_numero_poly: # on ne compte pas les intersections avec d'autres segments du même polygone
-                print("Polygone avec intersection :", poly_indice)
-                d.append((poly_indice, inter))
+                # print("Polygone avec intersection :", poly_indice)
+                # if inter >= min_x and
+                if not (poly_indice, inter) in d:
+                    d.append((poly_indice, inter))
             sommet0 = sommet1
             counter += 1
 
-    return sorted(d, key=lambda couple: couple[1]) # nécessaire
+    return sorted(d, key=lambda couple: mapping[couple[0]]) # nécessaire
 
 
-def get_segments(polygones):
+def get_segments(sorted_polygones):
     # les segments du fichier des polygones sont déjà triés
     # ie. points d'un même polygone à la suite des autres
     # on a besoin de trier car on enlève des éléments ensuite
     segments = []
+    mapping = dict()
     # poly_indices = []
     # dictionnaire ce clé y et de valeur les points sur y
     y_points = defaultdict(list)
-    for indice, polygon in polygones:
+    for indice, (poly_number, polygon) in enumerate(sorted_polygones):
+        mapping[poly_number] = indice
         # print(compteur)
         # poly_indices.append(indice)
         points = []
@@ -96,17 +101,19 @@ def get_segments(polygones):
             # segments.append((indice, segment_coord))
             # en fait on a besoin que du premier point
             first_point = segment.endpoints[0].coordinates
+            second_point = segment.endpoints[1].coordinates
             #segments[indice].append(first_point)
             points.append(first_point)
             # on ne veut pas de polygones en doublons
-            for value in y_points[first_point[1]]:
-                if value[0] == indice:
-                    break
-            else:
-                y_points[first_point[1]].append((indice, first_point[0]))
-        segments.append((indice, points))
+            #for value in y_points[first_point[1]]:
+            #     if value[0] == poly_number:
+            #         break
+            # else:
+            y_points[first_point[1]].append((poly_number, first_point[0]))
+            y_points[second_point[1]].append((poly_number, second_point[0]))
+        segments.append((poly_number, points))
 
-    return segments, y_points
+    return segments, y_points, mapping
 
 def choose_y(y_points, nombre_polygones):
     y_points_needed = defaultdict(list)
@@ -133,7 +140,7 @@ def trouve_inclusions_general(polygones):
     """
 
     ### TEST des QUADRANTS ###
-    #quadrants = [polygon.bounding_quadrant() for polygon in polygones]
+    quadrants = [polygon.bounding_quadrant for polygon in polygones]
     # on ne test pas les autres polygones
     sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
     #poly_indices, _ = zip(*sorted_polygones)
@@ -147,10 +154,10 @@ def trouve_inclusions_general(polygones):
     nombre_polygones = len(polygones)
     results = [-1] * nombre_polygones
     # get all segments
-    segments, y_points = get_segments(sorted_polygones)
+    segments, y_points, mapping = get_segments(sorted_polygones)
 
     # segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
-    # pprint(y_points)
+    pprint(y_points)
     # print(len(y_points))
 
     # for indice, polygon in enumerate(polygones):
@@ -175,53 +182,107 @@ def trouve_inclusions_general(polygones):
     y_points_needed = choose_y(y_points, nombre_polygones)
     pprint(y_points_needed)
     # print(len(y_points_needed))
-
+    liste_poly_done = []
     for ligne, value in y_points_needed.items():
-        print(f"y = {ligne}")
-        max_x = max(value, key=itemgetter(1))[1]
-        # print(max_x)
-        # pprint(segments)
-        liste_intersections = crossing_number_global(segments, ligne, max_x, results)#, value, number_couples)
-        if not liste_intersections: continue
-        pprint(liste_intersections)
-        for poly_number, abscisse in value:
-        # for poly_number, abscisse in value:
-        #     liste_intersections = crossing_number_global(segments, ligne, max_x, poly_number, number_couples)
-            #print(poly_number)
-            polygones_a_tester = []
-            for count, (indice_poly, liste_segments) in enumerate(segments):
-                # print(indice_poly, count)
-                if count == nombre_segments - 1:
-                    break
-                if indice_poly == poly_number:
-                    polygones_a_tester, _ = zip(*segments[count + 1:])
-                    break
-            if not polygones_a_tester: break
-
+        print(liste_poly_done)
+        for num_poly, _ in value:
+            if num_poly in liste_poly_done:
+                break
+        else:
+            value = y_points[ligne]
+            value.sort(key=lambda couple: couple[1])
+            print(f"y = {ligne}, {value}")
+            min_x = min(value, key=itemgetter(1))[1]
+            # print(max_x)
+            polygones_a_tester, _ = zip(*segments)
             pprint(polygones_a_tester)
-            #liste_intersections = crossing_number_global(segment_a_tester, ligne, max_x)
-            #pprint(liste_intersections)
-            print(f"may be in polygone {poly_number}")
-            #less_inter = [couple for couple in liste_intersections if couple[0] in polygones_a_tester and couple[1] < abscisse]# and (poly_number, couple[0]) in number_couples]
-            #if not less_inter: continue
-            #print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
-            #pprint(less_inter)
-            #count = Counter(couple[0] for couple in less_inter)
-            count = Counter(couple[0] for couple in liste_intersections if couple[0] in polygones_a_tester and couple[1] < abscisse)
-            # on ne retest pas ERREUR
-            # for poly_numb in polygones_a_tester:
-            # del segments[poly_number]
-            for indice, intersection_number in count.items():
-                # if (poly_number, indice) not in number_couples: # nécessaire
-                #     continue
-                ### TEST des QUADRANTS ### trop long
-                # if not quadrants[indice].intersect_2(quadrants[poly_number]):
-                #     continue
+            # pprint(segments)
+            liste_intersections = crossing_number_global(segments, ligne, value, min_x, mapping)#, value, number_couples)
+            if not liste_intersections: continue
+            pprint(liste_intersections)
+            #pprint(list(combinations(liste_intersections, 2)))
 
-                if intersection_number % 2 == 1:
-                    print(f"Polygone {poly_number} in {indice}")
-                    # lsq ligne indice, il ne faut pas prendre les segments de poly_number
-                    results[poly_number] = indice
+            compteur = defaultdict(int)
+            c, sup = 0, len(liste_intersections) - 1
+            done = False
+            for (numero_poly1, interx1), (numero_poly2, interx2) in combinations(liste_intersections, 2):
+                # already done
+                # if results[numero_poly1] != -1:
+                #     c += 1
+                #     continue
+                # cas 0 in 0
+                if numero_poly1 == numero_poly2:
+                    c += 1
+                    continue
+                if not done and interx2 > interx1:
+                    # print(c, sup)
+                    # print((numero_poly1, interx1), (numero_poly2, interx2))
+                    compteur[numero_poly2] += 1
+                    print(compteur)
+                c += 1
+                if c == sup or done:
+                    sup -= 1
+                    c = 0
+                    done = True # flag de la première création du compteur
+                    if compteur:
+                        print(compteur)
+                        # on réduit le compteur tout en continuant à l'incrémenter
+                        first = None
+                        for indice, intersection_number in compteur.items():
+                            if not first: first = indice
+                            if intersection_number % 2 == 1:
+                                print(f"Polygone {numero_poly1} in {indice}")
+                                # lsq ligne indice, il ne faut pas prendre les segments de poly_number
+                                results[numero_poly1] = indice
+                                compteur.pop(first)
+                                liste_poly_done.append(first)
+                                break
+    pprint(y_points_needed)
+        # polygones_a_tester = []
+        # for poly_number, abscisse in value:
+        #     if not segments: break
+        #     segments.pop(avancee)
+        # # for poly_number, abscisse in value:
+        # #     liste_intersections = crossing_number_global(segments, ligne, max_x, poly_number, number_couples)
+        #     #print(poly_number)
+        #     # pprint(segments)
+        #     # polygones_a_tester = []
+        #     # for count, (indice_poly, liste_segments) in enumerate(segments):
+        #     #     # print(indice_poly, count)
+        #     #     if count == nombre_segments - 1:
+        #     #         break
+        #     #     if indice_poly == poly_number:
+        #     #         polygones_a_tester, _ = zip(*segments[count + 1:])
+        #     #         break
+        #     # if not polygones_a_tester: break
+        #     if not polygones_a_tester:
+        #         polygones_a_tester, _ = zip(*segments)
+        #
+        #     pprint(polygones_a_tester)
+        #     #liste_intersections = crossing_number_global(segment_a_tester, ligne, max_x)
+        #     #pprint(liste_intersections)
+        #     # print(f"may be in polygone {poly_number}")
+        #     #less_inter = [couple for couple in liste_intersections if couple[0] in polygones_a_tester and couple[1] < abscisse]# and (poly_number, couple[0]) in number_couples]
+        #     #if not less_inter: continue
+        #     #print(f"Intersections de segments avec {poly_number} sur y = {ligne}")
+        #     #pprint(less_inter)
+        #     #count = Counter(couple[0] for couple in less_inter)
+        #     count = Counter(couple[0] for couple in liste_intersections if couple[0] in polygones_a_tester and couple[1] > abscisse)
+        #
+        #     # on ne retest pas ERREUR
+        #     # for poly_numb in polygones_a_tester:
+        #     # del segments[poly_number]
+        #     for indice, intersection_number in count.items():
+        #         # if (poly_number, indice) not in number_couples: # nécessaire
+        #         #     continue
+        #         ### TEST des QUADRANTS ### trop long
+        #         # if not quadrants[indice].intersect_2(quadrants[poly_number]):
+        #         #     continue
+        #
+        #         if intersection_number % 2 == 1:
+        #             print(f"Polygone {poly_number} in {indice}")
+        #             # lsq ligne indice, il ne faut pas prendre les segments de poly_number
+        #             results[poly_number] = indice
     return results
 
 
