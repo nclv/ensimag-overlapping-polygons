@@ -87,6 +87,26 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
                 # print(indice_poly1, indice_poly2)
                 break
 
+    # i = 0
+    # while i < nombre_polygones:
+    #     polygon1 = poly_couples[i]
+    #     indice_poly1 = polygon1[0]
+    #     if results[indice_poly1] != -1:
+    #         i += 1
+    #         continue
+    #     j = i + 1
+    #     while j < nombre_polygones:
+    #         polygon2 = poly_couples[j]
+    #         j += 1
+    #         indice_poly2 = polygon2[0]
+    #         if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+    #             continue
+    #         if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+    #             results[indice_poly1] = indice_poly2
+    #             # print(indice_poly1, indice_poly2)
+    #             break
+    #     i += 1
+
     return results
 
 def check_between(polygon1, polygon2):
