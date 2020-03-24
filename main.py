@@ -50,24 +50,42 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
     # list((i,j) for ((i,_),(j,_)) in itertools.permutations(enumerate(polygones), 2)) to get indexes
 
     # trier les polygones revient à modifier l'ordre défini dans le fichier .poly, le enumerate permet de conserver cet ordre
-    poly_couples = combinations(sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area), 2)
+    # poly_couples = combinations(sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area), 2)
+    poly_couples = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
     # OR presort by first quadrant scalar ?
     quadrants = [polygon.bounding_quadrant for polygon in polygones]
     # poly_couples_filtered = [couple for couple in poly_couples if quadrants[couple[0][0]].intersect_2(quadrants[couple[1][0]])]
-    results = [-1] * len(polygones)
+    nombre_polygones = len(polygones)
+    results = [-1] * nombre_polygones
+    if nombre_polygones < 2:
+        return
 
-    for polygon1, polygon2 in poly_couples:
-        indice_poly1, indice_poly2 = (
-            polygon1[0],
-            polygon2[0],
-        )
+    # for polygon1, polygon2 in poly_couples:
+    #     indice_poly1, indice_poly2 = (
+    #         polygon1[0],
+    #         polygon2[0],
+    #     )
+    #     if results[indice_poly1] != -1:
+    #         continue
+    #     if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+    #         continue
+    #     if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+    #         results[indice_poly1] = indice_poly2
+    #         # print(indice_poly1, indice_poly2)
+    for i in range(nombre_polygones):
+        polygon1 = poly_couples[i]
+        indice_poly1 = polygon1[0]
         if results[indice_poly1] != -1:
             continue
-        if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
-            continue
-        if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
-            results[indice_poly1] = indice_poly2
-            # print(indice_poly1, indice_poly2)
+        for j in range(i + 1, nombre_polygones):
+            polygon2 = poly_couples[j]
+            indice_poly2 = polygon2[0]
+            if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+                continue
+            if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+                results[indice_poly1] = indice_poly2
+                # print(indice_poly1, indice_poly2)
+                break
 
     return results
 
