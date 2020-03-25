@@ -32,8 +32,10 @@ def crossing_number_global(segments, ordo, value, min_x, mapping):#, poly_number
         boolean : True if point in polygon
 
     """
-    #d = value
-    d = []
+    # on choisi d'ajouter les points correspondants à des extrémités
+    # sinon on peut passer à côté d'un polygone sur cette ligne
+    # mais cela rajoute aussi des éléments inutiles dans la liste d
+    interup, interdown = [], []
     pprint(mapping)
 
     for poly_indice, points in segments:
@@ -49,37 +51,32 @@ def crossing_number_global(segments, ordo, value, min_x, mapping):#, poly_number
         counter = 0
         nombre_de_points = len(points)
         sommet0 = points[-1]
-        y_0 = sommet0[1] > ordo
+        y0, x0 = sommet0[1], sommet0[0]
+        # permet de savoir l'orientation relative de deux segments
         while counter < nombre_de_points:
-            #segment = segments[indice]
-            #sommet0 = segment[1][0]
             sommet1 = points[counter]
-            y_1 = sommet1[1] > ordo
+            y1, x1 = sommet1[1], sommet1[0]
             # print(y_0, y_1, sommet0, sommet1)
-            # si on a une ligne y0 = y1 = ordo on rajoute rien
-            if sommet0[1] == sommet1[1]:
-                d.append((poly_indice, sommet0[0]))
-                y_0 = y_1
-                sommet0 = sommet1
-                counter += 1
-                continue
-
-            if y_0 == y_1:
-                if ordo == sommet0[1]:
-                    d.append((poly_indice, sommet0[0]))
-                if ordo == sommet1[1]:
-                    d.append((poly_indice, sommet1[0]))
-                y_0 = y_1
-                sommet0 = sommet1
-                counter += 1
-                continue
-            # test de hauteur
-            #if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]): # and (sommet1[0] <= absc or sommet0[0] <= absc):
-            if (sommet0[1] > ordo > sommet1[1] or sommet1[1] > ordo > sommet0[1]):# and (sommet1[0] <= max_x or sommet0[0] <= max_x): # la deuxième condition apporte un petit gain
+            
+            # on compte seulement la traversée dans un sens
+            # if y0 == ordo:
+            #     if x0 < x1:
+            #         d.append((poly_indice, x0))
+            #     elif x0 == x1 and y0 < y1:
+            #         d.append((poly_indice, x0))
+            # if y1 == ordo:
+            #     if x0 > x1:
+            #         d.append((poly_indice, x1))
+            #     elif x0 == x1 and y0 < y1:
+            #         d.append((poly_indice, x1))
+            
+            # (y0 >= ordo > y1 or y1 >= ordo > y0) n'ajoute que les traits qui traversent et ceux qui sont au dessus
+            # (y0 > ordo >= y1 or y1 > ordo >= y0) n'ajoute que les traits qui traversent et ceux qui sont en dessous
+            if (y0 >= ordo > y1 or y1 >= ordo > y0):# or (y0 > ordo >= y1 or y1 > ordo >= y0):# and (x1 <= max_x or x0 <= max_x): # la deuxième condition apporte un petit gain
             #if sommet0[1] != sommet1[1]:
                 # le membre de gauche est la coordonnée de l'intersection du segment
                 # avec la droite y
-                inter = sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0])
+                inter = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
                 #if (sommet1[0] <= inter or sommet0[0] <= inter):
                 # if inter < absc:
                 #     # print("intersection")
@@ -91,15 +88,16 @@ def crossing_number_global(segments, ordo, value, min_x, mapping):#, poly_number
                 # if inter >= min_x and
                 #print(sommet0[1], sommet1[1])
                 #if not (poly_indice, inter) in d:
-                d.append((poly_indice, inter))
-            # if sommet0[1] == sommet1[1]:
-            #     print((poly_indice, sommet0[0]))
-            #     d.append((poly_indice, sommet0[0]))
-            y_0 = y_1
+                    #print(inter)
+                interup.append((poly_indice, inter))
+            if (y0 > ordo >= y1 or y1 > ordo >= y0):
+                inter = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
+                interdown.append((poly_indice, inter))
+            y0, x0 = y1, x1
             sommet0 = sommet1
             counter += 1
 
-    return sorted(d, key=lambda couple: mapping[couple[0]]) # nécessaire
+    return sorted(interup, key=lambda couple: mapping[couple[0]]), sorted(interdown, key=lambda couple: mapping[couple[0]]) # nécessaire
 
 
 def get_segments(sorted_polygones):
@@ -166,6 +164,90 @@ def choose_y(y_points, nombre_polygones, nombre_poly_sur_y):
     return y_points_needed
 
 def trouve_inclusions_general(polygones):
+    
+    sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
+    nombre_polygones = len(polygones)
+    results = [-1] * nombre_polygones
+    # get all segments
+    segments, y_points, nombre_poly_sur_y, mapping = get_segments(sorted_polygones)
+    pprint(y_points)
+    pprint(segments)
+    y_points_needed = choose_y(y_points, nombre_polygones, nombre_poly_sur_y)
+    pprint(y_points_needed)
+
+    liste_poly_done = []
+    for ligne, value in y_points_needed.items():
+        print(liste_poly_done)
+        for num_poly, _ in value:
+            if num_poly in liste_poly_done:
+                break
+        else:
+            value = y_points[ligne]
+            value.sort(key=lambda couple: couple[1])
+            print(f"y = {ligne}, {value}")
+            min_x = min(value, key=itemgetter(1))[1]
+            # print(max_x)
+            polygones_a_tester, _ = zip(*segments)
+            pprint(polygones_a_tester)         
+            # pprint(segments)
+            interup, interdown = crossing_number_global(segments, ligne, value, min_x, mapping)
+            if not interup and not interdown: continue
+            print("intersections")
+            pprint(interup)
+            pprint(interdown)
+            liste_intersections = interdown
+            nombre_intersections = len(liste_intersections)
+
+            compteur = defaultdict(int)
+            # x1 = liste_intersections[0][1]
+            # for indice_poly2, x2 in liste_intersections[1:]:
+            #     if x2 > x1:
+            #         compteur[indice_poly2] += 1
+            # print("compteur", compteur)
+            indices_lst = []
+            value = liste_intersections[0][0]
+            for i in range(nombre_intersections):
+                new_value = liste_intersections[i][0]
+                if new_value != value:
+                    indices_lst.append(i - 1)
+                    value = new_value
+            # print(indices_lst)
+            
+            for i in indices_lst:
+                compteur = defaultdict(int)
+                inter1 = liste_intersections[i]
+                indice_poly1 = inter1[0]
+                if results[indice_poly1] != -1:
+                    continue
+                for j in range(i + 1, nombre_intersections):
+                    inter2 = liste_intersections[j]
+                    indice_poly2 = inter2[0]
+                    # on construit le compteur au premier tour
+                    if inter2[1] > inter1[1]:
+                        compteur[indice_poly2] += 1
+                print(compteur)
+                # on réduit le compteur
+                first = None
+                for indice, intersection_number in compteur.items():
+                    if first is None: first = indice
+                    print(first)
+                    if intersection_number % 2 == 1:
+                        print(f"Polygone {indice_poly1} in {indice}")
+                        # lsq ligne indice, il ne faut pas prendre les segments de poly_number
+                        results[indice_poly1] = indice
+                        liste_poly_done.append(first)
+                        break
+    
+    return results
+                
+                # if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+                #     continue
+                # if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+                #     results[indice_poly1] = indice_poly2
+                #     # print(indice_poly1, indice_poly2)
+                #     break
+
+def old_trouve_inclusions_general(polygones):
     """problème avec 1
     ligne qui passe par 3 sommets (2 polygones carré gauche et grand milieu)
 
@@ -190,6 +272,7 @@ def trouve_inclusions_general(polygones):
 
     # segments.sort(key=lambda couple: couple[1][0][1]) # tri selon les y croissants
     pprint(y_points)
+    
     #pprint(mapping)
     #pprint(nombre_poly_sur_y)
     # print(len(y_points))

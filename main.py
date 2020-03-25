@@ -58,7 +58,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_s
     nombre_polygones = len(polygones)
     results = [-1] * nombre_polygones
     if nombre_polygones < 2:
-        return
+        return [-1]
 
     # for polygon1, polygon2 in poly_couples:
     #     indice_poly1, indice_poly2 = (
