@@ -222,3 +222,36 @@ def crossing_number_v5(polygon, point):
         indice += 1
 
     return nombre_impair_de_noeuds
+
+
+def left_line(p0, p1, p2):
+    """Renvoie si un point est à gauche/sur/à droite d'une ligne (pas un segment hein)
+    Return: > 0 pour p2 à gauche de la ligne (p0, p1)
+            = 0 pour p2 sur cette ligne
+            < 0 pour p2 à sa droite
+    """
+    return (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p2[0] -  p0[0]) * (p1[1] - p0[1])
+
+def winding_number(polygon, point):
+    """http://geomalgorithms.com/a03-_inclusion.html"""
+    absc, ordo = point.coordinates
+    points = polygon.points
+    indice = 0
+    nombre_de_points = len(points)
+    sommet0 = points[-1].coordinates
+    nombre_impair_de_noeuds = 0
+
+    while indice < nombre_de_points:
+        sommet1 = points[indice].coordinates
+        if sommet0[1] <= ordo:  # start y <= ordo
+            if sommet1[1] > ordo:   # an upward crossing
+                 if left_line(sommet0, sommet1, [absc, ordo]) > 0:  # P left of  edge
+                     nombre_impair_de_noeuds += 1  # have  a valid up intersect
+        else:  # start y > ordo (no test needed)
+            if sommet1[1] <= ordo:  # a downward crossing
+                 if left_line(sommet0, sommet1, [absc, ordo]) < 0:  # P right of  edge
+                     nombre_impair_de_noeuds -= 1  # have  a valid down intersect
+        sommet0 = sommet1
+        indice += 1
+
+    return nombre_impair_de_noeuds

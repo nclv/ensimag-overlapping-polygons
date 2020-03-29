@@ -23,13 +23,14 @@ from point_in_polygon import (
     crossing_number_v3_sec,
     crossing_number_v4,
     crossing_number_v5,
+    winding_number,
 )
 from segments_intersections import trouve_inclusions_segments
 from point_in_polygon_general import trouve_inclusions_general
 from tycat import read_instance
 
 # ok
-def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_sec):
+def trouve_inclusions_sorted(polygones, is_point_in_polygon=winding_number):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).

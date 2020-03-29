@@ -61,6 +61,8 @@ def crossing_number_global(segments, ordo, mapping):#, poly_number, number_coupl
             #     elif x0 == x1 and y0 < y1:
             #         d.append((poly_indice, x1))
 
+            # (((V[i].y <= P.y) && (V[i+1].y > P.y))     // an upward crossing
+            # || ((V[i].y > P.y) && (V[i+1].y <=  P.y))) // a downward crossing
             # (y0 >= ordo > y1 or y1 >= ordo > y0) n'ajoute que les traits qui traversent et ceux qui sont au dessus
             # (y0 > ordo >= y1 or y1 > ordo >= y0) n'ajoute que les traits qui traversent et ceux qui sont en dessous
             if (y0 >= ordo > y1 or y1 >= ordo > y0):# or (y0 > ordo >= y1 or y1 > ordo >= y0):# and (x1 <= max_x or x0 <= max_x): # la deuxième condition apporte un petit gain
