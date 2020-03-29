@@ -6,7 +6,7 @@ from collections import Counter, defaultdict, OrderedDict
 from operator import itemgetter
 
 
-def crossing_number_global(segments, ordo, mapping):#, poly_number, number_couples):
+def crossing_number_global(segments, ordo, mapping, delim):#, poly_number, number_couples):
     """Renvoie si le point est dans le polygone.
 
     Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
@@ -39,15 +39,17 @@ def crossing_number_global(segments, ordo, mapping):#, poly_number, number_coupl
         #     continue
         # if results[poly_indice] != -1:
         #     continue
-        print(poly_indice)
+        # if delim[poly_indice][1] < ordo or ordo < delim[poly_indice][0]:
+        #         continue
+        # print(poly_indice)
         counter = 0
         nombre_de_points = len(points)
         sommet0 = points[-1]
-        y0, x0 = sommet0[1], sommet0[0]
+        x0, y0 = sommet0.coordinates
         # permet de savoir l'orientation relative de deux segments
         while counter < nombre_de_points:
             sommet1 = points[counter]
-            y1, x1 = sommet1[1], sommet1[0]
+            x1, y1 = sommet1.coordinates
             # print(y_0, y_1, sommet0, sommet1)
 
             # on compte seulement la traversée dans un sens
@@ -194,7 +196,7 @@ def compute_intersections(liste_intersections, results, liste_poly_done):
             # print(first)
             # liste_poly_done.append(indice)
             if intersection_number % 2 == 1:
-                print(f"Polygone {indice_poly1} in {indice}")
+                # print(f"Polygone {indice_poly1} in {indice}")
                 # lsq ligne indice, il ne faut pas prendre les segments de poly_number
                 results[indice_poly1] = indice
                 # liste_poly_done.append(first)
@@ -203,38 +205,71 @@ def compute_intersections(liste_intersections, results, liste_poly_done):
 
 def trouve_inclusions_general(polygones):
 
-    sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
+    
     nombre_polygones = len(polygones)
     results = [-1] * nombre_polygones
+
+    sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
+    mapping = {poly_number: indice for indice, (poly_number, _) in enumerate(sorted_polygones)}
+
+    max_y = lambda poly: max(point.coordinates[1] for point in poly.points)
+    min_y = lambda poly: min(point.coordinates[1] for point in poly.points)
+    delim = [(min_y(polygon), max_y(polygon)) for polygon in polygones]
+
     # get all segments
-    segments, y_points, nombre_poly_sur_y, mapping = get_segments(sorted_polygones)
+    # segments, y_points, nombre_poly_sur_y, mapping = get_segments(sorted_polygones)
     # pprint(y_points)
-    pprint(mapping)
-    pprint(segments)
-    y_points_needed = choose_y(y_points, nombre_polygones, nombre_poly_sur_y)
+    # pprint(mapping)
+    # pprint(segments)
+    # y_points_needed = choose_y(y_points, nombre_polygones, nombre_poly_sur_y)
+    # pprint(y_points_needed)
+    # print(len(y_points_needed))
+
+    # le prétraitement qui suis permet de grouper les polygones susceptibles de s'intersecter
+    # tri des polygones % valeur de y maximale
+    sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
+    done = []
+    # y_lines contient les possibles polygones s'intersectant avec la ligne
+    y_points_needed = defaultdict(list)
+    for indice_poly_1, polygon1 in sorted_y:
+        if indice_poly_1 in done:
+            continue
+        line_ordo = delim[indice_poly_1][1]  # on prend le max sur y (cohérent avec le tri)
+        y_points_needed[line_ordo] += [(indice_poly_1, polygon1.points)]
+        for indice_poly_2, polygon2 in sorted_y:
+            # si le polygone ne peut pas cross la ligne
+            if delim[indice_poly_2][1] < line_ordo or line_ordo < delim[indice_poly_2][0]:
+                continue
+            if indice_poly_2 not in done:
+                done.append(indice_poly_2)
+            if (indice_poly_2, polygon2) not in y_points_needed[line_ordo]:
+                y_points_needed[line_ordo].append((indice_poly_2, polygon2.points))
+
     pprint(y_points_needed)
-    print(len(y_points_needed))
 
     liste_poly_done = [] # cela doit rester un set, mais on peut plus facilement repérer les erreurs avec une liste
     liste_poly_done.append(sorted_polygones[-1][0])
     for ligne, value in y_points_needed.items():
-        print(liste_poly_done)
-        print(f"y = {ligne}, {value}")
+        # print(liste_poly_done)
+        # print(f"y = {ligne}, {value}")
         for indice, _ in value:
             if indice not in liste_poly_done:
                 break
         else:
             continue
-        # pprint(segments)
-        interup, interdown = crossing_number_global(segments, ligne, mapping)
+        # pprint(value)
+        # print(ligne)
+        # on ne passe ici qu'une fois (y = 1) pour les fichiers type 10000)
+        interup, interdown = crossing_number_global(value, ligne, mapping, delim)
         # print("intersections")
-        pprint(interup)
-        pprint(interdown)
+        # pprint(interup)
+        # pprint(interdown)
 
         if interup:
             results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
-        if interdown:
-            results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
+        # gain sans interdown
+        # if interdown:
+        #     results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
 
     return results
 
