@@ -44,15 +44,15 @@ def trouve_inclusions_bis(polygones):
 
     for _, poly_list in y_lines.items():
         nombre_poly = len(poly_list)
-        sorted_poly_list = sorted(poly_list, key=lambda couple: couple[1].absolute_area)
+        poly_list.sort(key=lambda couple: couple[1].absolute_area)
         # pprint(sorted_poly_list)
         for i in range(nombre_poly):
-            polygon1 = sorted_poly_list[i]
+            polygon1 = poly_list[i]
             indice_poly1 = polygon1[0]
             if results[indice_poly1] != -1:
                 continue
             for j in range(i + 1, nombre_poly):
-                polygon2 = sorted_poly_list[j]
+                polygon2 = poly_list[j]
                 indice_poly2 = polygon2[0]
                 # faire les courbes avec et sans pour les fichiers du type 512/256...
                 # très peu efficace sans
