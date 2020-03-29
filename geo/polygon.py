@@ -40,8 +40,6 @@ class Polygon:
         assert len(points) > 2
         self.points = points
         self.num = None
-        self.quadrant = None
-        self.already = False
 
     @classmethod
     def square(cls, start_x, start_y, side):
@@ -118,6 +116,9 @@ class Polygon:
         svg_coordinates = ("{},{}".format(*p.coordinates) for p in self.points)
         svg_formatted = " ".join(svg_coordinates)
         return '<polygon points="{}" fill="none"/>'.format(svg_formatted)
+
+    def __lt__(self, other):
+        return self.absolute_area < other.absolute_area
 
     def __str__(self):
         points = ",\n".join(str(p) for p in self.points)

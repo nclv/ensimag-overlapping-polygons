@@ -27,7 +27,7 @@ from point_in_polygon import (
 )
 from segments_intersections import trouve_inclusions_segments
 from point_in_polygon_general import trouve_inclusions_general
-from point_in_polygon_general_bis import inclusions
+from point_in_polygon_general_bis import trouve_inclusions_bis
 from tycat import read_instance
 
 # ok
@@ -260,8 +260,7 @@ def main():
         polygones = read_instance(fichier)
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
-        # send_theo(polygones)
-        inclusions = inclusions(polygones)
+        inclusions = trouve_inclusions_bis(polygones)
         print(inclusions)
 
 
