@@ -268,8 +268,8 @@ def trouve_inclusions_general(polygones):
         if interup:
             results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
         # gain sans interdown
-        # if interdown:
-        #     results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
+        if interdown:
+            results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
 
     return results
 
