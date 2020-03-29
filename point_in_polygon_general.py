@@ -22,7 +22,8 @@ def crossing_number_global(segments, ordo, mapping):#, poly_number, number_coupl
     # on choisi d'ajouter les points correspondants à des extrémités
     # sinon on peut passer à côté d'un polygone sur cette ligne
     # mais cela rajoute aussi des éléments inutiles dans la liste d
-    interup, interdown = [], []
+    interup = []
+    interdown = []
     # pprint(mapping)
 
     for poly_indice, points in segments:
@@ -131,7 +132,7 @@ def get_segments(sorted_polygones):
 
     for ligne, value in y_points.items():
         seen = set()
-        for indice_poly, absc in value:
+        for indice_poly, _ in value:
             if indice_poly not in seen:
                 seen.add(indice_poly)
                 nombre_poly_sur_y[ligne] += 1
@@ -172,15 +173,16 @@ def compute_intersections(liste_intersections, results, liste_poly_done):
         compteur = defaultdict(int)
         inter1 = liste_intersections[i]
         indice_poly1 = inter1[0]
-        # if indice_poly1 in liste_poly_done:
-        #     break
-        if results[indice_poly1] != -1:
+        if indice_poly1 in liste_poly_done:
             continue
+        # if results[indice_poly1] != -1:
+        #     continue
+        # print(inter1)
         for j in range(i + 1, nombre_intersections):
             inter2 = liste_intersections[j]
             indice_poly2 = inter2[0]
-            if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
-                continue
+            # if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+            #     continue
             if inter2[1] > inter1[1]:
                 compteur[indice_poly2] += 1
         # print(compteur)
@@ -192,7 +194,7 @@ def compute_intersections(liste_intersections, results, liste_poly_done):
             # print(first)
             # liste_poly_done.append(indice)
             if intersection_number % 2 == 1:
-                # print(f"Polygone {indice_poly1} in {indice}")
+                print(f"Polygone {indice_poly1} in {indice}")
                 # lsq ligne indice, il ne faut pas prendre les segments de poly_number
                 results[indice_poly1] = indice
                 # liste_poly_done.append(first)
@@ -207,36 +209,41 @@ def trouve_inclusions_general(polygones):
     # get all segments
     segments, y_points, nombre_poly_sur_y, mapping = get_segments(sorted_polygones)
     # pprint(y_points)
+    pprint(mapping)
     pprint(segments)
     y_points_needed = choose_y(y_points, nombre_polygones, nombre_poly_sur_y)
     pprint(y_points_needed)
+    print(len(y_points_needed))
 
-    liste_poly_done = [] # TODO : revoir l'utilité
+    liste_poly_done = [] # cela doit rester un set, mais on peut plus facilement repérer les erreurs avec une liste
+    liste_poly_done.append(sorted_polygones[-1][0])
     for ligne, value in y_points_needed.items():
-        # print(liste_poly_done)
-        for num_poly, _ in value:
-            if num_poly in liste_poly_done:
+        print(liste_poly_done)
+        print(f"y = {ligne}, {value}")
+        for indice, _ in value:
+            if indice not in liste_poly_done:
                 break
         else:
-            # print(f"y = {ligne}, {value}")
-            # pprint(segments)
-            interup, interdown = crossing_number_global(segments, ligne, mapping)
-            # print("intersections")
-            # pprint(interup)
-            # pprint(interdown)
-            if interup:
-                results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
-            if interdown:
-                results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
+            continue
+        # pprint(segments)
+        interup, interdown = crossing_number_global(segments, ligne, mapping)
+        # print("intersections")
+        pprint(interup)
+        pprint(interdown)
+
+        if interup:
+            results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
+        if interdown:
+            results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
 
     return results
 
-                # if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
-                #     continue
-                # if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
-                #     results[indice_poly1] = indice_poly2
-                #     # print(indice_poly1, indice_poly2)
-                #     break
+# if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+#     continue
+# if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+#     results[indice_poly1] = indice_poly2
+#     # print(indice_poly1, indice_poly2)
+#     break
 
 def old_trouve_inclusions_general(polygones):
     """problème avec 1

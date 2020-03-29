@@ -34,11 +34,14 @@ class Polygon:
 
     """
 
-    __slots__ = "points"
+    # __slots__ = "points"
 
     def __init__(self, points):
         assert len(points) > 2
         self.points = points
+        self.num = None
+        self.quadrant = None
+        self.already = False
 
     @classmethod
     def square(cls, start_x, start_y, side):

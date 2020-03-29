@@ -56,4 +56,4 @@ def generator2(number=4, example_file="tests/polyfiles/1bis.poly", path=""):
 if __name__ == '__main__':
     # for i in range(1, 8):
     #     generator(number=i)
-    generator2(number=4, path="tests/polyfiles/")
+    generator2(number=50000, path="tests/polyfiles/")
