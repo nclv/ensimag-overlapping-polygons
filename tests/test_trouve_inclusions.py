@@ -16,7 +16,7 @@ from main import trouve_inclusions, trouve_inclusions_sorted
 from segments_intersections import trouve_inclusions_segments
 from line_intersections import trouve_inclusions_lines
 from point_in_polygon_general import trouve_inclusions_general
-from point_in_polygon_general_bis import inclusions
+from point_in_polygon_general_bis import trouve_inclusions_bis
 
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
@@ -40,7 +40,7 @@ TROUVE_INCLUSIONS_FUNCTIONS = [
     #trouve_inclusions_segments,
     trouve_inclusions_general,
     #trouve_inclusions,
-    inclusions
+    trouve_inclusions_bis
 ]
 TROUVE_INCLUSIONS_FUNCTIONS_BAD = [
     trouve_inclusions_lines

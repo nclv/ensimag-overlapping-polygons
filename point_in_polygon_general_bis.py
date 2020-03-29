@@ -23,6 +23,7 @@ def trouve_inclusions_bis(polygones):
     # tri des polygones % valeur de y maximale
     sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
     
+    # le prétraitement qui suis permet de grouper les polygones susceptibles de s'intersecter
     done = []
     # y_lines contient les possibles polygones s'intersectant avec la ligne
     y_lines = defaultdict(list)
