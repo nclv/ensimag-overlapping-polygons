@@ -110,9 +110,29 @@ On peut se poser deux questions :
 
 Nous ferons le choix ici de ne compter que les intersections d'abscisses inférieures à l'abscisse du point choisi. Si ce nombre est impair, le point est dans le polygone.
 
-De ce choix découle que l'on peut minimiser le nombre d'intersections calculées en prenant le point du polygone $2$ d'abscisse minimale, et ne considérer que les segments du polygone $1$ dont les points sont d'abscisses inférieures à cette abscisse maximale.
+De ce choix découle que l'on peut minimiser le nombre d'intersections calculées en prenant le point du polygone $2$ d'abscisse minimale, et ne considérer que les segments du polygone $1$ dont les points sont d'abscisses inférieures à cette abscisse maximale. Avec un tri des segments, on peut sortir directement de la boucle sur les segments dès que l'on rencontre un segment dont les deux points sont d'abscisses supérieures à l'abscisse maximale.
 
+Pour éviter d'avoir à calculer d'autres points d'intersections inutiles, on utilise la première observation du paragraphe *Intersection d'une ligne avec $n$ segments*.
+Elle se traduit par :
+```python
+ecart0, ecart1 = y0 - y, y1 - y
+if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
+   continue
+```
 
+Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte. La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
+```python
+(y0 >= ordo > y1 or y1 >= ordo > y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en bas avec une extrémité sur la ligne y
+(y0 > ordo >= y1 or y1 > ordo >= y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en haut avec une extrémité sur la ligne y
+```
+L'inconvénient de cette méthode est que l'on perd des points d'intersections et donc possiblement des polygones. Si l'on est intéressé par l'ensemble des polygones s'intersectant avec la ligne $y$ on est obligé d'effectuer les deux tests, calculant ainsi des points d'intersections en double.
+
+On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par énumération des cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aille du même côté ou non de la ligne), coin supérieur et coin inférieur.
+
+On peut maintenant calculer l'abscisse du point d'intersection et tester si elle est plus petite que celle du point du polygone $2$. Ci-dessous la formule déterminant l'abscisse du point d'intersection.
+```python
+interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
+```
 
 TODO: 
 - Description de crossing_number et winding_number
