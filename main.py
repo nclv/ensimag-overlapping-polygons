@@ -21,6 +21,7 @@ from point_in_polygon import (
     crossing_number_v3,
     crossing_number_v3_bis,
     crossing_number_v3_sec,
+    crossing_number_v3_segments,
     crossing_number_v4,
     crossing_number_v5,
     winding_number,
@@ -31,7 +32,7 @@ from point_in_polygon_general_bis import trouve_inclusions_bis
 from tycat import read_instance
 
 # ok
-def trouve_inclusions_sorted(polygones, is_point_in_polygon=winding_number):
+def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_sec):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
@@ -82,7 +83,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=winding_number):
             indice_poly2 = polygon2[0]
             if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
                 continue
-            if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
+            if is_point_in_polygon(polygon2[1], min(polygon1[1].points)):
                 results[indice_poly1] = indice_poly2
                 # print(indice_poly1, indice_poly2)
                 break

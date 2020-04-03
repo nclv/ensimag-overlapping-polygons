@@ -8,7 +8,7 @@ import sys
 from tycat import read_instance
 from pprint import pprint
 from collections import defaultdict
-from point_in_polygon import crossing_number_v3_sec, winding_number
+from point_in_polygon import crossing_number_v3_sec, crossing_number_v3_segments, winding_number
 
 
 def trouve_inclusions_bis(polygones):
@@ -19,7 +19,7 @@ def trouve_inclusions_bis(polygones):
     min_y = lambda poly: min(point.coordinates[1] for point in poly.points)
 
     delim = [(min_y(polygon), max_y(polygon)) for polygon in polygones]
-    # quadrants = [polygon.bounding_quadrant for polygon in polygones]
+    quadrants = [polygon.bounding_quadrant for polygon in polygones]
     # tri des polygones % valeur de y maximale
     sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
     
@@ -50,16 +50,16 @@ def trouve_inclusions_bis(polygones):
         for i in range(nombre_poly):
             polygon1 = poly_list[i]
             indice_poly1 = polygon1[0]
-            if results[indice_poly1] != -1:
-                continue
+            # if results[indice_poly1] != -1:
+            #     continue
             for j in range(i + 1, nombre_poly):
                 polygon2 = poly_list[j]
                 indice_poly2 = polygon2[0]
                 # faire les courbes avec et sans pour les fichiers du type 512/256...
                 # très peu efficace sans
-                # if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
-                #     continue
-                if crossing_number_v3_sec(polygon2[1], polygon1[1].points[0]):
+                if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
+                    continue
+                if crossing_number_v3_segments(polygon2[1], polygon1[1].points[0]):
                     results[indice_poly1] = indice_poly2
                     # print(indice_poly1, indice_poly2)
                     break

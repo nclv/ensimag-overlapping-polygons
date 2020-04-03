@@ -163,20 +163,63 @@ def crossing_number_v3_sec(polygon, point):
     indice = 0
     nombre_de_points = len(points)
     sommet0 = points[-1].coordinates
+    ecart0 = sommet0[1] - ordo
     nombre_impair_de_noeuds = False
 
     while indice < nombre_de_points:
         sommet1 = points[indice].coordinates
-        ecart0 = sommet0[1] - ordo
         ecart1 = sommet1[1] - ordo
         if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
             sommet0 = sommet1
             indice += 1
             continue
-        if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]) and (sommet1[0] <= absc or sommet0[0] <= absc):
+        if (sommet1[0] <= absc or sommet0[0] <= absc) and (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
                 not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+        ecart0 = ecart1
+        sommet0 = sommet1
+        indice += 1
+
+    return nombre_impair_de_noeuds
+
+
+def crossing_number_v3_segments(polygon, point):
+    """Renvoie si le point est dans le polygone.
+
+    Si le point est exactement sur le bord du polygone, cette fonction peut retourner True ou False.
+
+    Parameters:
+        polygon (Polygon): //
+        point (Point): //
+
+    Returns:
+        boolean : True if point in polygon
+
+    """
+    absc, ordo = point.coordinates
+    segments = sorted(list(polygon.segments()))
+    indice = 0
+    nombre_de_points = len(segments)
+    nombre_impair_de_noeuds = False
+
+    while indice < nombre_de_points:
+        segment = segments[indice].endpoints
+        sommet0 = segment[0].coordinates
+        ecart0 = sommet0[1] - ordo
+        sommet1 = segment[1].coordinates
+        ecart1 = sommet1[1] - ordo
+        if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
+            sommet0 = sommet1
+            indice += 1
+            continue
+        if (sommet1[0] > absc and sommet0[0] > absc):
+            break
+        if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]):
+            # xor plus rapide que ^=
+            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+        ecart0 = ecart1
         sommet0 = sommet1
         indice += 1
 

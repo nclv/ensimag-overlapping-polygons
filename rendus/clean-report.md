@@ -29,6 +29,7 @@ On peut noter aussi que n'importe quelle opération entre deux objects de stocka
 
 Le temps d'exécution asymptotique d'un algorithme est toujours sensible par rapport à l'entrée (dépend entre autre de $n$).
 On veut également que le temps d'exécution soit sensible par rapport à la sortie: si la sortie est volumineuse, c'est normal que l'algorithme soit plus long que si la sortie l'est peu, et dans ce cas, on souhaite un algorithme rapide.
+La sortie est ici dépendante du nombre de polygones contenus dans le fichier $.poly$.
 
 ### Intersection d'une ligne avec $n$ segments
 
@@ -69,7 +70,7 @@ Cette première étape est en $O(n^2)$ (sans compteur l'étape de détermination
 
 Comment alors limiter le nombre de comparaisons (inutiles il s'entend) entre polygones ?
 
-On ne veut pas réaliser les comparaisons inutiles lors d'inclusions multiples. Le critère de l'aire du polygone permet de chosir quelles comparaisons effectuer. A la fois lors d'inclusions multiples où l'on ne compare que les polygones qui sont voisins directs mais aussi plus globalement : on ne va pas tester qu'un polygone 1 d'aire supérieure à un polygone 2 se trouve dans le polygone 2.
+On ne veut pas réaliser les comparaisons inutiles lors d'inclusions multiples. Le critère de l'aire du polygone permet de choisir quelles comparaisons effectuer. A la fois lors d'inclusions multiples où l'on ne compare que les polygones qui sont voisins directs mais aussi plus globalement : on ne va pas tester qu'un polygone $poly_1$ d'aire supérieure à un polygone $poly_2$ se trouve dans le polygone $poly_2$.
 
 Ainsi au lieu de $n^2$ tours de boucle, on en effectue $\frac{n(n - 1)}{2}$. Et si l'on se trouve avec $n$ polygones inclus les uns dans les autres (DESSIN), on n'effectue alors que $n - 1$ comparaisons.
 
@@ -91,15 +92,27 @@ Cela nous rajoute une étape de prétraitement en $O(n.m)$ lors de laquelle on c
 ```
 b1.min_x < b2.max_x and b1.max_x > b2.min_x and b1.min_y < b2.max_y and b1.max_y > b2.min_y
 ```
-Dans le cas où toutes les *bounding boxes* s'intersectent entre elles, ie. on n'a que des inclusions multiples. La complexité temporelle est en $O(n.m + m.(n - 1))$. S'il n'y a aucune intersection, cela fait une complexité en $O(n.m + m.\frac{n(n - 1)}{2})$.
+S'il n'y a aucune intersection entre les *bounding boxes*, cela fait une complexité en $O(n.m + \frac{n(n - 1)}{2})$ (on n'appelle pas l'algorithme PIP). Si toutes les *bounding boxes* s'intersectent, on appelle à chaque tour l'algorithme PIP et la complexité temporelle est donc en $O(n.m + m\frac{n(n - 1)}{2})$. Dans le cas où on n'a que des inclusions multiples, les *bounding boxes* s'intersectent toutes entre elles et la complexité temporelle est en $O(n.m + m.(n - 1))$.
 
 ---
 
-Revenons sur le cas des polygones convexes. Il est possible de vérifier qu'un polygone est convexe en $O(n)$ (indépendamment de s'il est simple ou non d'ailleurs). On peut effectuer cette opération sur les $n$ polygones avant d'entrer dans la boucle de comparaison (voir annexe a.2.), puis utiliser notre algorithme en $O(log(n))$ sur ces polygones.
+Revenons sur le cas des polygones convexes. Il est possible de vérifier qu'un polygone est convexe en $O(m)$ (indépendamment de s'il est simple ou non d'ailleurs). On peut effectuer cette opération sur les $n$ polygones avant d'entrer dans la boucle de comparaison (voir annexe a.2.), puis utiliser notre algorithme en $O(log(m))$ sur ces polygones.
 
-On aurait alors une complexité en $O(n.m + log(m).\frac{n(n - 1)}{2}) = O(m.\frac{n(n - 1)}{2})$ si tous nos polygones étaient convexes.
+On aurait alors une complexité en $O(n.m + log(m).\frac{n(n - 1)}{2})$ si tous nos polygones étaient convexes.
 
----
+### Algorithmes PIP
+
+Le principe de l'algorithme PIP évoqué dans le sujet est de boucler sur les segments du polygone $1$ et de compter les intersections avec une ligne passant par le point du polygone $2$.
+
+On peut se poser deux questions :
+ - comment choisir le point du polygone $2$?
+ - comment choisir la ligne passant par ce point ?
+
+Nous ferons le choix ici de ne compter que les intersections d'abscisses inférieures à l'abscisse du point choisi. Si ce nombre est impair, le point est dans le polygone.
+
+De ce choix découle que l'on peut minimiser le nombre d'intersections calculées en prenant le point du polygone $2$ d'abscisse minimale, et ne considérer que les segments du polygone $1$ dont les points sont d'abscisses inférieures à cette abscisse maximale.
+
+
 
 TODO: 
 - Description de crossing_number et winding_number

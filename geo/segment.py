@@ -48,6 +48,16 @@ class Segment:
     def __eq__(self, other):
         return self.endpoints == other.endpoints
 
+    def __lt__(self, other):
+        """
+        lexicographical comparison % abscisse
+        """
+        ax = self.endpoints[0].coordinates[0]
+        bx = self.endpoints[1].coordinates[0]
+        cx = other.endpoints[0].coordinates[0]
+        dx = other.endpoints[1].coordinates[0]
+        return (ax < cx and ax < dx) or (bx < cx and bx < dx)
+
     def copy(self):
         """
         return duplicate of given segment (no shared points with original,
@@ -123,5 +133,3 @@ class Segment:
     def __repr__(self):
         return "[" + repr(self.endpoints[0]) + ", " + repr(self.endpoints[1]) + "])"
 
-    def __hash__(self):
-        return hash(tuple(self.endpoints))
