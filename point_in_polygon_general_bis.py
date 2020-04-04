@@ -59,7 +59,7 @@ def trouve_inclusions_bis(polygones):
                 # très peu efficace sans
                 if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
                     continue
-                if crossing_number_v3_segments(polygon2[1], polygon1[1].points[0]):
+                if crossing_number_v3_segments(polygon2[1], min(polygon1[1].points)):
                     results[indice_poly1] = indice_poly2
                     # print(indice_poly1, indice_poly2)
                     break

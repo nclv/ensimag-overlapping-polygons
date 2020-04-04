@@ -294,12 +294,12 @@ def winding_number(polygon, point):
         sommet1 = points[indice].coordinates
         if sommet0[1] <= ordo:  # start y <= ordo
             if sommet1[1] > ordo:   # an upward crossing
-                 if left_line(sommet0, sommet1, [absc, ordo]) > 0:  # P left of  edge
-                     nombre_impair_de_noeuds += 1  # have  a valid up intersect
+                 if left_line(sommet0, sommet1, [absc, ordo]) > 0:  # P left of edge
+                     nombre_impair_de_noeuds += 1  # have a valid up intersect
         else:  # start y > ordo (no test needed)
             if sommet1[1] <= ordo:  # a downward crossing
-                 if left_line(sommet0, sommet1, [absc, ordo]) < 0:  # P right of  edge
-                     nombre_impair_de_noeuds -= 1  # have  a valid down intersect
+                 if left_line(sommet0, sommet1, [absc, ordo]) < 0:  # P right of edge
+                     nombre_impair_de_noeuds -= 1  # have a valid down intersect
         sommet0 = sommet1
         indice += 1
 

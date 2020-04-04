@@ -129,7 +129,7 @@ L'inconvénient de cette méthode est que l'on perd des points d'intersections e
 
 On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par énumération des cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aille du même côté ou non de la ligne), coin supérieur et coin inférieur.
 
-On peut maintenant calculer l'abscisse du point d'intersection et tester si elle est plus petite que celle du point du polygone $2$. Ci-dessous la formule déterminant l'abscisse du point d'intersection.
+On peut maintenant calculer l'abscisse du point d'intersection et tester si elle est plus petite que celle du point du polygone $2$. Ci-dessous la formule déterminant l'abscisse du point d'intersection :
 ```python
 interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
 ```
