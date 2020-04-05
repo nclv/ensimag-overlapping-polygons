@@ -127,15 +127,27 @@ Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe pl
 ```
 L'inconvénient de cette méthode est que l'on perd des points d'intersections et donc possiblement des polygones. Si l'on est intéressé par l'ensemble des polygones s'intersectant avec la ligne $y$ on est obligé d'effectuer les deux tests, calculant ainsi des points d'intersections en double.
 
-On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par énumération des cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aille du même côté ou non de la ligne), coin supérieur et coin inférieur.
+On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par énumération des cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aillent du même côté ou non de la ligne), coin supérieur et coin inférieur.
 
 On peut maintenant calculer l'abscisse du point d'intersection et tester si elle est plus petite que celle du point du polygone $2$. Ci-dessous la formule déterminant l'abscisse du point d'intersection :
 ```python
 interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
 ```
 
+---
+
+La méthode précédente se prête aux erreurs numériques (et possiblement une division par 0 si l'on change les conditions du $if$) lors du calcul de l'intersection. Il est possible de ne pas réaliser ce calcul.
+
+En effet, avec un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas (DESSIN http://geomalgorithms.com/a03-_inclusion.html). Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
+
+Déterminer la position relative d'un point par rapport à une ligne peut se faire par un simple calcul d'aire signé.
+```python
+(x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0)
+```
+Si cette aire est positive (resp. négative), le point 2 à gauche (resp. droite) du segment orienté $[p0, p1]$.
+
+
 TODO: 
-- Description de crossing_number et winding_number
 - Le tracé d'une ligne
 - L'importance du choix de la division lsq diviser pour régner
 
@@ -149,6 +161,10 @@ Nous avons cherché les cas qui pourraient poser problème à nos algorithmes et
 Nous pouvons actuellement générer :
  - l'inclusion d'un très grand nombre de polygones,
  - la duplication d'un ensemble de polygones selon l'axe des ordonnées, l'axe des abscisses ou les deux axes,
+
+## Mesures temporelles
+
+On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
 
 ## Annexes
 a.1.
