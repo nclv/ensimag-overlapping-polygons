@@ -252,14 +252,14 @@ def trouve_inclusions_general(polygones):
     for ligne, value in y_points_needed.items():
         # print(liste_poly_done)
         # print(f"y = {ligne}, {value}")
-        for indice, _ in value:
-            if indice not in liste_poly_done:
-                break
-        else:
-            continue
+        # for indice, _ in value:
+        #     if indice not in liste_poly_done:
+        #         break
+        # else:
+        #     continue
         # pprint(value)
         # print(ligne)
-        # on ne passe ici qu'une fois (y = 1) pour les fichiers type 10000)
+        # on ne passe ici qu'une fois (y = 1) pour les fichiers overlapping_square)
         interup, interdown = crossing_number_global(value, ligne, mapping, delim)
         # print("intersections")
         # pprint(interup)
@@ -268,7 +268,7 @@ def trouve_inclusions_general(polygones):
         if interup:
             results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
         # gain sans interdown
-        if interdown:
+        if interdown and interdown != interup:
             results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
 
     return results

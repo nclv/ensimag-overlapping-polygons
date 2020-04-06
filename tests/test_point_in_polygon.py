@@ -17,6 +17,7 @@ from point_in_polygon import (
     crossing_number_v3,
     crossing_number_v3_bis,
     crossing_number_v3_sec,
+    crossing_number_v3_segments,
     crossing_number_v4,
     crossing_number_v5,
 )
@@ -26,7 +27,7 @@ from geo.point import Point
 
 TESTS_2_POLY = [(crossing_number, config.TESTS_PATH + "10x10.poly", True)]
 POLY_FILES = get_files_matching_ext(
-    ".poly", exceptions=[config.TESTS_PATH + "1bis.poly"]
+    ".poly", exceptions=[config.TESTS_PATH + "1_square.poly"]
 )
 
 # [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]],
@@ -35,6 +36,7 @@ POINT_IN_POLYGON_FUNCTIONS = (
     crossing_number_v2,
     crossing_number_v5,
     crossing_number_v3_sec,
+    crossing_number_v3_segments,
     crossing_number,
 )
 

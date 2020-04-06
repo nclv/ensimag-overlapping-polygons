@@ -63,7 +63,6 @@ def trouve_inclusions_bis(polygones):
                     results[indice_poly1] = indice_poly2
                     # print(indice_poly1, indice_poly2)
                     break
-    
     return results
 
 

@@ -21,7 +21,7 @@ from point_in_polygon_general_bis import trouve_inclusions_bis
 
 # TROUVE_INCLUSIONS_FUNCTIONS = (trouve_inclusions)
 POLY_FILES = get_files_matching_ext(
-    ".poly", exceptions=[config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [256, 512]]
+    ".poly", exceptions=[config.TESTS_PATH + f"upper_and_left_duplication_{i}.poly" for i in [256, 512]]
 )
 # [config.TESTS_PATH + "generated.poly"] + [config.TESTS_PATH + f"generated_from_examples_{i}.poly" for i in [2, 4, 8, 16, 64, 128, 256]]
 TESTS_INCLUSIONS = [
@@ -31,7 +31,7 @@ TESTS_INCLUSIONS = [
     (config.TESTS_PATH + "e21.poly", [-1, 0, 1, 2]),
     (config.TESTS_PATH + "e3.poly", [-1, 0, 1, 1, -1, 4, 5, 5]),
     (
-        config.TESTS_PATH + "generated_from_examples_2.poly",
+        config.TESTS_PATH + "upper_and_left_duplication_2.poly",
         [1, -1, 0, 0, 5, -1, 4, 4, 9, -1, 8, 8],
     ),
 ]

@@ -32,7 +32,7 @@ from point_in_polygon_general_bis import trouve_inclusions_bis
 from tycat import read_instance
 
 # ok
-def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_sec):
+def trouve_inclusions_sorted(polygones, is_point_in_polygon=crossing_number_v3_segments):
     """Renvoie le vecteur des inclusions
 
     La ieme case contient l'indice du polygone contenant le ieme polygone (-1 si aucun).
@@ -259,7 +259,7 @@ def main():
         polygones = read_instance(fichier)
         #  polygones = read_instance_v2(fichier)
         #  inclusions = trouve_inclusions_diviser(polygones)
-        inclusions = trouve_inclusions_bis(polygones)
+        inclusions = trouve_inclusions_sorted(polygones)
         print(inclusions)
 
 

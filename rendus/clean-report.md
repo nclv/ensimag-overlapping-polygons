@@ -151,6 +151,18 @@ TODO:
 - Le tracé d'une ligne
 - L'importance du choix de la division lsq diviser pour régner
 
+Liste des fichiers à tester :
+ - (8/12)_polygons_multiples_inclusions, 1_square, 4_triangles_multiples_inclusions, 19_polygons_some_overlapping, 14_polygons_limit_cases, 3_polygons_limit_case
+ - 8_polygons_1round_shape
+ - 17_squares_overlapping
+ - 2_circular_shape
+ - 147_polygons_without_overlap
+ - 25_polygons_around_1complex_shape
+
+Liste des algorithmes :
+ - Avec crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
+ - trouve_inclusions, trouve_inclusions_sorted, trouve_inclusions_bis, trouve_inclusions_general (avec et sans test des quadrants)
+
 ## Générateurs d'entrées
 
 S'il est important de distinguer le comportement asymptotique du temps d'exécution réelle de notre algorithme, c'est en partie parce que les paramètres en entrée sont déterminants.
