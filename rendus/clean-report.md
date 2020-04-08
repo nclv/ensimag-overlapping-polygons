@@ -151,13 +151,19 @@ TODO:
 - Le tracé d'une ligne
 - L'importance du choix de la division lsq diviser pour régner
 
-Liste des fichiers à tester :
+Liste des fichiers pour les tests de correction :
  - (8/12)_polygons_multiples_inclusions, 1_square, 4_triangles_multiples_inclusions, 19_polygons_some_overlapping, 14_polygons_limit_cases, 3_polygons_limit_case
  - 8_polygons_1round_shape
  - 17_squares_overlapping
+ - 10x10, 10x20c10000, e2
+
+Liste des fichiers pour les tests de performance :
+ - e2, 10x10
  - 2_circular_shape
  - 147_polygons_without_overlap
  - 25_polygons_around_1complex_shape
+ - overlapping_square_4 / 100 / 1000 / ...
+ - upper_and_left_duplication_2 / 64 / 256 / ...
 
 Liste des algorithmes :
  - Avec crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5

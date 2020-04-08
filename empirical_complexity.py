@@ -8,7 +8,6 @@ empirical_complexity.py : Calcule la complexité empirique par une régression.
 
 import sys
 from collections import defaultdict
-from math import log2  # on effectue n *= 2
 from pprint import pprint
 from time import perf_counter_ns
 
@@ -51,9 +50,6 @@ def convert_ns(nanos):
 
 
 def empirical_complexity(functions_list, pip_functions, argument_function):
-    """
-    See https://algorithmtutor.com/Analysis-of-Algorithm/Empirical-way-of-calculating-running-time/
-    """
 
     # on aura max_appels - 2 mesures temporelles dans times
     # on a de 1 à max_appels - 1 mesures temporelles cumulées
@@ -143,7 +139,7 @@ def main():
     ]
     polygones = read_instance(sys.argv[1])
 
-    values, times = empirical_complexity(functions_list, pip_functions, polygones,)
+    values, times = empirical_complexity(functions_list, pip_functions, polygones)
 
     # affichages_multiples(values, times)
 
