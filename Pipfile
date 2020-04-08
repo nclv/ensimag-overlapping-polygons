@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+black = "*"
 
 [packages]
 pytest = "*"
@@ -15,3 +16,6 @@ scipy = "*"
 
 [requires]
 python_version = "3.8.2"
+
+[pipenv]
+allow_prereleases = true
