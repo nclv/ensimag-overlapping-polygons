@@ -2,6 +2,8 @@
 
 flags : DESSIN, 
 
+Tous les fichiers du projet ne sont pas contenu dans l'archive. Les modifications apportées au module $geo$, certains affichages complémentaires, d'autres fichiers $.poly$, les jeux de tests, les programmes générateurs ainsi que l'ensemble des programmes développés lors de notre recherche de solution mais n'ayant pas aboutis se trouve sur le gitlab du projet.
+
 ## Analyse du problème
 
 ### Rappel du sujet

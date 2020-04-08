@@ -15,7 +15,7 @@ NUMBER = 10
 
 
 def generator(number=10, example_file="tests/polyfiles/e2.poly", n=7, path=""):
-    """Génération d'un fichier .poly.
+    """Duplication d'un fichier .poly selon l'axe des abscisses et des ordonnées.
 
     Parameters:
         n (int) : gère l'espacement entre les motifs, variable selon example_file.
@@ -37,10 +37,13 @@ def generator(number=10, example_file="tests/polyfiles/e2.poly", n=7, path=""):
                 points = np.append(points, temp, axis=0)
                 increment += save_increment
 
-    np.savetxt(path + f"generated_from_examples_{number}.poly", points, fmt='%i')
+    np.savetxt(path + f"generated_from_examples_{number}.poly", points, fmt="%i")
 
 
 def generator2(number=4, example_file="tests/polyfiles/1bis.poly", path=""):
+    """Simple duplicateur permettant de créer des inclusions multiples de carrés.
+
+    """
     with open(example_file, "r") as file:
         points = np.array([list(map(int, ligne.split())) for ligne in file])
         save_points = points.copy()
@@ -51,9 +54,10 @@ def generator2(number=4, example_file="tests/polyfiles/1bis.poly", path=""):
                 temp[:, column] = temp[:, column] * i
             points = np.append(points, temp, axis=0)
 
-    np.savetxt(path + f"generate_{number}.poly", points, fmt='%i')
+    np.savetxt(path + f"generate_{number}.poly", points, fmt="%i")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # for i in range(1, 8):
     #     generator(number=i)
     generator2(number=50000, path="tests/polyfiles/")
