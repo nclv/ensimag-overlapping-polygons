@@ -13,7 +13,7 @@ La liste $results$ contient
  - $-1$ à l'indice $i$ lorsque le $i$-ème polygone du fichier $.poly$ n'est inclu dans aucun autre polygone,
  - l'indice $j$ du polygone à l'indice $i$ lorsque le $i$-ème polygone du fichier $.poly$ est inclu dans le $j$-ème polygone du fichier $.poly$.
 
-Que faire lorsqu'un polygone $i$ est inclus dans plusieurs autres polygones ? On chosit de récupérer dans $results$ le polygone le plus proche du polygone $i$, ie. le polygone d'aire la plus petite dans lequel se trouve le polygone $i$.
+Que faire lorsqu'un polygone $i$ est inclu dans plusieurs autres polygones ? On choisit de récupérer dans $results$ le polygone le plus proche du polygone $i$, ie. le polygone d'aire la plus petite dans lequel se trouve le polygone $i$.
 
 ---
 
@@ -27,9 +27,9 @@ Donc un polygone simple avec $n$ sommets nécessite un stockage linéaire, ie. e
 
 NB. Plutôt que de voir un polygone comme un ensemble de segments (comportants deux extrémités), on peut voir un polygone comme une ligne continue (ie. un ensemble de points) et ainsi réduire par deux le nombre de réels décrivant notre polygone.
 
-On peut noter aussi que n'importe quelle opération entre deux objects de stockages constant prend un temps constant. On peut penser ici à des opérations comme un calcul de distance ou d'intersection.
+On peut noter aussi que n'importe quelle opération entre deux objets de stockage constant prend un temps constant. On peut penser ici à des opérations comme un calcul de distance ou d'intersection.
 
-Le temps d'exécution asymptotique d'un algorithme est toujours sensible par rapport à l'entrée (dépend entre autre de $n$).
+Le temps d'exécution asymptotique d'un algorithme est toujours sensible par rapport à l'entrée.
 On veut également que le temps d'exécution soit sensible par rapport à la sortie: si la sortie est volumineuse, c'est normal que l'algorithme soit plus long que si la sortie l'est peu, et dans ce cas, on souhaite un algorithme rapide.
 La sortie est ici dépendante du nombre de polygones contenus dans le fichier $.poly$.
 
