@@ -92,40 +92,50 @@ def trouve_inclusions_groupy(polygones, pip_function):
     
     # le prétraitement qui suit permet de grouper les polygones susceptibles de s'intersecter
     done = []
+    nombre_poly_done = 0
     # y_lines contient les possibles polygones s'intersectant avec la ligne
     y_lines = defaultdict(list)
     for indice_poly_1, polygon1 in sorted_y:
+        if nombre_poly_done == nombre_polygones:
+            break
         if indice_poly_1 in done:
             continue
-        line_ordo = delim[indice_poly_1][1]  # on prend le max sur y (cohérent avec le tri)
-        y_lines[line_ordo] += [(indice_poly_1, polygon1)]
+        line_ordo = delim[indice_poly_1][1]  # on prend le max sur y du polygone (cohérent avec le tri)
         for indice_poly_2, polygon2 in sorted_y:
-            # si le polygone ne peut pas cross la ligne
+            # la ligne ne traverse pas le polygone
             if delim[indice_poly_2][1] < line_ordo or line_ordo < delim[indice_poly_2][0]:
                 continue
+            # la ligne traverse le polygone et c'est la première fois qu'on voit le polygone
             if indice_poly_2 not in done:
                 done.append(indice_poly_2)
-            if (indice_poly_2, polygon2) not in y_lines[line_ordo]:
-                y_lines[line_ordo].append((indice_poly_2, polygon2))
+                nombre_poly_done += 1
+            y_lines[line_ordo].append((indice_poly_2, polygon2))
     
     # pprint(y_lines)
 
+    # on évite de reboucler sur des polygones déjà traités
+    seen = []
     for _, poly_list in y_lines.items():
         nombre_poly = len(poly_list)
         poly_list.sort(key=lambda couple: couple[1].absolute_area)
-        # pprint(sorted_poly_list)
+        # pprint(poly_list)
         for i in range(nombre_poly - 1):
             polygon1 = poly_list[i]
             indice_poly1 = polygon1[0]
-            # if results[indice_poly1] != -1:
-            #     continue
+            if indice_poly1 in seen:
+                break
+            seen.append(indice_poly1)
+            # print(seen)
+            # print("1", indice_poly1)
             for j in range(i + 1, nombre_poly):
                 polygon2 = poly_list[j]
                 indice_poly2 = polygon2[0]
+                # print("2", indice_poly2)
                 # faire les courbes avec et sans pour les fichiers du type 512/256...
                 # très peu efficace sans
                 if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
                     continue
+                # ici le min % aux abscisses
                 if pip_function(polygon2[1], min(polygon1[1].points)):
                     results[indice_poly1] = indice_poly2
                     # print(indice_poly1, indice_poly2)

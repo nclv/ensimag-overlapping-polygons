@@ -83,6 +83,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=winding_number):
             indice_poly2 = polygon2[0]
             if not quadrants[indice_poly1].intersect_2(quadrants[indice_poly2]):
                 continue
+            # min % abscisses, pbl pour 3_polygons_limit_case.poly
             if is_point_in_polygon(polygon2[1], min(polygon1[1].points)):
                 results[indice_poly1] = indice_poly2
                 # print(indice_poly1, indice_poly2)

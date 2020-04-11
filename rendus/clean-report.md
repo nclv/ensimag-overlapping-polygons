@@ -4,6 +4,8 @@ flags : DESSIN,
 
 Tous les fichiers du projet ne sont pas contenu dans l'archive. Les modifications apportées au module $geo$, certains affichages complémentaires, d'autres fichiers $.poly$, les jeux de tests, les programmes générateurs ainsi que l'ensemble des programmes développés lors de notre recherche de solution mais n'ayant pas aboutis se trouve sur le gitlab du projet.
 
+Une liste des algorithmes et fichiers de tests est présente en annexe $a.3.$.
+
 ## Analyse du problème
 
 ### Rappel du sujet
@@ -86,6 +88,7 @@ Ainsi au lieu de $n^2$ tours de boucle, on en effectue $\frac{n(n - 1)}{2}$. Et 
 Passons à **l'inclusion en elle-même** (ie. ce que l'on effectue dans notre boucle).
 
 L'algorithme PIP (Point In Polygon) évoqué dans le sujet a une complexité en $O(m)$ où $m$ est le nombre de segments du polygone.
+$m$ représentera par la suite le nombre moyen de segments par polygone.
 
 > Certaines propriétés des polygones permettent de simplifier des algorithmes. Il est ainsi possible de vérifier si un point se trouve dans un polygone **convexe** en $O(log(m))$ (Voir annexe a.1.).
 
@@ -171,17 +174,83 @@ Jusqu'ici nous avons tracé une droite par polygone alors qu'il est possible (m�
 On recherche alors **le plus petit ensemble de droites** tel que chaque droite s'intersecte avec plusieurs polygones.
 Pour nous simplifier la vie, on suppose toujours que les droites sont horizontales.
 
-> Quelle différence y aurait-il eu à choisir des droites verticales ? Pour répondre à cette question il faut se ramener à des exemples précis du même type que les fichiers `upper_and_left_duplication.poly`. En effet, avec une ligne horizontale de polygones, on obtiendra une seule ligne horizontale et autant de lignes verticales qu'il y a de groupes de polygones inclus les uns dans les autres. C'est l'inverse pour une ligne verticale de polygones. Alors faut-il avoir le plus possible de lignes ou le moins possible ? ça dépend de ce que l'on compte en faire...
+> Quelle différence(s) y aurait-il eu à choisir des droites verticales ? Pour répondre à cette question il faut se ramener à des exemples précis du même type que les fichiers `upper_and_left_duplication.poly`. En effet, avec une ligne horizontale de polygones, on obtiendra une seule ligne horizontale et autant de lignes verticales qu'il y a de groupes de polygones inclus les uns dans les autres. C'est l'inverse pour une ligne verticale de polygones. Alors faut-il avoir le plus possible de lignes ou le moins possible ? ça dépend de ce que l'on compte en faire...
+
+---
+
+On se retrouve avec une liste de couples droite / liste de polygones. Pour chaque droite, on peut appliquer l'algorithme précédent à la liste de polygones correspondante.
+
+Analysons l'étape de précalcul de l'ensemble de droite.
+
+Dans le pire des cas on se retrouve avec une droite par polygone (ie. $n$ polygones alignés verticalements sans inclusions) et une complexité en $O(n^2)$. Dans le meilleur des cas on a une seule droite (ie. $n$ polygones alignés horizontalements) et une complexité en $O(n)$.
+
+Sinon, on note $k$ le nombre de polygones traversés par la même ligne et $r$ le nombre de nouveaux (ie. qu'on a pas encore rencontré parmi tous les $k$ précédents) polygones parmi ces $k$ polygones on a une complexité en $O(r.k)$.
+
+On a ensuite notre traitement en $O(p(m - 1) + \frac{n(n - 1)}{2})$ pour une moyenne de $p$ appels à l'algorithme PIP (ie. $p$ intersections de *bounding boxes*, le nombre d'appels allant de $0$ à $\frac{n(n - 1)}{2}$) - effectué pour chaque ligne.
+
+En résumé pour $l$ lignes, on a une complexité en $O(n.m + r.k + l.\big(p(m - 1) + \frac{n(n - 1)}{2}\big)$.
+
+---
+
+Cela semble moins intéressant que notre première approche. Néanmoins nous n'avons pas développé la complexité des tris utilisés.
+
+Avec notre première approche, on effectue un unique tri par aire sur les $n$ polygones en prétraitement.
+
+Dans cette nouvelle approche, on effectue un tri par la valeur de l'ordonnée maximale des points du polygone sur les $n$ polygones en prétraitement. Mais ce n'est pas l'unique tri effectué. On tri ensuite par aire les $k$ polygones traversés par la même ligne à chaque itération sur l'ensemble des lignes.
+
+Faire un nombre plus élevé de tri sur un ensemble de valeurs plus restreint semble plus efficace avec l'algorithme *Timsort* que de faire un unique tri sur toutes les valeurs.
+
+---
+
+On peut encore avoir une autre approche nécessitant de modifier notre fonction PIP. Celle-ci renverra la liste des points d'intersections entre la ligne et les segments des polygones. On effectuerait ensuite le comptage du nombre d'intersections.
+
+Nous avons développé une ébauche fonctionnelle d'algorithme réalisant cette approche. Nous avons rencontré des problèmes pour récupérer le bon nombre d'intersections et n'avons pas développé d'algorithme efficace permettant de relever toutes les intersections en un seul appel.
+
+Une piste d'amélioration serait d'inclure tous les compteurs des polygones d'une même ligne dans la fonction PIP.
+
+## Mesures temporelles ou comparaisons expérimentales
+
+On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
 
 
 
-Plusieurs approches s'offrent à nous :
- - garder le même raisonnement que précédemment
+## Générateurs d'entrées
 
+S'il est important de distinguer le comportement asymptotique du temps d'exécution réelle de notre algorithme, c'est en partie parce que les paramètres en entrée sont déterminants.
 
-TODO: 
-- Le tracé d'une ligne
-- L'importance du choix de la division lsq diviser pour régner
+Nous n'avons pas souhaité développer des algorithmes de génération d'un ensemble quelconque de polygones.
+Nous avons cherché les cas qui pourraient poser problème à nos algorithmes et programmé des duplicateurs étant capables de les créer.
+
+Nous pouvons actuellement générer :
+ - l'inclusion d'un très grand nombre de polygones,
+ - la duplication d'un ensemble de polygones selon l'axe des ordonnées, l'axe des abscisses ou les deux axes,
+
+Dans nos essais (infructueux...) de création de générateur d'entrée nous avons rencontré plusieurs problèmes :
+ - éviter les intersections de segments lors de la génération des segments,
+ - effectuer une bonne jonction entre le premier et le dernier point, 
+
+Le fichier `polygones_generator.py` présent sur notre répertoire du projet contient nos pistes d'algorithmes et un algorithme fonctionnel trouvé sur internet que nous avons testé.
+
+## Conclusion
+
+Nous avons développé plusieurs algorithmes fonctionnels répondant au problème posé et effectué une analyse à la fois asymptotique et expérimentale de ces algorithmes.
+
+Il est difficile de trouver des optimisations indépendantes les une des autres. L'utilisation simultanée de plusieurs optimisations peut alors se révéler moins performante que l'algorithme initial non optimisé.
+
+Merci d'avoir pris le temps de lire (ou survoler) ce rapport.
+
+## Annexes
+a.1.
+- Une approche est de trianguler le polygone en traçant les arêtes d'un sommet à tous les autres, trouver l'angle où se trouve le point en utilisant une recherche dichotomique et ensuite vérifier si le point est dans le triangle ou non.
+- On peut penser à une autre approche. Si le point est en dessous (ou à gauche sur la même droite horizontale) que le sommet inférieur (ie. le sommet de plus petite ordonnée) gauche, le sommet est hors du polygone. On a le même raisonnement pour le sommet supérieur droit. On connecte ces deux sommets. Si le point est sur ce segment, il est soit sur la limite du polygone (confondu avec les extrémités du segment ou sinon ce segment est une arête du polygone), soit à l'intérieur du polygone. Si le point est à droite (ou à gauche de manière analogue), nous devons vérifier s'il se trouve à gauche de la chaîne droite construite par l'algorithme du calcul de l'enveloppe convexe. L'arrête correspondante est trouvée en utilisant la recherche dichotomique, en comparant les points lexicographiquement.
+
+a.2.
+
+*(Quick and)* **Dirty** : `[all((a - c) * (d - f) <= (b - d) * (c - e) for (a, b), (c, d), (e, f) in zip(p[-2:] + p, [p[-1]] + p + [p[0]], p))::2]` où $p$ est une liste de points.
+
+Voir [ce post](https://stackoverflow.com/a/1881201) pour plus d'informations.
+
+a.3. 
 
 Liste des fichiers pour les tests de correction :
  - (8/12)_polygons_multiples_inclusions, 1_square, 4_triangles_multiples_inclusions, 19_polygons_some_overlapping, 14_polygons_limit_cases, 3_polygons_limit_case
@@ -200,33 +269,3 @@ Liste des fichiers pour les tests de performance :
 Liste des algorithmes :
  - Avec crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
  - trouve_inclusions, trouve_inclusions_sorted, trouve_inclusions_bis, trouve_inclusions_general (avec et sans test des quadrants)
-
-## Générateurs d'entrées
-
-S'il est important de distinguer le comportement asymptotique du temps d'exécution réelle de notre algorithme, c'est en partie parce que les paramètres en entrée sont déterminants.
-
-Nous n'avons pas souhaité développer des algorithmes de génération d'un ensemble quelconque de polygones.
-Nous avons cherché les cas qui pourraient poser problème à nos algorithmes et programmé des duplicateurs étant capables de les créer.
-
-Nous pouvons actuellement générer :
- - l'inclusion d'un très grand nombre de polygones,
- - la duplication d'un ensemble de polygones selon l'axe des ordonnées, l'axe des abscisses ou les deux axes,
-
-## Mesures temporelles
-
-On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
-
-## Conclusion
-
-Il est difficile de trouver des optimisations indépendantes les unes des autres. L'utilisation simultanée de plusieurs optimisations peut alors se révéler moins performante que l'algorithme initial non optimisé.
-
-## Annexes
-a.1.
-- Une approche est de trianguler le polygone en traçant les arêtes d'un sommet à tous les autres, trouver l'angle où se trouve le point en utilisant une recherche dichotomique et ensuite vérifier si le point est dans le triangle ou non.
-- On peut penser à une autre approche. Si le point est en dessous (ou à gauche sur la même droite horizontale) que le sommet inférieur (ie. le sommet de plus petite ordonnée) gauche, le sommet est hors du polygone. On a le même raisonnement pour le sommet supérieur droit. On connecte ces deux sommets. Si le point est sur ce segment, il est soit sur la limite du polygone (confondu avec les extrémités du segment ou sinon ce segment est une arête du polygone), soit à l'intérieur du polygone. Si le point est à droite (ou à gauche de manière analogue), nous devons vérifier s'il se trouve à gauche de la chaîne droite construite par l'algorithme du calcul de l'enveloppe convexe (DESSIN). L'arrête correspondante est trouvée en utilisant la recherche dichotomique, en comparant les points lexicographiquement.
-
-a.2.
-
-*(Quick and)* **Dirty** : `[all((a - c) * (d - f) <= (b - d) * (c - e) for (a, b), (c, d), (e, f) in zip(p[-2:] + p, [p[-1]] + p + [p[0]], p))::2]` où $p$ est une liste de points.
-
-Voir [ce post](https://stackoverflow.com/a/1881201) pour plus d'informations.
