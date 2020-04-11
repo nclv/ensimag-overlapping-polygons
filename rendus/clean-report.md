@@ -40,11 +40,13 @@ On peut se poser la question suivante : combien d'intersections nous nous attend
 On choisit ici une ligne d'ordonnée fixe $y$ (facilitant les projections). On peut généraliser ce qui suit à une ligne quelconque.
 
 Il est possible de faire une liste d'observations :
- - une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) peuvent s'intersecter ssi. les intervalles formés par les projections des points sur la droite, notés $[y0, y]$ et $[y1, y]$, se chevauchent (DESSIN).
+ - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) s'intersectent ssi. le point d'ordonnée $y$ se trouve sur le segment $[y0, y1]$. 
 
-    On est alors ramené à un problème en 1D : étant donné un ensemble d'intervalles sur une droite réelle, trouver toutes les paires s'intersectant partiellement (ou alorséliminer toutes les paires ne s'intersectant pas) (DESSIN).
+    On est alors ramené à un problème en 1D : étant donné un ensemble d'intervalles sur une droite réelle, trouver tous les intervalles contenant le point $y$ (ou alors éliminer tout ceux ne le contenant pas) (DESSIN).
+ 
+ - Autre condition pour une ligne quelconque, il y a intersection ssi le produit des distances du sommet 0 avec la droite et du sommet 1 avec la droite est négatif.
 
- - une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) peuvent s'intersecter ssi. la ligne et le segment sont adjacents dans une liste d'ordonnées triée ie. ce sont des voisins verticaux (DESSIN). Si c'est le cas, l'intersection ne peut avoir lieu qu'après que la ligne et le segment ne soient devenus des voisins verticaux.
+ - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) peuvent s'intersecter ssi. la ligne et le segment sont adjacents dans une liste d'ordonnées triée ie. ce sont des voisins verticaux (DESSIN). Si c'est le cas, l'intersection ne peut avoir lieu qu'après que la ligne et le segment ne soient devenus des voisins verticaux.
 
     On est ramené à un algorithme de ligne de balayage faisant passer une ligne verticale de la gauche vers la droite ne gardant que les segments qui nous intéressent. Il faut pour celà définir le status et les évènements. Et faire attention à prendre en compte des cas spéciaux : deux extrémités de même abscisse par exemple.
 
@@ -53,7 +55,10 @@ Il est possible de faire une liste d'observations :
     En résumé, remplir la structure d'évènements prend un temps $O(nlog(n))$, chacun des $O(n + k)$ évènement prend un temps $O(log(n))$ et donc, avec $k = O(n)$, l'algorithme est en $O(nlog(n))$.
     Cependant si $k$ est très grand, en pratique l'algorithme naïf en $O(n^2)$ est plus rapide.
 
-Dans la suite, nous laisserons de côté la deuxième observation.
+On peut faire d'autres observations concernant les segments :
+ - Pour un segment AB quelconque, une intersection est possible ssi. les intervalles $[y0, y1]$ et $[yA, yB]$ se chevauchent.
+
+    Cette propriété n'est pas adaptée à une ligne car une ligne est infinie.
 
 
 ### Inclusions entre $n$ polygones
@@ -114,7 +119,7 @@ Nous ferons le choix ici de ne compter que les intersections d'abscisses inféri
 
 De ce choix découle que l'on peut minimiser le nombre d'intersections calculées en prenant le point du polygone $2$ d'abscisse minimale, et ne considérer que les segments du polygone $1$ dont les points sont d'abscisses inférieures à cette abscisse maximale. Avec un tri des segments, on peut sortir directement de la boucle sur les segments dès que l'on rencontre un segment dont les deux points sont d'abscisses supérieures à l'abscisse maximale.
 
-Pour éviter d'avoir à calculer d'autres points d'intersections inutiles, on utilise la première observation du paragraphe *Intersection d'une ligne avec $n$ segments*.
+Pour éviter d'avoir à calculer d'autres points d'intersections inutiles, on utilise la seconde observation du paragraphe *Intersection d'une ligne avec $n$ segments*.
 Elle se traduit par :
 ```python
 ecart0, ecart1 = y0 - y, y1 - y
@@ -122,7 +127,8 @@ if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
    continue
 ```
 
-Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte. La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
+Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte.
+La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
 ```python
 (y0 >= ordo > y1 or y1 >= ordo > y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en bas avec une extrémité sur la ligne y
 (y0 > ordo >= y1 or y1 > ordo >= y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en haut avec une extrémité sur la ligne y
@@ -140,7 +146,7 @@ interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
 
 La méthode précédente se prête aux erreurs numériques (et possiblement une division par 0 si l'on change les conditions du $if$) lors du calcul de l'intersection. Il est possible de ne pas réaliser ce calcul.
 
-En effet, avec un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas (DESSIN http://geomalgorithms.com/a03-_inclusion.html). Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
+On peut utiliser un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas. Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
 
 Déterminer la position relative d'un point par rapport à une ligne peut se faire par un simple calcul d'aire signé.
 ```python
