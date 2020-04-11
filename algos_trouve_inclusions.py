@@ -15,7 +15,7 @@ def trouve_inclusions_sorted1(polygones, pip_function):
     if nombre_polygones < 2:
         return [-1]
 
-    for i in range(nombre_polygones):
+    for i in range(nombre_polygones - 1):
         polygon1 = poly_couples[i]
         indice_poly1 = polygon1[0]
         for j in range(i + 1, nombre_polygones):
@@ -90,7 +90,7 @@ def trouve_inclusions_groupy(polygones, pip_function):
     # tri des polygones % valeur de y maximale
     sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
     
-    # le prétraitement qui suis permet de grouper les polygones susceptibles de s'intersecter
+    # le prétraitement qui suit permet de grouper les polygones susceptibles de s'intersecter
     done = []
     # y_lines contient les possibles polygones s'intersectant avec la ligne
     y_lines = defaultdict(list)
@@ -114,7 +114,7 @@ def trouve_inclusions_groupy(polygones, pip_function):
         nombre_poly = len(poly_list)
         poly_list.sort(key=lambda couple: couple[1].absolute_area)
         # pprint(sorted_poly_list)
-        for i in range(nombre_poly):
+        for i in range(nombre_poly - 1):
             polygon1 = poly_list[i]
             indice_poly1 = polygon1[0]
             # if results[indice_poly1] != -1:

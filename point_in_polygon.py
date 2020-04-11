@@ -209,18 +209,16 @@ def crossing_number_v3_segments(polygon, point):
         ecart0 = sommet0[1] - ordo
         sommet1 = segment[1].coordinates
         ecart1 = sommet1[1] - ordo
+        if (sommet1[0] > absc and sommet0[0] > absc):
+            break
         if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
             sommet0 = sommet1
             indice += 1
             continue
-        if (sommet1[0] > absc and sommet0[0] > absc):
-            break
         if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
                 not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
-        ecart0 = ecart1
-        sommet0 = sommet1
         indice += 1
 
     return nombre_impair_de_noeuds
@@ -265,6 +263,7 @@ def crossing_number_v5(polygon, point):
         sommet1 = points[indice].coordinates
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
+            # on évite la division
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not ((sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])) == y1_test)
         y0_test = y1_test
         sommet0 = sommet1
