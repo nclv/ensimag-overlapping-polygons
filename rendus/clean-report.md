@@ -210,8 +210,11 @@ Une piste d'amélioration serait d'inclure tous les compteurs des polygones d'un
 
 ## Mesures temporelles ou comparaisons expérimentales
 
-On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
+Lors du développement, nous avons utilisé le script $performances.sh$ pour avoir une vue claire des emplacements du code étant les plus pénalisant.
 
+Pour réaliser les graphiques nous avons utilisé le fichier $empirical_complexity.py$.
+
+On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
 
 Consulter le fichier $empirical_complexity.py$ pour plus d'informations sur les figures.
 
@@ -297,6 +300,8 @@ En résumé, il existe des cas où il est inutile de partitionner par rapport à
 
 Il serait intéressant de réaliser un algorithme similaire avec une ligne verticale pour observer les possibles différences.
 
+L'algorithme trouve_inclusions_groupy2 n'a pas été testé. Il est moins efficace que ces deux derniers algorithmes.
+
 ## Générateurs d'entrées
 
 S'il est important de distinguer le comportement asymptotique du temps d'exécution réelle de notre algorithme, c'est en partie parce que les paramètres en entrée sont déterminants.
@@ -351,4 +356,4 @@ Liste des fichiers pour les tests de performance :
 
 Liste des algorithmes :
  - crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
- - trouve_inclusions, trouve_inclusions_sorted1, trouve_inclusions_sorted2, trouve_inclusions_groupy1, trouve_inclusions_groupy2 (avec et sans test des quadrants)
+ - trouve_inclusions, trouve_inclusions_sorted1, trouve_inclusions_sorted2, trouve_inclusions_groupy1, trouve_inclusions_groupy2
