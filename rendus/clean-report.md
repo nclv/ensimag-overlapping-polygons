@@ -267,5 +267,5 @@ Liste des fichiers pour les tests de performance :
  - upper_and_left_duplication_2 / 64 / 256 / ...
 
 Liste des algorithmes :
- - Avec crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
- - trouve_inclusions, trouve_inclusions_sorted, trouve_inclusions_bis, trouve_inclusions_general (avec et sans test des quadrants)
+ - crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
+ - trouve_inclusions, trouve_inclusions_sorted1, trouve_inclusions_sorted2, trouve_inclusions_groupy1, trouve_inclusions_groupy2 (avec et sans test des quadrants)

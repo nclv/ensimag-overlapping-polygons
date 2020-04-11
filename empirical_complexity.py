@@ -111,6 +111,8 @@ def main():
         trouve_inclusions_sorted1,
         trouve_inclusions_sorted2,
         trouve_inclusions,
+        trouve_inclusions_groupy1,
+        trouve_inclusions_groupy2
     )
     from algos_pip import (
         crossing_number,
@@ -136,6 +138,8 @@ def main():
         trouve_inclusions,
         trouve_inclusions_sorted1,
         trouve_inclusions_sorted2,
+        trouve_inclusions_groupy1,
+        trouve_inclusions_groupy2,
     ]
     polygones = read_instance(sys.argv[1])
 
