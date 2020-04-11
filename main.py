@@ -75,7 +75,7 @@ def trouve_inclusions_sorted(polygones, is_point_in_polygon=winding_number):
     #     if is_point_in_polygon(polygon2[1], polygon1[1].points[0]):
     #         results[indice_poly1] = indice_poly2
     #         # print(indice_poly1, indice_poly2)
-    for i in range(nombre_polygones):
+    for i in range(nombre_polygones - 1):
         polygon1 = poly_couples[i]
         indice_poly1 = polygon1[0]
         for j in range(i + 1, nombre_polygones):

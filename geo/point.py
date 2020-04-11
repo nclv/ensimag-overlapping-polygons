@@ -114,4 +114,6 @@ class Point:
         """
         lexicographical comparison
         """
-        return self.coordinates < other.coordinates
+        # return self.coordinates < other.coordinates
+        # min % aux abscisses
+        return self.coordinates[0] < other.coordinates[0]

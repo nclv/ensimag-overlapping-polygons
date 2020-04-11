@@ -19,11 +19,11 @@ def trouve_inclusions_bis(polygones):
     min_y = lambda poly: min(point.coordinates[1] for point in poly.points)
 
     delim = [(min_y(polygon), max_y(polygon)) for polygon in polygones]
-    pprint(delim)
+    # pprint(delim)
     quadrants = [polygon.bounding_quadrant for polygon in polygones]
     # tri des polygones % valeur de y maximale
     sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
-    pprint(sorted_y)
+    # pprint(sorted_y)
     
     # le prétraitement qui suis permet de grouper les polygones susceptibles de s'intersecter
     # tester avec 10x20x1000.poly 
@@ -47,14 +47,14 @@ def trouve_inclusions_bis(polygones):
                 nombre_poly_done += 1
             y_lines[line_ordo].append((indice_poly_2, polygon2))
     
-    pprint(y_lines)
+    # pprint(y_lines)
 
     # on évite de reboucler sur des polygones déjà traités
     seen = []
     for _, poly_list in y_lines.items():
         nombre_poly = len(poly_list)
         poly_list.sort(key=lambda couple: couple[1].absolute_area)
-        pprint(poly_list)
+        # pprint(poly_list)
         for i in range(nombre_poly - 1):
             polygon1 = poly_list[i]
             indice_poly1 = polygon1[0]
