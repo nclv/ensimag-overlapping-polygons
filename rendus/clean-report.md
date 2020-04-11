@@ -127,7 +127,8 @@ if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
    continue
 ```
 
-Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte. La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
+Ce qui nous importe ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte.
+La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
 ```python
 (y0 >= ordo > y1 or y1 >= ordo > y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en bas avec une extrémité sur la ligne y
 (y0 > ordo >= y1 or y1 > ordo >= y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en haut avec une extrémité sur la ligne y
@@ -145,7 +146,7 @@ interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
 
 La méthode précédente se prête aux erreurs numériques (et possiblement une division par 0 si l'on change les conditions du $if$) lors du calcul de l'intersection. Il est possible de ne pas réaliser ce calcul.
 
-En effet, avec un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas (DESSIN http://geomalgorithms.com/a03-_inclusion.html). Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
+On peut utiliser un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas. Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
 
 Déterminer la position relative d'un point par rapport à une ligne peut se faire par un simple calcul d'aire signé.
 ```python
