@@ -213,6 +213,89 @@ Une piste d'amélioration serait d'inclure tous les compteurs des polygones d'un
 On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
 
 
+Consulter le fichier $empirical_complexity.py$ pour plus d'informations sur les figures.
+
+---
+
+Nous allons commencer par tester les algorithmes du fichier $algos_pip.py$ pour chaque algorithme du fichier $algos_trouve_inclusions.py$ ayant un de ces algorithmes en paramètres.
+
+Nous effectuerons ces tests avec les fichiers e2, 10x10, overlapping_square_1000 et upper_and_left_duplication_64 (n'hésitez pas à consulter les courbes du dossier $tests1/$ pour vous faire votre propre idée).
+
+On constate que la fonction trouve_inclusions est la plus lente comme prévu. Elle permet d'avoir un ensemble de point suivant bien la droite de régression.
+
+La fonction crossing_number_v3_segments apparaît comme très lente pour la fonction trouve_inclusions. On peut l'expliquer par le tri sur les segments et le fait que l'on boucle sur les segments et non pas les points.
+
+Les fonctions crossing_number_v3_sec, crossing_number_v5 et winding_number sont les plus rapides.
+
+Les fonctions autres que trouve_inclusions donnent des résultats peu exploitables pour les petits fichiers (e2 et 10x10).
+
+---
+
+Nous allons conserver les algorithmes crossing_number_v3_sec, crossing_number_v5 et winding_number ainsi que trouve_inclusions_sorted1, trouve_inclusions_sorted2 et trouve_inclusions_groupy1.
+
+Nous effectuerons les tests avec le fichier plus conséquent upper_and_left_duplication_256.
+
+Les résultats sont mitigés. Aucun des trois algorithmes PIP ne semble se démarquer. Nous allons donc grouper en fonction des meilleurs performances : le winding_number pour trouve_inclusions_groupy1, le crossing_number_v3_sec pour trouve_inclusions_sorted1 et crossing_number_v5 pour trouve_inclusions_sorted2.
+
+---
+
+Nous allons garder à l'esprit le groupement décelé lors du test précédent et fixer l'algorithme winding_number pour commencer. Nous testerons ensuite les deux autres algorithmes.
+
+Observons les temps d'exécutions sur le fichier upper_and_left_duplication_256:
+
+La première ligne correspond à trouve_inclusions_sorted1, la seconde à trouve_inclusions_sorted2 et la troisième à trouve_inclusions_groupy1.
+
+winding_number
+$$
+[574114008, 1139859786, 1722721197, 2327846641, 2981675013, 4065701911, 4328074542]
+The execution time is: (0.0, 656.0, 161.0, 416.7142858505249)
+[775713111, 1548904539, 2312957580, 3301711726, 3743966787, 4518493082, 5250254591]
+The execution time is: (0.0, 742.0, 636.0, 97.60714292526245)
+[287784533, 576518753, 1044934474, 1204057370, 1447223241, 1865730313, 2057459417]
+The execution time is: (0.0, 296.0, 62.0, 19.25)
+$$
+crossing_number_v3_sec
+$$
+[581914736, 1148200841, 1761292603, 2336870267, 2908719767, 3508070288, 4063955075]
+The execution time is: (0.0, 582.0, 617.0, 395.5357142686844)
+[752642838, 1497954808, 2264829637, 3026780991, 3747005773, 4537128798, 5252406197]
+The execution time is: (0.0, 752.0, 136.0, 221.17857146263123)
+[278784324, 554542920, 832403378, 1095390518, 1380842134, 1651239728, 1924956587]
+The execution time is: (0.0, 274.0, 298.0, 184.32142859697342)
+$$
+crossing_number_v5
+$$
+[943716122, 1503821995, 2119504416, 2620455161, 3034968277, 4367255650, 4658518544]
+The execution time is: (0.0, 635.0, 240.0, 658.4642856121063)
+[750991184, 1744761843, 2546888378, 3607144305, 4087606970, 4826053333, 5727942712]
+The execution time is: (0.0, 808.0, 362.0, 719.8571429252625)
+[272765822, 536513685, 818223879, 1066324472, 1352387644, 1621397318, 1888779382]
+The execution time is: (0.0, 269.0, 713.0, 275.3928571343422)
+$$
+
+Il apparaît que l'algorithme crossing_number_v3_sec est globalement le plus efficace sur cette entrée. Cette observation est vérifiée sur l'entrée 147_polygons_without_overlap.
+
+Cet algorithme semble plus stable (bonne droite de régression) sur de grosses entrée que les deux autres. Il semble avoir la même stabilité sur des entrées plus petites.
+
+Nous avons pu observer un classement des algorithmes : trouve_inclusions_groupy1, trouve_inclusions_sorted1 puis trouve_inclusions_sorted2 du plus au moins rapide.
+
+Pour le fichier 147_polygons_without_overlap ne contenant aucune inclusion, les algorithmes trouve_inclusions_sorted1 et trouve_inclusions_sorted2 s'exécutent en temps similaires.
+
+---
+
+Nous conservons les algorithmes trouve_inclusions_sorted1 et trouve_inclusions_groupy1 avec l'algorithme PIP crossing_number_v3_sec.
+
+Nous allons tester les fichiers e2, 10x10, 2_circular_shape, 25_polygons_around_1complex_shape, overlapping_square_4 / 100 / 1000 / 10000 et upper_and_left_duplication_2 / 64 / 256 / 512.
+
+On observe que pour les petits fichiers e2, 10x10 et 2_circular_shape l'algorithme trouve_inclusions_sorted1 est étonnament plus rapide.
+
+Pour le fichier 25_polygons_around_1complex_shape il est clairement plus rapide.
+
+On peut maintenant consulter les examples du type overlapping_square et upper_and_left_duplication. On observe bien que trouve_inclusions_sorted1 est particulièrement bien adapté à overlapping_square tandis que trouve_inclusions_groupy1 l'est pour upper_and_left_duplication.
+
+En résumé, il existe des cas où il est inutile de partitionner par rapport à une ligne horizontale.
+
+Il serait intéressant de réaliser un algorithme similaire avec une ligne verticale pour observer les possibles différences.
 
 ## Générateurs d'entrées
 

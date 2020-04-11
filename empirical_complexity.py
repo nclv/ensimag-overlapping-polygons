@@ -58,9 +58,9 @@ def empirical_complexity(functions_list, pip_functions, argument_function):
     times = defaultdict(list)
     values = range(1, max_appels - 1)
 
-    for function in functions_list:
+    for pip_function in pip_functions:
         temp_times = defaultdict(list)
-        for pip_function in pip_functions:
+        for function in functions_list:
             elapsed_time = perform_time_measurement(
                 function, [argument_function, pip_function], max_appels
             )
@@ -90,6 +90,7 @@ def affichage(values, elapsed_time, functions_names, trend, colormap):
     plt.ylabel("Temps écoulé (ns)")
     plt.xlabel("Nombre d'appels")
 
+
     # plt.legend()
     # plt.savefig(f"plots/{functions_names[0]}{functions_names[1]}")
 
@@ -103,7 +104,8 @@ def affichages_multiples(values, times):
     plt.ylabel("Temps écoulé (ns)")
     plt.xlabel("Nombre d'appels")
     plt.legend()
-    plt.show()
+    # plt.show()
+    plt.savefig(f"rendus/tests4/{sys.argv[1][15:-4]}")
 
 
 def main():
@@ -126,20 +128,20 @@ def main():
     from tycat import read_instance
 
     pip_functions = [
-        crossing_number,
-        crossing_number_v2,
-        crossing_number_v3,
+        # crossing_number,
+        # crossing_number_v2,
+        # crossing_number_v3,
         crossing_number_v3_sec,
-        crossing_number_v3_segments,
-        crossing_number_v5,
-        winding_number,
+        # crossing_number_v3_segments,
+        # crossing_number_v5,
+        # winding_number,
     ]
     functions_list = [
-        trouve_inclusions,
+        # trouve_inclusions,
         trouve_inclusions_sorted1,
-        trouve_inclusions_sorted2,
+        # trouve_inclusions_sorted2,
         trouve_inclusions_groupy1,
-        trouve_inclusions_groupy2,
+        # trouve_inclusions_groupy2, n'utilise pas les pip_functions
     ]
     polygones = read_instance(sys.argv[1])
 
