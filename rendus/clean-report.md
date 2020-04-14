@@ -1,19 +1,38 @@
-# Projet d'algorithmque : inclusion de polygones
+# Projet d'algorithmique : inclusion de polygones
 
-flags : DESSIN, 
+<p align="center"> <img src="art.png" alt="Toujous plus de polygones..."> </p>
 
-Tous les fichiers du projet ne sont pas contenu dans l'archive. Les modifications apportées au module $geo$, certains affichages complémentaires, d'autres fichiers $.poly$, les jeux de tests, les programmes générateurs ainsi que l'ensemble des programmes développés lors de notre recherche de solution mais n'ayant pas aboutis se trouve sur le gitlab du projet.
+<div style="text-align: justify">
+Tous les fichiers du projet ne sont pas contenu dans l'archive. Les modifications apportées au module <code>geo/</code>, certains affichages complémentaires, d'autres fichiers <code>.poly</code>, les jeux de tests, les programmes générateurs ainsi que l'ensemble des programmes développés lors de notre recherche de solution mais n'ayant pas aboutis se trouve sur le gitlab du projet.
 
 Une liste des algorithmes et fichiers de tests est présente en annexe $a.3.$.
+</div>
+
+## Sommaire
+
+ - [Analyse du problème](#analyse-du-probl%c3%a8me)
+   - [Rappel du sujet](#rappel-du-sujet)
+   - [Intersection d'une ligne avec $n$ segments](#intersection-dune-ligne-avec-n-segments)
+   - [Inclusions entre $n$ polygones](#inclusions-entre-n-polygones)
+   - [Algorithmes PIP](#algorithmes-pip)
+ - [Une autre approche](#une-autre-approche)
+ - [Mesures temporelles ou comparaisons expérimentales](#mesures-temporelles-ou-comparaisons-exp%c3%a9rimentales)
+ - [Générateurs d'entrées](#g%c3%a9n%c3%a9rateurs-dentr%c3%a9es)
+ - [Conclusion](#conclusion)
+ - [Annexes](#annexes)
+
 
 ## Analyse du problème
 
 ### Rappel du sujet
+
+<div style="text-align: justify">
+
 Il faut trouver les inclusions entre $n$ polygones simples ne s'intersectant pas entre eux et retourner une liste des inclusions, notée ici $results$.
 
 La liste $results$ contient 
  - $-1$ à l'indice $i$ lorsque le $i$-ème polygone du fichier $.poly$ n'est inclu dans aucun autre polygone,
- - l'indice $j$ du polygone à l'indice $i$ lorsque le $i$-ème polygone du fichier $.poly$ est inclu dans le $j$-ème polygone du fichier $.poly$.
+ - l'indice $j$ du polygone à l'indice $i$ lorsque le $i$-ème polygone du fichier $.poly$ est inclu dans le $j$-ème polygone du fichier <code>.poly</code>.
 
 Que faire lorsqu'un polygone $i$ est inclu dans plusieurs autres polygones ? On choisit de récupérer dans $results$ le polygone le plus proche du polygone $i$, ie. le polygone d'aire la plus petite dans lequel se trouve le polygone $i$.
 
@@ -33,22 +52,32 @@ On peut noter aussi que n'importe quelle opération entre deux objets de stockag
 
 Le temps d'exécution asymptotique d'un algorithme est toujours sensible par rapport à l'entrée.
 On veut également que le temps d'exécution soit sensible par rapport à la sortie: si la sortie est volumineuse, c'est normal que l'algorithme soit plus long que si la sortie l'est peu, et dans ce cas, on souhaite un algorithme rapide.
-La sortie est ici dépendante du nombre de polygones contenus dans le fichier $.poly$.
+La sortie est ici dépendante du nombre de polygones contenus dans le fichier <code>.poly</code>.
+</div>
 
 ### Intersection d'une ligne avec $n$ segments
+
+<div style="text-align: justify">
 
 On peut se poser la question suivante : combien d'intersections nous nous attendons à avoir dans notre fichier de polygones ? Si on en attend $k$ et que $k = O(n)$ alors un algorithme en complexité temporelle $O(nlog(n))$ serait intéressant.
 
 On choisit ici une ligne d'ordonnée fixe $y$ (facilitant les projections).
 
 Il est possible de faire une liste d'observations :
- - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) s'intersectent ssi. le point d'ordonnée $y$ se trouve sur le segment $[y0, y1]$ (DESSIN). 
+ - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) s'intersectent ssi. le point d'ordonnée $y$ se trouve sur le segment $[y0, y1]$.
 
-    On est alors ramené à un problème en 1D : étant donné un ensemble d'intervalles sur une droite réelle, trouver tous les intervalles contenant le point $y$ (ou alors éliminer tout ceux ne le contenant pas) (DESSIN).
+    <p align="center"> <img src="dessins/observation_ligne.png" alt="observation_ligne.png"> </p>
+
+
+    On est alors ramené à un problème en 1D : étant donné un ensemble d'intervalles sur une droite réelle, trouver tous les intervalles contenant le point $y$ (ou alors éliminer tout ceux ne le contenant pas).
+
+    <p align="center"> <img src="dessins/intervals.png" alt="intervals.png"> </p>
  
  - Autre condition (fonctionnant aussi pour une ligne quelconque): il y a intersection ssi le produit des distances du sommet 0 avec la droite et du sommet 1 avec la droite est négatif.
 
- - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) peuvent s'intersecter ssi. la ligne et le segment sont adjacents dans une liste d'ordonnées triée ie. ce sont des voisins verticaux (DESSIN). Si c'est le cas, l'intersection ne peut avoir lieu qu'après que la ligne et le segment ne soient devenus des voisins verticaux.
+ - Une ligne d'ordonnée $y$ et un segment (deux points d'ordonnées $y0$ et $y1$) peuvent s'intersecter ssi. la ligne et le segment sont adjacents dans une liste d'ordonnées triée ie. ce sont des voisins verticaux. Si c'est le cas, l'intersection ne peut avoir lieu qu'après que la ligne et le segment ne soient devenus des voisins verticaux.
+
+    <p align="center"> <img src="dessins/voisins.png" alt="voisins.png"> </p>
 
     On est ramené à un algorithme de ligne de balayage faisant passer une ligne verticale de la gauche vers la droite ne gardant que les segments qui nous intéressent. Il faut pour cela définir le status et les évènements. Et faire attention aux cas spéciaux lors du décompte des intersections: deux extrémités de même abscisse par exemple.
 
@@ -60,14 +89,18 @@ Il est possible de faire une liste d'observations :
 On peut faire d'autres observations concernant les segments :
  - Pour un segment AB quelconque, une intersection est possible ssi. les intervalles $[y0, y1]$ et $[yA, yB]$ se chevauchent.
 
-    Cependant cette propriété n'est pas adaptée à une ligne car une ligne est infinie.
+    <p align="center"> <img src="dessins/observation_segments.png" alt="observation_segments.png"> </p>
 
+    Cependant cette propriété n'est pas adaptée à une ligne car une ligne est infinie.
+</div>
 
 ### Inclusions entre $n$ polygones
 
+<div style="text-align: justify">
+
 Nous avons eu ici différentes approches, avec des améliorations observées tout au long de ce projet.
 
-Tout d'abord il est important d'initialiser chaque élément de la liste de polygone à $-1$. En effet, cela nous permet d'éviter de devoir construire la liste $results$ au fur et à mesure de nos comparaisons entre polygones (ie. $.append$ qui est coûteux à la longue...).
+Tout d'abord il est important d'initialiser chaque élément de la liste de polygone à $-1$. En effet, cela nous permet d'éviter de devoir construire la liste `results` au fur et à mesure de nos comparaisons entre polygones (ie. `.append` qui est coûteux à la longue...).
 
 ---
 
@@ -81,7 +114,9 @@ Comment alors limiter le nombre de comparaisons (inutiles il s'entend) entre pol
 
 On ne veut pas réaliser les comparaisons inutiles lors d'inclusions multiples. Le critère de l'aire du polygone permet de choisir quelles comparaisons effectuer. A la fois lors d'inclusions multiples où l'on ne compare que les polygones qui sont voisins directs mais aussi plus globalement : on ne va pas tester qu'un polygone $poly_1$ d'aire supérieure à un polygone $poly_2$ se trouve dans le polygone $poly_2$.
 
-Ainsi au lieu de $n^2$ tours de boucle, on en effectue $\frac{n(n - 1)}{2}$. Et si l'on se trouve avec $n$ polygones inclus les uns dans les autres (DESSIN), on n'effectue alors que $n - 1$ comparaisons.
+Ainsi au lieu de $n^2$ tours de boucle, on en effectue $\frac{n(n - 1)}{2}$. Et si l'on se trouve avec $n$ polygones inclus les uns dans les autres, on n'effectue alors que $n - 1$ comparaisons.
+
+<p align="center"> <img src="dessins/inclusions_multiples.png" alt="inclusions_multiples.png"> </p>
 
 ---
 
@@ -96,7 +131,7 @@ $m$ représentera par la suite le nombre moyen de segments par polygone.
 
 La complexité temporelle avec cet algorithme est en $O(m.\frac{n(n - 1)}{2})$ dans le pire cas (zéro ou une unique inclusion par polygone). On peut chercher maintenant à réduire le nombre d'appels à l'algorithme PIP.
 
-La **méthode des quadrants** présente dans le module $geo$ peut nous y aider. En effet, si les *bounding boxes* des polygones ne s'intersectent pas, alors il n'y aura pas d'inclusions entre ces polygones.
+La **méthode des quadrants** présente dans le module <code>geo/</code> peut nous y aider. En effet, si les *bounding boxes* des polygones ne s'intersectent pas, alors il n'y aura pas d'inclusions entre ces polygones.
 
 Cela nous rajoute une étape de prétraitement en $O(n.m)$ lors de laquelle on calcule les *bounding boxes* de chaque polygone. Puis une comparaison en $O(1)$ :
 ```
@@ -109,8 +144,12 @@ S'il n'y a aucune intersection entre les *bounding boxes*, cela fait une complex
 Revenons sur le cas des polygones convexes. Il est possible de vérifier qu'un polygone est convexe en $O(m)$ (indépendamment de s'il est simple ou non d'ailleurs). On peut effectuer cette opération sur les $n$ polygones avant d'entrer dans la boucle de comparaison (voir annexe a.2.), puis utiliser notre algorithme en $O(log(m))$ sur ces polygones.
 
 On aurait alors une complexité en $O(n.m + log(m).\frac{n(n - 1)}{2})$ si tous nos polygones étaient convexes.
+</div>
+
 
 ### Algorithmes PIP
+
+<div style="text-align: justify">
 
 Dans ce paragraphe nous allons développer différentes implémentations de l'algorithme PIP.
 
@@ -128,44 +167,72 @@ De ce choix découle que l'on peut minimiser le nombre d'intersections calculée
 
 Pour éviter d'avoir à calculer d'autres points d'intersections inutiles, on utilise la seconde observation du paragraphe *Intersection d'une ligne avec $n$ segments*. C'est une addition optionnelle.
 Elle se traduit par :
+
+</div>
+
 ```python
 ecart0, ecart1 = y0 - y, y1 - y
 if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
    continue
 ```
 
+<div style="text-align: justify">
+
 Ce qui nous importe ici ne sont pas les intersections mais leur nombre. Il existe plusieurs méthodes de décompte.
 La méthode que nous avons utilisé choisi de ne compter que les intersections "supérieures" ou "inférieures" selon le test utilisé.
+
+</div>
+
 ```python
 (y0 >= ordo > y1 or y1 >= ordo > y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en bas avec une extrémité sur la ligne y
 (y0 > ordo >= y1 or y1 > ordo >= y0)  # n'ajoute que les traits qui traversent la ligne y et ceux qui arrivent d'en haut avec une extrémité sur la ligne y
 ```
+
+<div style="text-align: justify">
+
 L'inconvénient de cette méthode est que l'on perd des points d'intersections et donc possiblement des polygones. Si l'on est intéressé par l'ensemble des polygones s'intersectant avec la ligne $y$ on est obligé d'effectuer les deux tests, calculant ainsi des points d'intersections en double.
 
-On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par disjonction de cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aillent du même côté ou non de la ligne), coin supérieur et coin inférieur (DESSIN).
+On peut penser à une autre méthode de décompte, nécessitant de connaître l'orientation entre deux segments successifs. Il est alors nécessaire de calculer celle-ci avant d'effectuer le tri des segments (ou alors de ne pas trier les segments). On raisonne ensuite par disjonction de cas : traversée de haut en bas, traversée de bas en haut, segment confondu avec la ligne (deux sous-cas ici, selon que les segments précédent et suivant aillent du même côté ou non de la ligne), coin supérieur et coin inférieur. Ci-dessous quelques cas (non exhaustif).
+
+<p align="center"> <img src="dessins/disjonction_cas.png" alt="disjonction_cas.png"></p>>
 
 On peut maintenant calculer l'abscisse du point d'intersection et tester si elle est plus petite que celle du point du polygone $2$. Ci-dessous la formule déterminant l'abscisse du point d'intersection :
+
+</div>
+
 ```python
 interx = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
 ```
 
 ---
 
-La méthode précédente se prête aux erreurs numériques (et possiblement une division par 0 si l'on change les conditions du $if$ sans faire attention) lors du calcul de l'intersection. Il est possible de ne pas réaliser ce calcul.
+<div style="text-align: justify">
+
+La méthode précédente se prête aux erreurs numériques (et possiblement une division par 0 si l'on change les conditions du `if` sans faire attention) lors du calcul de l'intersection. Il est possible de ne pas réaliser ce calcul.
 
 On peut utiliser un simple compteur auquel l'on ajoute $1$ lorsque que l'on coupe la ligne vers le haut et un $-1$ si on la coupe vers le bas. Il faut aussi prendre en compte si le point est placé à gauche ou à droite du segment orienté et faire un choix : ne compter que les segments situés à gauche du point ou seulement ceux situés à sa droite.
 
 Déterminer la position relative d'un point par rapport à une ligne peut se faire par un simple calcul d'aire signé.
+
+</div>
+
 ```python
 (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0)
 ```
+
+<div style="text-align: justify">
+
 Si cette aire est positive (resp. négative), le point 2 à gauche (resp. droite) du segment orienté $[p0, p1]$.
 
 ---
 
-L'ensemble des algorithmes PIP se trouve dans le fichier $algos_pip.py$.
+L'ensemble des algorithmes PIP se trouve dans le fichier `algos_pip.py`.
+
+</div>
 
 ## Une autre approche
+
+<div style="text-align: justify">
 
 Nous avons répondu à la première question posée au début du paragraphe précédent (pour rappel : comment choisir le point ?) et nous avons décidé de prendre une droite horizontale en réponse à la seconde question. Notez que nous aurions tout aussi bien pu choisir une ligne verticale.
 
@@ -174,7 +241,7 @@ Jusqu'ici nous avons tracé une droite par polygone alors qu'il est possible (m�
 On recherche alors **le plus petit ensemble de droites** tel que chaque droite s'intersecte avec plusieurs polygones.
 Pour nous simplifier la vie, on suppose toujours que les droites sont horizontales.
 
-> Quelle différence(s) y aurait-il eu à choisir des droites verticales ? Pour répondre à cette question il faut se ramener à des exemples précis du même type que les fichiers `upper_and_left_duplication.poly`. En effet, avec une ligne horizontale de polygones, on obtiendra une seule ligne horizontale et autant de lignes verticales qu'il y a de groupes de polygones inclus les uns dans les autres. C'est l'inverse pour une ligne verticale de polygones. Alors faut-il avoir le plus possible de lignes ou le moins possible ? ça dépend de ce que l'on compte en faire...
+> Quelle différence(s) y aurait-il eu à choisir des droites verticales ? Pour répondre à cette question il faut se ramener à des exemples précis du même type que les fichiers <code>upper_and_left_duplication.poly</code>. En effet, avec une ligne horizontale de polygones, on obtiendra une seule ligne horizontale et autant de lignes verticales qu'il y a de groupes de polygones inclus les uns dans les autres. C'est l'inverse pour une ligne verticale de polygones. Alors faut-il avoir le plus possible de lignes ou le moins possible ? ça dépend de ce que l'on compte en faire...
 
 ---
 
@@ -208,101 +275,148 @@ Nous avons développé une ébauche fonctionnelle d'algorithme réalisant cette 
 
 Une piste d'amélioration serait d'inclure tous les compteurs des polygones d'une même ligne dans la fonction PIP.
 
+</div>
+
 ## Mesures temporelles ou comparaisons expérimentales
 
-Lors du développement, nous avons utilisé le script $performances.sh$ pour avoir une vue claire des emplacements du code étant les plus pénalisant.
+<div style="text-align: justify">
 
-Pour réaliser les graphiques nous avons utilisé le fichier $empirical_complexity.py$.
+Lors du développement, nous avons utilisé le script <code>performances.sh</code> pour avoir une vue claire des emplacements du code étant les plus pénalisants.
+
+Pour réaliser les graphiques nous avons utilisé le fichier <code>empirical_complexity.py</code>.
 
 On cherche ici à minimiser les erreurs systématique et aléatoire. Pour plus d'information sur la méthode utilisée consulter ce [lien](https://github.com/NicovincX2/python-tools/blob/master/measuring-code-execution-time.md).
 
-Consulter le fichier $empirical_complexity.py$ pour plus d'informations sur les figures.
+Consulter le fichier <code>empirical_complexity.py</code> pour plus d'informations sur les figures. Et le dossier du test correspondant pour voir encore plus de figures !!
 
 ---
 
-Nous allons commencer par tester les algorithmes du fichier $algos_pip.py$ pour chaque algorithme du fichier $algos_trouve_inclusions.py$ ayant un de ces algorithmes en paramètres.
+Nous allons commencer par tester les algorithmes du fichier <code>algos_pip.py</code> pour chaque algorithme du fichier <code>algos_trouve_inclusions.py</code> ayant un de ces algorithmes en paramètres.
 
-Nous effectuerons ces tests avec les fichiers e2, 10x10, overlapping_square_1000 et upper_and_left_duplication_64 (n'hésitez pas à consulter les courbes du dossier $tests1/$ pour vous faire votre propre idée).
+Nous effectuerons ces tests avec les fichiers *e2*, *10x10*, *overlapping_square_1000* et *upper_and_left_duplication_64* (n'hésitez pas à consulter les courbes du dossier <code>tests1/</code> pour vous faire votre propre idée).
 
-On constate que la fonction trouve_inclusions est la plus lente comme prévu. Elle permet d'avoir un ensemble de point suivant bien la droite de régression.
+<p align="center"> <img src="tests1/e2_trouve_inclusions.png" alt="e2_trouve_inclusions.png"> </p>
 
-La fonction crossing_number_v3_segments apparaît comme très lente pour la fonction trouve_inclusions. On peut l'expliquer par le tri sur les segments et le fait que l'on boucle sur les segments et non pas les points.
+On constate que la fonction *trouve_inclusions* est la plus lente comme prévu. Elle permet d'avoir un ensemble de point suivant bien la droite de régression.
 
-Les fonctions crossing_number_v3_sec, crossing_number_v5 et winding_number sont les plus rapides.
+La fonction *crossing_number_v3_segments* apparaît comme très lente pour la fonction *trouve_inclusions*. On peut l'expliquer par le tri sur les segments et le fait que l'on boucle sur les segments et non pas les points.
 
-Les fonctions autres que trouve_inclusions donnent des résultats peu exploitables pour les petits fichiers (e2 et 10x10).
+Les fonctions *crossing_number_v3_sec*, *crossing_number_v5* et *winding_number* sont les plus rapides.
+
+<p align="center"> <img src="tests1/e2_trouve_inclusions_sorted1.png" alt="e2_trouve_inclusions_sorted1.png"> </p>
+<p align="center"> <img src="tests1/e2_trouve_inclusions_sorted2.png" alt="e2_trouve_inclusions_sorted2.png"> </p>
+<p align="center"> <img src="tests1/e2_trouve_inclusions_groupy1.png" alt="e2_trouve_inclusions_groupy1.png"> </p>
+
+Les fonctions autres que *trouve_inclusions* donnent des résultats peu exploitables pour les petits fichiers (*e2* et *10x10*).
+
+<p align="center"> <img src="tests1/upper_and_left_duplication_64_trouve_inclusions_groupy1.png" alt="upper_and_left_duplication_64_trouve_inclusions_groupy1.png"> </p>
+<p align="center"> <img src="tests1/upper_and_left_duplication_64_trouve_inclusions_sorted2.png" alt="upper_and_left_duplication_64_trouve_inclusions_sorted2.png"> </p>
 
 ---
 
-Nous allons conserver les algorithmes crossing_number_v3_sec, crossing_number_v5 et winding_number ainsi que trouve_inclusions_sorted1, trouve_inclusions_sorted2 et trouve_inclusions_groupy1.
+Nous allons conserver les algorithmes *crossing_number_v3_sec*, *crossing_number_v5* et *winding_number* ainsi que *trouve_inclusions_sorted1*, *trouve_inclusions_sorted2* et *trouve_inclusions_groupy1*.
 
-Nous effectuerons les tests avec le fichier plus conséquent upper_and_left_duplication_256.
+Nous effectuerons les tests avec le fichier plus conséquent *upper_and_left_duplication_256*.
 
-Les résultats sont mitigés. Aucun des trois algorithmes PIP ne semble se démarquer. Nous allons donc grouper en fonction des meilleurs performances : le winding_number pour trouve_inclusions_groupy1, le crossing_number_v3_sec pour trouve_inclusions_sorted1 et crossing_number_v5 pour trouve_inclusions_sorted2.
+<p align="center"> <img src="tests2/upper_and_left_duplication_256_trouve_inclusions_sorted2.png" alt="upper_and_left_duplication_256_trouve_inclusions_sorted2.png"> </p>
+<p align="center"> <img src="tests2/upper_and_left_duplication_256_trouve_inclusions_sorted1.png" alt="upper_and_left_duplication_256_trouve_inclusions_sorted1.png"> </p>
+<p align="center"> <img src="tests2/upper_and_left_duplication_256_trouve_inclusions_groupy1.png" alt="upper_and_left_duplication_256_trouve_inclusions_groupy1.png"> </p>
+
+Les résultats sont mitigés. Aucun des trois algorithmes PIP ne semble se démarquer. Nous allons donc grouper en fonction des meilleurs performances : le *winding_number* pour *trouve_inclusions_groupy1*, le *crossing_number_v3_sec* pour *trouve_inclusions_sorted1* et *crossing_number_v5* pour *trouve_inclusions_sorted2*.
 
 ---
 
-Nous allons garder à l'esprit le groupement décelé lors du test précédent et fixer l'algorithme winding_number pour commencer. Nous testerons ensuite les deux autres algorithmes.
+Nous allons garder à l'esprit le groupement décelé lors du test précédent et fixer l'algorithme *winding_number* pour commencer. Nous testerons ensuite les deux autres algorithmes.
 
-Observons les temps d'exécutions sur le fichier upper_and_left_duplication_256:
+Observons les temps d'exécutions sur le fichier *upper_and_left_duplication_256*:
 
-La première ligne correspond à trouve_inclusions_sorted1, la seconde à trouve_inclusions_sorted2 et la troisième à trouve_inclusions_groupy1.
+<p align="center"> <img src="tests3/upper_and_left_duplication_256_crossing_number_v3_sec.png" alt="upper_and_left_duplication_256_crossing_number_v3_sec.png"> </p>
+<p align="center"> <img src="tests3/upper_and_left_duplication_256_crossing_number_v5.png" alt="upper_and_left_duplication_256_crossing_number_v5.png"> </p>
+<p align="center"> <img src="tests3/upper_and_left_duplication_256_winding_number.png" alt="upper_and_left_duplication_256_winding_number.png"> </p>
 
-winding_number
-$$
+La première ligne correspond à *trouve_inclusions_sorted1*, la seconde à *trouve_inclusions_sorted2* et la troisième à *trouve_inclusions_groupy1*. Les temps d'exécutions correspondent à **la pente** de la droite de régression.
+
+</div>
+
+**winding_number**
+```
 [574114008, 1139859786, 1722721197, 2327846641, 2981675013, 4065701911, 4328074542]
 The execution time is: (0.0, 656.0, 161.0, 416.7142858505249)
 [775713111, 1548904539, 2312957580, 3301711726, 3743966787, 4518493082, 5250254591]
 The execution time is: (0.0, 742.0, 636.0, 97.60714292526245)
 [287784533, 576518753, 1044934474, 1204057370, 1447223241, 1865730313, 2057459417]
 The execution time is: (0.0, 296.0, 62.0, 19.25)
-$$
-crossing_number_v3_sec
-$$
+```
+**crossing_number_v3_sec**
+```
 [581914736, 1148200841, 1761292603, 2336870267, 2908719767, 3508070288, 4063955075]
 The execution time is: (0.0, 582.0, 617.0, 395.5357142686844)
 [752642838, 1497954808, 2264829637, 3026780991, 3747005773, 4537128798, 5252406197]
 The execution time is: (0.0, 752.0, 136.0, 221.17857146263123)
 [278784324, 554542920, 832403378, 1095390518, 1380842134, 1651239728, 1924956587]
 The execution time is: (0.0, 274.0, 298.0, 184.32142859697342)
-$$
-crossing_number_v5
-$$
+```
+**crossing_number_v5**
+```
 [943716122, 1503821995, 2119504416, 2620455161, 3034968277, 4367255650, 4658518544]
 The execution time is: (0.0, 635.0, 240.0, 658.4642856121063)
 [750991184, 1744761843, 2546888378, 3607144305, 4087606970, 4826053333, 5727942712]
 The execution time is: (0.0, 808.0, 362.0, 719.8571429252625)
 [272765822, 536513685, 818223879, 1066324472, 1352387644, 1621397318, 1888779382]
 The execution time is: (0.0, 269.0, 713.0, 275.3928571343422)
-$$
+```
 
-Il apparaît que l'algorithme crossing_number_v3_sec est globalement le plus efficace sur cette entrée. Cette observation est vérifiée sur l'entrée 147_polygons_without_overlap.
+<div style="text-align: justify">
+
+Il apparaît que l'algorithme *crossing_number_v3_sec* est globalement le plus efficace sur cette entrée. Cette observation est vérifiée sur l'entrée *147_polygons_without_overlap*.
 
 Cet algorithme semble plus stable (bonne droite de régression) sur de grosses entrée que les deux autres. Il semble avoir la même stabilité sur des entrées plus petites.
 
-Nous avons pu observer un classement des algorithmes : trouve_inclusions_groupy1, trouve_inclusions_sorted1 puis trouve_inclusions_sorted2 du plus au moins rapide.
+Nous avons pu observer un classement des algorithmes : *trouve_inclusions_groupy1*, *trouve_inclusions_sorted1* puis *trouve_inclusions_sorted2* du plus au moins rapide.
 
-Pour le fichier 147_polygons_without_overlap ne contenant aucune inclusion, les algorithmes trouve_inclusions_sorted1 et trouve_inclusions_sorted2 s'exécutent en temps similaires.
+Pour le fichier *147_polygons_without_overlap* ne contenant aucune inclusion, les algorithmes *trouve_inclusions_sorted1* et *trouve_inclusions_sorted2* s'exécutent en temps similaires.
+
+<p align="center"> <img src="tests3/147_polygons_without_overlap_crossing_number_v5.png" alt="147_polygons_without_overlap_crossing_number_v5.png"> </p>
 
 ---
 
-Nous conservons les algorithmes trouve_inclusions_sorted1 et trouve_inclusions_groupy1 avec l'algorithme PIP crossing_number_v3_sec.
+Nous conservons les algorithmes *trouve_inclusions_sorted1* et *trouve_inclusions_groupy1* avec l'algorithme PIP *crossing_number_v3_sec*.
 
-Nous allons tester les fichiers e2, 10x10, 2_circular_shape, 25_polygons_around_1complex_shape, overlapping_square_4 / 100 / 1000 / 10000 et upper_and_left_duplication_2 / 64 / 256 / 512.
+Nous allons tester les fichiers *e2*, *10x10*, *2_circular_shape*, *25_polygons_around_1complex_shape*, *overlapping_square_(4/100/1000/10000)* et *upper_and_left_duplication_(2/64/256/512)*.
 
-On observe que pour les petits fichiers e2, 10x10 et 2_circular_shape l'algorithme trouve_inclusions_sorted1 est étonnament plus rapide.
+On observe que pour les petits fichiers *e2*, *10x10* et *2_circular_shape* l'algorithme *trouve_inclusions_sorted1* est étonnament plus rapide.
 
-Pour le fichier 25_polygons_around_1complex_shape il est clairement plus rapide.
+<p align="center"> <img src="tests4/e2.png" alt="e2.png"> </p>
+<p align="center"> <img src="tests4/10x10.png" alt="10x10.png"> </p>
+<p align="center"> <img src="tests4/2_circular_shape.png" alt="2_circular_shape.png"> </p>
 
-On peut maintenant consulter les examples du type overlapping_square et upper_and_left_duplication. On observe bien que trouve_inclusions_sorted1 est particulièrement bien adapté à overlapping_square tandis que trouve_inclusions_groupy1 l'est pour upper_and_left_duplication.
+Pour le fichier *25_polygons_around_1complex_shape* il est clairement plus rapide.
 
-En résumé, il existe des cas où il est inutile de partitionner par rapport à une ligne horizontale.
+<p align="center"> <img src="tests4/25_polygons_around_1complex_shape.png" alt="25_polygons_around_1complex_shape.png"> </p>
+
+On peut maintenant consulter les examples du type *overlapping_square* et *upper_and_left_duplication*. On observe bien que *trouve_inclusions_sorted1* est particulièrement bien adapté à *overlapping_square* tandis que *trouve_inclusions_groupy1* l'est pour *upper_and_left_duplication*.
+
+**overlapping_square_(100/1000/10000)**
+<p align="center"> <img src="tests4/overlapping_square_100.png" alt="overlapping_square_100.png"> </p>
+<p align="center"> <img src="tests4/overlapping_square_1000.png" alt="overlapping_square_1000.png"> </p>
+<p align="center"> <img src="tests4/overlapping_square_10000.png" alt="overlapping_square_10000.png"> </p>
+
+**upper_and_left_duplication_(2/256/512)**
+<p align="center"> <img src="tests4/upper_and_left_duplication_2.png" alt="upper_and_left_duplication_2.png"> </p>
+<p align="center"> <img src="tests4/upper_and_left_duplication_256.png" alt="upper_and_left_duplication_256.png"> </p>
+<p align="center"> <img src="tests4/upper_and_left_duplication_512.png" alt="upper_and_left_duplication_512.png"> </p>
+
+En résumé, il existe des cas (inclusions multiples) où il est inutile de partitionner par rapport à une ligne horizontale.
 
 Il serait intéressant de réaliser un algorithme similaire avec une ligne verticale pour observer les possibles différences.
 
-L'algorithme trouve_inclusions_groupy2 n'a pas été testé. Il est moins efficace que ces deux derniers algorithmes.
+L'algorithme *trouve_inclusions_groupy2* n'a pas été testé. Il est moins efficace que ces deux derniers algorithmes.
+
+</div>
 
 ## Générateurs d'entrées
+
+<div style="text-align: justify">
 
 S'il est important de distinguer le comportement asymptotique du temps d'exécution réelle de notre algorithme, c'est en partie parce que les paramètres en entrée sont déterminants.
 
@@ -317,9 +431,13 @@ Dans nos essais (infructueux...) de création de générateur d'entrée nous avo
  - éviter les intersections de segments lors de la génération des segments,
  - effectuer une bonne jonction entre le premier et le dernier point, 
 
-Le fichier `polygones_generator.py` présent sur notre répertoire du projet contient nos pistes d'algorithmes et un algorithme fonctionnel trouvé sur internet que nous avons testé.
+Le fichier <code>polygones_generator.py</code> présent sur notre répertoire du projet contient nos pistes d'algorithmes et un algorithme fonctionnel trouvé sur internet que nous avons testé.
+
+</div>
 
 ## Conclusion
+
+<div style="text-align: justify">
 
 Nous avons développé plusieurs algorithmes fonctionnels répondant au problème posé et effectué une analyse à la fois asymptotique et expérimentale de ces algorithmes.
 
@@ -327,16 +445,25 @@ Il est difficile de trouver des optimisations indépendantes les une des autres.
 
 Merci d'avoir pris le temps de lire (ou survoler) ce rapport.
 
+</div>
+
 ## Annexes
+
+<div style="text-align: justify">
+
 a.1.
 - Une approche est de trianguler le polygone en traçant les arêtes d'un sommet à tous les autres, trouver l'angle où se trouve le point en utilisant une recherche dichotomique et ensuite vérifier si le point est dans le triangle ou non.
 - On peut penser à une autre approche. Si le point est en dessous (ou à gauche sur la même droite horizontale) que le sommet inférieur (ie. le sommet de plus petite ordonnée) gauche, le sommet est hors du polygone. On a le même raisonnement pour le sommet supérieur droit. On connecte ces deux sommets. Si le point est sur ce segment, il est soit sur la limite du polygone (confondu avec les extrémités du segment ou sinon ce segment est une arête du polygone), soit à l'intérieur du polygone. Si le point est à droite (ou à gauche de manière analogue), nous devons vérifier s'il se trouve à gauche de la chaîne droite construite par l'algorithme du calcul de l'enveloppe convexe. L'arrête correspondante est trouvée en utilisant la recherche dichotomique, en comparant les points lexicographiquement.
+
+</div>
 
 a.2.
 
 *(Quick and)* **Dirty** : `[all((a - c) * (d - f) <= (b - d) * (c - e) for (a, b), (c, d), (e, f) in zip(p[-2:] + p, [p[-1]] + p + [p[0]], p))::2]` où $p$ est une liste de points.
 
 Voir [ce post](https://stackoverflow.com/a/1881201) pour plus d'informations.
+
+<div style="text-align: justify">
 
 a.3. 
 
@@ -357,3 +484,5 @@ Liste des fichiers pour les tests de performance :
 Liste des algorithmes :
  - crossing_number, crossing_number_v2, crossing_number_v3, crossing_number_v3_sec, crossing_number_v3_segments, winding_number, crossing_number_v5
  - trouve_inclusions, trouve_inclusions_sorted1, trouve_inclusions_sorted2, trouve_inclusions_groupy1, trouve_inclusions_groupy2
+
+</div>
