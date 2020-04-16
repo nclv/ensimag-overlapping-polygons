@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
+"""
+algos_trouve_inclusions.py : Ensemble des programmes de recherche d'inclusions entre polygones.
+Seul l'algorithme trouve_inclusions_groupy2 ne prend pas de pip_function en paramètre.
+Il dépend de la fonction crossing_number_global présente dans ce fichier.
+"""
+
+
 from itertools import combinations, permutations
 from collections import defaultdict
 
@@ -89,7 +97,7 @@ def trouve_inclusions_groupy1(polygones, pip_function):
     quadrants = [polygon.bounding_quadrant for polygon in polygones]
     # tri des polygones % valeur de y maximale
     sorted_y = sorted(enumerate(polygones), key=lambda couple: delim[couple[0]][1])
-    
+
     # le prétraitement qui suit permet de grouper les polygones susceptibles de s'intersecter
     done = []
     nombre_poly_done = 0
@@ -100,17 +108,21 @@ def trouve_inclusions_groupy1(polygones, pip_function):
             break
         if indice_poly_1 in done:
             continue
-        line_ordo = delim[indice_poly_1][1]  # on prend le max sur y du polygone (cohérent avec le tri)
+        line_ordo = delim[indice_poly_1][1]  
+        # on prend le max sur y du polygone (cohérent avec le tri)
         for indice_poly_2, polygon2 in sorted_y:
             # la ligne ne traverse pas le polygone
-            if delim[indice_poly_2][1] < line_ordo or line_ordo < delim[indice_poly_2][0]:
+            if (
+                delim[indice_poly_2][1] < line_ordo
+                or line_ordo < delim[indice_poly_2][0]
+            ):
                 continue
             # la ligne traverse le polygone et c'est la première fois qu'on voit le polygone
             if indice_poly_2 not in done:
                 done.append(indice_poly_2)
                 nombre_poly_done += 1
             y_lines[line_ordo].append((indice_poly_2, polygon2))
-    
+
     # pprint(y_lines)
 
     # on évite de reboucler sur des polygones déjà traités
@@ -167,17 +179,20 @@ def crossing_number_global(segments, ordo, mapping, delim):
         while counter < nombre_de_points:
             sommet1 = points[counter]
             x1, y1 = sommet1.coordinates
-            if (y0 >= ordo > y1 or y1 >= ordo > y0):
+            if y0 >= ordo > y1 or y1 >= ordo > y0:
                 inter = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
                 interup.append((poly_indice, inter))
-            if (y0 > ordo >= y1 or y1 > ordo >= y0):
+            if y0 > ordo >= y1 or y1 > ordo >= y0:
                 inter = x1 + (ordo - y1) / (y0 - y1) * (x0 - x1)
                 interdown.append((poly_indice, inter))
             y0, x0 = y1, x1
             sommet0 = sommet1
             counter += 1
 
-    return sorted(interup, key=lambda couple: mapping[couple[0]]), sorted(interdown, key=lambda couple: mapping[couple[0]]) # nécessaire
+    return (
+        sorted(interup, key=lambda couple: mapping[couple[0]]),
+        sorted(interdown, key=lambda couple: mapping[couple[0]]),
+    )  # nécessaire ici de trier
 
 
 def compute_intersections(liste_intersections, results, liste_poly_done):
@@ -214,12 +229,17 @@ def compute_intersections(liste_intersections, results, liste_poly_done):
                 break
     return results, liste_poly_done
 
+
 def trouve_inclusions_groupy2(polygones):
     nombre_polygones = len(polygones)
     results = [-1] * nombre_polygones
 
-    sorted_polygones = sorted(enumerate(polygones), key=lambda couple: couple[1].absolute_area)
-    mapping = {poly_number: indice for indice, (poly_number, _) in enumerate(sorted_polygones)}
+    sorted_polygones = sorted(
+        enumerate(polygones), key=lambda couple: couple[1].absolute_area
+    )
+    mapping = {
+        poly_number: indice for indice, (poly_number, _) in enumerate(sorted_polygones)
+    }
 
     max_y = lambda poly: max(point.coordinates[1] for point in poly.points)
     min_y = lambda poly: min(point.coordinates[1] for point in poly.points)
@@ -237,10 +257,14 @@ def trouve_inclusions_groupy2(polygones):
             break
         if indice_poly_1 in done:
             continue
-        line_ordo = delim[indice_poly_1][1]  # on prend le max sur y (cohérent avec le tri)
+        line_ordo = delim[indice_poly_1][1]  
+        # on prend le max sur y (cohérent avec le tri)
         for indice_poly_2, polygon2 in sorted_y:
             # si le polygone ne peut pas cross la ligne
-            if delim[indice_poly_2][1] < line_ordo or line_ordo < delim[indice_poly_2][0]:
+            if (
+                delim[indice_poly_2][1] < line_ordo
+                or line_ordo < delim[indice_poly_2][0]
+            ):
                 continue
             if indice_poly_2 not in done:
                 done.append(indice_poly_2)
@@ -249,7 +273,8 @@ def trouve_inclusions_groupy2(polygones):
 
     # pprint(y_points_needed)
 
-    liste_poly_done = [] # cela doit rester un set, mais on peut plus facilement repérer les erreurs avec une liste
+    liste_poly_done = []
+    # cela doit rester un set, mais on peut plus facilement repérer les erreurs avec une liste
     liste_poly_done.append(sorted_polygones[-1][0])
     for ligne, value in y_points_needed.items():
         # on ne passe ici qu'une fois (y = 1) pour les fichiers overlapping_square)
@@ -259,9 +284,14 @@ def trouve_inclusions_groupy2(polygones):
         # pprint(interdown)
 
         if interup:
-            results, liste_poly_done = compute_intersections(interup, results, liste_poly_done)
+            results, liste_poly_done = compute_intersections(
+                interup, results, liste_poly_done
+            )
         # gain sans interdown
         if interdown and interdown != interup:
-            results, liste_poly_done = compute_intersections(interdown, results, liste_poly_done)
+            results, liste_poly_done = compute_intersections(
+                interdown, results, liste_poly_done
+            )
 
     return results
+

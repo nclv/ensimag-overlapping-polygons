@@ -19,7 +19,13 @@ def crossing_number(polygon, point):
 
     for i in range(nombre_de_points):
         if y_coord[i] < ordo <= y_coord[j] or y_coord[j] < ordo <= y_coord[i]:
-            if x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc:
+            if (
+                x_coord[i]
+                + (ordo - y_coord[i])
+                / (y_coord[j] - y_coord[i])
+                * (x_coord[j] - x_coord[i])
+                < absc
+            ):
                 nombre_impair_de_noeuds = not nombre_impair_de_noeuds
         j = i
 
@@ -37,8 +43,18 @@ def crossing_number_v2(polygon, point):
     j = nombre_de_points - 1
 
     for i in range(nombre_de_points):
-        if y_coord[i] < ordo <= y_coord[j] or y_coord[j] < ordo <= y_coord[i] and (x_coord[i] <= absc or x_coord[j] <= absc):
-            if x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc:
+        if (
+            y_coord[i] < ordo <= y_coord[j]
+            or y_coord[j] < ordo <= y_coord[i]
+            and (x_coord[i] <= absc or x_coord[j] <= absc)
+        ):
+            if (
+                x_coord[i]
+                + (ordo - y_coord[i])
+                / (y_coord[j] - y_coord[i])
+                * (x_coord[j] - x_coord[i])
+                < absc
+            ):
                 nombre_impair_de_noeuds = not nombre_impair_de_noeuds
         j = i
 
@@ -55,10 +71,19 @@ def crossing_number_v3(polygon, point):
     j = nombre_de_points - 1
 
     for i in range(nombre_de_points):
-        if y_coord[i] < ordo <= y_coord[j] or y_coord[j] < ordo <= y_coord[i] and (x_coord[i] <= absc or x_coord[j] <= absc):
+        if (
+            y_coord[i] < ordo <= y_coord[j]
+            or y_coord[j] < ordo <= y_coord[i]
+            and (x_coord[i] <= absc or x_coord[j] <= absc)
+        ):
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
-                not x_coord[i] + (ordo - y_coord[i]) / (y_coord[j] - y_coord[i]) * (x_coord[j] - x_coord[i]) < absc)
+                not x_coord[i]
+                + (ordo - y_coord[i])
+                / (y_coord[j] - y_coord[i])
+                * (x_coord[j] - x_coord[i])
+                < absc
+            )
         j = i
 
     return nombre_impair_de_noeuds
@@ -80,9 +105,16 @@ def crossing_number_v3_sec(polygon, point):
             sommet0 = sommet1
             indice += 1
             continue
-        if (sommet1[0] <= absc or sommet0[0] <= absc) and (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]):
+        if (sommet1[0] <= absc or sommet0[0] <= absc) and (
+            sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]
+        ):
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
-                not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+                not sommet1[0]
+                + (ordo - sommet1[1])
+                / (sommet0[1] - sommet1[1])
+                * (sommet0[0] - sommet1[0])
+                < absc
+            )
         ecart0 = ecart1
         sommet0 = sommet1
         indice += 1
@@ -104,16 +136,21 @@ def crossing_number_v3_segments(polygon, point):
         ecart0 = sommet0[1] - ordo
         sommet1 = segment[1].coordinates
         ecart1 = sommet1[1] - ordo
-        if (sommet1[0] > absc and sommet0[0] > absc):
+        if sommet1[0] > absc and sommet0[0] > absc:
             break
         if ecart0 * ecart1 > 0 or ecart0 == ecart1 == 0:
             sommet0 = sommet1
             indice += 1
             continue
-        if (sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]):
+        if sommet0[1] >= ordo > sommet1[1] or sommet1[1] >= ordo > sommet0[1]:
             # xor plus rapide que ^=
             nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
-                not sommet1[0] + (ordo - sommet1[1]) / (sommet0[1] - sommet1[1]) * (sommet0[0] - sommet1[0]) < absc)
+                not sommet1[0]
+                + (ordo - sommet1[1])
+                / (sommet0[1] - sommet1[1])
+                * (sommet0[0] - sommet1[0])
+                < absc
+            )
         indice += 1
 
     return nombre_impair_de_noeuds
@@ -132,7 +169,13 @@ def crossing_number_v5(polygon, point):
         sommet1 = points[indice].coordinates
         y1_test = sommet1[1] >= ordo
         if y0_test != y1_test:
-            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (not ((sommet1[1] - ordo) * (sommet0[0] - sommet1[0]) >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])) == y1_test)
+            nombre_impair_de_noeuds = (not nombre_impair_de_noeuds) != (
+                not (
+                    (sommet1[1] - ordo) * (sommet0[0] - sommet1[0])
+                    >= (sommet1[0] - absc) * (sommet0[1] - sommet1[1])
+                )
+                == y1_test
+            )
         y0_test = y1_test
         sommet0 = sommet1
         indice += 1
@@ -146,7 +189,7 @@ def left_line(p0, p1, p2):
             = 0 pour p2 sur cette ligne
             < 0 pour p2 à sa droite
     """
-    return (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p2[0] -  p0[0]) * (p1[1] - p0[1])
+    return (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p2[0] - p0[0]) * (p1[1] - p0[1])
 
 
 def winding_number(polygon, point):
@@ -161,13 +204,13 @@ def winding_number(polygon, point):
     while indice < nombre_de_points:
         sommet1 = points[indice].coordinates
         if sommet0[1] <= ordo:  # start y <= ordo
-            if sommet1[1] > ordo:   # an upward crossing
-                 if left_line(sommet0, sommet1, [absc, ordo]) > 0:  # P left of edge
-                     nombre_impair_de_noeuds += 1  # have a valid up intersect
+            if sommet1[1] > ordo:  # an upward crossing
+                if left_line(sommet0, sommet1, [absc, ordo]) > 0:  # P left of edge
+                    nombre_impair_de_noeuds += 1  # have a valid up intersect
         else:  # start y > ordo (no test needed)
             if sommet1[1] <= ordo:  # a downward crossing
-                 if left_line(sommet0, sommet1, [absc, ordo]) < 0:  # P right of edge
-                     nombre_impair_de_noeuds -= 1  # have a valid down intersect
+                if left_line(sommet0, sommet1, [absc, ordo]) < 0:  # P right of edge
+                    nombre_impair_de_noeuds -= 1  # have a valid down intersect
         sommet0 = sommet1
         indice += 1
 

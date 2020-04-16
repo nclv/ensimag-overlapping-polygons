@@ -16,7 +16,6 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-
 mpl.style.use("seaborn")
 
 
@@ -90,7 +89,6 @@ def affichage(values, elapsed_time, functions_names, trend, colormap):
     plt.ylabel("Temps écoulé (ns)")
     plt.xlabel("Nombre d'appels")
 
-
     # plt.legend()
     # plt.savefig(f"plots/{functions_names[0]}{functions_names[1]}")
 
@@ -114,7 +112,7 @@ def main():
         trouve_inclusions_sorted2,
         trouve_inclusions,
         trouve_inclusions_groupy1,
-        trouve_inclusions_groupy2
+        trouve_inclusions_groupy2,
     )
     from algos_pip import (
         crossing_number,
@@ -145,8 +143,7 @@ def main():
     ]
     polygones = read_instance(sys.argv[1])
 
-    values, times = empirical_complexity(functions_list, pip_functions, polygones)
-
+    _, _ = empirical_complexity(functions_list, pip_functions, polygones)
     # affichages_multiples(values, times)
 
 
