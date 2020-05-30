@@ -1,5 +1,9 @@
 *.pyc
 __pycache__/
+.pytest_cache/
+.ropeproject/
+.vscode/
+
 geo/__pycache__/
 may_be_on_y.py
 COMPLEXITY.md
